@@ -91,7 +91,7 @@ void ucg_GetDimension(ucg_t *ucg)
 
 void ucg_DrawPixelWithArg(ucg_t *ucg)
 {
-  ucg->device_cb(ucg, UCG_MSG_DRAW_PIXEL, &(ucg->arg.pixel));
+  ucg->device_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
 }
 
 void ucg_DrawL90FXWithArg(ucg_t *ucg)

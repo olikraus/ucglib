@@ -235,13 +235,6 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DEV_POWER_UP:
       ucg_sdl_init();
       ucg_sdl_start();
-      /*
-      ucg_sdl_set_pixel(10, 10, 3);
-      ucg_sdl_set_fullcolor(11,10, 255, 0, 0);
-      ucg_sdl_set_fullcolor(12,10, 255, 255, 0);
-      ucg_sdl_set_fullcolor(13,10, 255, 255, 255);
-      SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
-      */
       return 1;
     case UCG_MSG_DEV_POWER_DOWN:
       return 1;
@@ -253,40 +246,16 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
 	ucg_sdl_set_fullcolor(
-	    ((ucg_arg_t *)data)->pixel.pos.x,
-	    ((ucg_arg_t *)data)->pixel.pos.y, 
-	    ((ucg_arg_t *)data)->pixel.rgb.color[0], 
-	    ((ucg_arg_t *)data)->pixel.rgb.color[1], 
-	    ((ucg_arg_t *)data)->pixel.rgb.color[2]);
+	    ucg->arg.pixel.pos.x,
+	    ucg->arg.pixel.pos.y, 
+	    ucg->arg.pixel.rgb.color[0], 
+	    ucg->arg.pixel.rgb.color[1], 
+	    ucg->arg.pixel.rgb.color[2]);
 	SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      if ( ucg_clip_l90fx(ucg) != 0 )
-      {
-	ucg_int_t dx, dy;
-	ucg_int_t i;
-	switch(ucg->arg.dir)
-	{
-	  case 0: dx = 1; dy = 0; break;
-	  case 1: dx = 0; dy = 1; break;
-	  case 2: dx = -1; dy = 0; break;
-	  case 3: dx = 0; dy = -1; break;
-	}
-	for( i = 0; i < ucg->arg.len; i++ )
-	{
-	  //printf("%d %d\n", i, ucg->arg.len);
-	  ucg_sdl_set_fullcolor(
-	      ((ucg_arg_t *)data)->pixel.pos.x,
-	      ((ucg_arg_t *)data)->pixel.pos.y, 
-	      ((ucg_arg_t *)data)->pixel.rgb.color[0], 
-	      ((ucg_arg_t *)data)->pixel.rgb.color[1], 
-	      ((ucg_arg_t *)data)->pixel.rgb.color[2]);
-	  ((ucg_arg_t *)data)->pixel.pos.x+=dx;
-	  ((ucg_arg_t *)data)->pixel.pos.y+=dy;
-	}
-	SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
-      }
+      ucg_handle_l90fx(ucg, ucg_sdl_dev_cb);
       return 1;
     case UCG_MSG_DRAW_L90TC:
       if ( ucg_clip_l90tc(ucg) != 0 )
@@ -310,15 +279,15 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
 	  if ( (pixmap & 128) != 0 )
 	  {
 	    ucg_sdl_set_fullcolor(
-		((ucg_arg_t *)data)->pixel.pos.x,
-		((ucg_arg_t *)data)->pixel.pos.y, 
-		((ucg_arg_t *)data)->pixel.rgb.color[0], 
-		((ucg_arg_t *)data)->pixel.rgb.color[1], 
-		((ucg_arg_t *)data)->pixel.rgb.color[2]);
+	    ucg->arg.pixel.pos.x,
+	    ucg->arg.pixel.pos.y, 
+	    ucg->arg.pixel.rgb.color[0], 
+	    ucg->arg.pixel.rgb.color[1], 
+	    ucg->arg.pixel.rgb.color[2]);
 	  }
 	  pixmap<<=1;
-	  ((ucg_arg_t *)data)->pixel.pos.x+=dx;
-	  ((ucg_arg_t *)data)->pixel.pos.y+=dy;
+	  ucg->arg.pixel.pos.x+=dx;
+	  ucg->arg.pixel.pos.y+=dy;
 	  bitcnt++;
 	  if ( bitcnt >= 8 )
 	  {

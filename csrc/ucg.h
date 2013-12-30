@@ -213,6 +213,7 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_com_fnptr com_cb);
 /*================================================*/
 /* ucg_dev_default_cb.c */
 ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 /*================================================*/
 /* ucg_dev_sdl.c */

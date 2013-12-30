@@ -51,3 +51,33 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data)
   }
   return 1;	/* all ok */
 }
+
+
+/*
+  handle UCG_MSG_DRAW_L90FX message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL
+  return 1 if something has been drawn
+*/
+ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb)
+{
+  if ( ucg_clip_l90fx(ucg) != 0 )
+  {
+    ucg_int_t dx, dy;
+    ucg_int_t i;
+    switch(ucg->arg.dir)
+    {
+      case 0: dx = 1; dy = 0; break;
+      case 1: dx = 0; dy = 1; break;
+      case 2: dx = -1; dy = 0; break;
+      case 3: dx = 0; dy = -1; break;
+    }
+    for( i = 0; i < ucg->arg.len; i++ )
+    {
+      dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+      ucg->arg.pixel.pos.x+=dx;
+      ucg->arg.pixel.pos.y+=dy;
+    }
+  }
+  return 0;
+}
+
+

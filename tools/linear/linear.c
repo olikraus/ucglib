@@ -2,6 +2,8 @@
 
 /*
 
+  ccs = color component slide
+
   s: start
   e: end
   n: steps
@@ -23,7 +25,7 @@
 
 typedef int16_t ucg_int_t;
 
-struct _ucg_lin_t
+struct _ucg_ccs_t
 {
   uint8_t start;
   uint8_t current;
@@ -34,33 +36,33 @@ struct _ucg_lin_t
   ucg_int_t rem;  
   ucg_int_t frac;
 };
-typedef struct _ucg_lin_t ucg_lin_t;
+typedef struct _ucg_ccs_t ucg_ccs_t;
 
 /*
   
 */
-void ucg_lin_init(ucg_lin_t *lin, uint8_t start, uint8_t end, ucg_int_t steps)
+void ucg_ccs_init(ucg_ccs_t *ccs, uint8_t start, uint8_t end, ucg_int_t steps)
 {
-  lin->start = start;
-  lin->num = end-start;
-  lin->den = steps-1;
+  ccs->start = start;
+  ccs->num = end-start;
+  ccs->den = steps-1;
   
-  lin->quot = lin->num / lin->den;
-  lin->rem = lin->num % lin->den;
+  ccs->quot = ccs->num / ccs->den;
+  ccs->rem = ccs->num % ccs->den;
   
-  lin->frac = lin->den/2;
-  lin->current = start;
+  ccs->frac = ccs->den/2;
+  ccs->current = start;
 }
 
-void ucg_lin_step(ucg_lin_t *lin)
+void ucg_ccs_step(ucg_ccs_t *ccs)
 {
   
-  lin->current += lin->quot;
-  lin->frac += lin->rem;
-  if ( lin->frac >= lin->den )
+  ccs->current += ccs->quot;
+  ccs->frac += ccs->rem;
+  if ( ccs->frac >= ccs->den )
   {
-    lin->current++;
-    lin->frac -= lin->den;
+    ccs->current++;
+    ccs->frac -= ccs->den;
   }
   
 }
@@ -70,31 +72,31 @@ void ucg_lin_step(ucg_lin_t *lin)
   current = (num / den)  * (pos / den)
   
 */
-void ucg_lin_seek(ucg_lin_t *lin, ucg_int_t pos)
+void ucg_ccs_seek(ucg_ccs_t *ccs, ucg_int_t pos)
 {
   ucg_int_t p;
-  lin->current = lin->quot;
-  lin->current *= pos;
-  p = lin->rem * pos + lin->den/2;
-  lin->current += p / lin->den;
-  lin->frac = p % lin->den;
-  lin->current += lin->start;
+  ccs->current = ccs->quot;
+  ccs->current *= pos;
+  p = ccs->rem * pos + ccs->den/2;
+  ccs->current += p / ccs->den;
+  ccs->frac = p % ccs->den;
+  ccs->current += ccs->start;
 }
 
 int main(void)
 {
-  ucg_lin_t lin;
-  ucg_lin_t lin2;
+  ucg_ccs_t ccs;
+  ucg_ccs_t ccs2;
   ucg_int_t i, n;
   
   n = 10;
-  ucg_lin_init(&lin, 5, 70, n);
-  ucg_lin_init(&lin2, 5, 70, n);
+  ucg_ccs_init(&ccs, 5, 70, n);
+  ucg_ccs_init(&ccs2, 5, 70, n);
   for( i = 0; i < n; i++ )
   {
-    ucg_lin_seek(&lin2, i);
-    printf("%d: current=%d frac=%d (current=%d frac=%d)\n", i, lin.current, lin.frac, lin2.current, lin2.frac);
-    ucg_lin_step(&lin);
+    ucg_ccs_seek(&ccs2, i);
+    printf("%d: current=%d frac=%d (current=%d frac=%d)\n", i, ccs.current, ccs.frac, ccs2.current, ccs2.frac);
+    ucg_ccs_step(&ccs);
   }
   
 }
