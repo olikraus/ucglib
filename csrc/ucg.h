@@ -241,6 +241,16 @@ void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg
 /*================================================*/
 /* ucg_font.c */
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+
+void ucg_SetFontRefHeightText(ucg_t *ucg);
+void ucg_SetFontRefHeightExtendedText(ucg_t *ucg);
+void ucg_SetFontRefHeightAll(ucg_t *ucg);
+
+void ucg_SetFontPosBaseline(ucg_t *ucg);
+void ucg_SetFontPosBottom(ucg_t *ucg);
+void ucg_SetFontPosTop(ucg_t *ucg);
+void ucg_SetFontPosCenter(ucg_t *ucg);
+
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
 
 

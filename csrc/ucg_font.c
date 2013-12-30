@@ -492,7 +492,21 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
-  //y += ucg->font_calc_vref(u8g);
+  switch(dir)
+  {
+    case 0:
+      y += ucg->font_calc_vref(ucg);
+      break;
+    case 1:
+      x -= ucg->font_calc_vref(ucg);
+      break;
+    case 2:
+      y -= ucg->font_calc_vref(ucg);
+      break;
+    case 3:
+      x += ucg->font_calc_vref(ucg);
+      break;
+  }
   return ucg_draw_glyph(ucg, x, y, dir, encoding);
 }
 

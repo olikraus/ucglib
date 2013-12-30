@@ -24,6 +24,8 @@ int main(void)
   ucg_SetFont(&ucg, ucg_font_ncenB18);
   
   ucg_SetColor(&ucg, 255, 0, 0);
+ 
+  ucg_SetFontPosBottom(&ucg);
   
   ucg_DrawGlyph(&ucg, 70, 20, 0, 'A');
   ucg_DrawGlyph(&ucg, 70, 20, 1, 'A');
