@@ -153,7 +153,7 @@ struct _ucg_arg_t
   ucg_int_t offset;			/* calculated offset from the inital point to the start of the clip window (ucg_clip_l90fx) */
   const unsigned char *bitmap;
   ucg_int_t pixel_skip;		/* within the "bitmap" skip the specified number of pixel with the bit. pixel_skip is always <= 7 */
-  ucg_color_t rgb[2];		/* start and end color for L90SE */
+  ucg_color_t rgb[4];		/* start and end color for L90SE , two more colors for the gradient box */
   ucg_ccs_t ccs_line[3];	/* color component sliders used by L90SE */
 };
 
@@ -243,6 +243,11 @@ void ucg_DrawPixel(ucg_t *ucg, ucg_int_t x, ucg_int_t y);
 void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir);
+
+
+/*================================================*/
+/* ucg_box.c */
+void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h);
 
 /*================================================*/
 /* ucg_bitmap.c */

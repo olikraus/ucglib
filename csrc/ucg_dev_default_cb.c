@@ -130,6 +130,7 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   handle UCG_MSG_DRAW_L90SE message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL
   return 1 if something has been drawn
 */
+
 ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
 {
   uint8_t i;

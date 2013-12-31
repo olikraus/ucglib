@@ -90,7 +90,15 @@ int main(void)
   ucg_SetMaxClipRange(&ucg);
   ucg_SetColor(&ucg, 0, 255, 0, 0);
   ucg_SetColor(&ucg, 1, 0, 255, 0);
+  
+  ucg_SetColor(&ucg, 0, 255, 0, 0);
+  ucg_SetColor(&ucg, 1, 0, 253, 0);
+  ucg_SetColor(&ucg, 2, 30, 255, 255);
+  ucg_SetColor(&ucg, 3, 255, 30, 255);
+
   ucg_DrawGradientLine(&ucg, 10, 40, 100, 0);
+
+  ucg_DrawGradientBox(&ucg, 10, 43, 100, 20);
 
 
   while( ucg_sdl_get_key() < 0 )
