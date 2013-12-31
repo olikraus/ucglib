@@ -25,7 +25,7 @@ int main(void)
   
   ucg_SetColor(&ucg, 255, 0, 0);
  
-  ucg_SetFontPosBottom(&ucg);
+  //ucg_SetFontPosBottom(&ucg);
   
   ucg_DrawGlyph(&ucg, 70, 20, 0, 'A');
   ucg_DrawGlyph(&ucg, 70, 20, 1, 'A');
@@ -78,6 +78,13 @@ int main(void)
 
   ucg_DrawBitmapLine(&ucg, 9,22, 0,16, bitmap);
   ucg_DrawBitmapLine(&ucg, 10,23, 0,16, bitmap);
+
+  ucg_SetClipRange(&ucg, 70-9, 20-9, 20, 20);
+
+  ucg_DrawGlyph(&ucg, 70, 20, 0, 'A');
+  ucg_DrawGlyph(&ucg, 70, 20, 1, 'A');
+  ucg_DrawGlyph(&ucg, 70, 20, 2, 'A');
+  ucg_DrawGlyph(&ucg, 70, 20, 3, 'A');
 
 
   while( ucg_sdl_get_key() < 0 )

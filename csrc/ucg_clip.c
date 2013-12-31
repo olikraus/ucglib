@@ -108,6 +108,7 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
 {
   ucg_int_t a;
   ucg_int_t b;
+  ucg->arg.offset = 0;
   switch(ucg->arg.dir)
   {
     case 0:
@@ -120,6 +121,7 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.x, ucg->clip_box.ul.x+ucg->clip_box.size.w) == 0 )
 	return 0;
       
+      ucg->arg.offset = a - ucg->arg.pixel.pos.x;
       ucg->arg.pixel.pos.x = a;
       b -= a;
       ucg->arg.len = b;
@@ -136,6 +138,7 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.y, ucg->clip_box.ul.y+ucg->clip_box.size.h) == 0 )
 	return 0;
 
+      ucg->arg.offset = a - ucg->arg.pixel.pos.y;
       ucg->arg.pixel.pos.y = a;
       b -= a;
       ucg->arg.len = b;
@@ -155,6 +158,7 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.x, ucg->clip_box.ul.x+ucg->clip_box.size.w) == 0 )
 	return 0;
       
+      ucg->arg.offset = ucg->arg.pixel.pos.x-b;
       ucg->arg.len = b-a;
       
       b--;
@@ -175,6 +179,7 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.y, ucg->clip_box.ul.y+ucg->clip_box.size.h) == 0 )
 	return 0;
       
+      ucg->arg.offset = ucg->arg.pixel.pos.y-b;
       ucg->arg.len = b-a;
       
       b--;

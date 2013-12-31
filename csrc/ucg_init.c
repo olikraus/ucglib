@@ -50,6 +50,7 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_com_fnptr com_cb)
   //ucg->display_cb = display_cb;
   ucg->device_cb = device_cb;
   ucg->com_cb = com_cb;
+  ucg_SetFontPosBaseline(ucg);
   r = ucg_PowerUp(ucg);
   ucg_GetDimension(ucg);
   return r;

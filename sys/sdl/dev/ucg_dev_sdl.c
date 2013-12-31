@@ -1,8 +1,40 @@
 /*
 
   ucg_dev_sdl.c
+
+  Universal uC Color Graphics Library
   
+  Copyright (c) 2013, olikraus@gmail.com
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without modification, 
+  are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this list 
+    of conditions and the following disclaimer.
+    
+  * Redistributions in binary form must reproduce the above copyright notice, this 
+    list of conditions and the following disclaimer in the documentation and/or other 
+    materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+
 */
+  
+  
+
 
 
 #include "ucg.h"
@@ -258,47 +290,8 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg_handle_l90fx(ucg, ucg_sdl_dev_cb);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      if ( ucg_clip_l90tc(ucg) != 0 )
-      {
-	ucg_int_t dx, dy;
-	ucg_int_t i;
-	unsigned char pixmap;
-	uint8_t bitcnt;
-	switch(ucg->arg.dir)
-	{
-	  case 0: dx = 1; dy = 0; break;
-	  case 1: dx = 0; dy = 1; break;
-	  case 2: dx = -1; dy = 0; break;
-	  case 3: dx = 0; dy = -1; break;
-	}
-	pixmap = *(ucg->arg.bitmap);
-	bitcnt = ucg->arg.pixel_skip;
-	pixmap <<= bitcnt;
-	for( i = 0; i < ucg->arg.len; i++ )
-	{
-	  if ( (pixmap & 128) != 0 )
-	  {
-	    ucg_sdl_set_fullcolor(
-	    ucg->arg.pixel.pos.x,
-	    ucg->arg.pixel.pos.y, 
-	    ucg->arg.pixel.rgb.color[0], 
-	    ucg->arg.pixel.rgb.color[1], 
-	    ucg->arg.pixel.rgb.color[2]);
-	  }
-	  pixmap<<=1;
-	  ucg->arg.pixel.pos.x+=dx;
-	  ucg->arg.pixel.pos.y+=dy;
-	  bitcnt++;
-	  if ( bitcnt >= 8 )
-	  {
-	    ucg->arg.bitmap++;
-	    pixmap = *(ucg->arg.bitmap);
-	    bitcnt = 0;
-	  }
-	}
-	SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
-
-      }
+      ucg_handle_l90tc(ucg, ucg_sdl_dev_cb);
+      return 1;
       break;
 
   }

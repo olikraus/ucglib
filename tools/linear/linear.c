@@ -27,8 +27,8 @@ typedef int16_t ucg_int_t;
 
 struct _ucg_ccs_t
 {
+  uint8_t current;	/* contains the current color component */
   uint8_t start;
-  uint8_t current;
   uint8_t num;
   uint8_t quot;
   

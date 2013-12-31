@@ -35,7 +35,6 @@
   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
   
 
-
   SW layers
   
   High Level Procedures
@@ -96,6 +95,7 @@ typedef struct _ucg_xy_t ucg_xy_t;
 typedef struct _ucg_wh_t ucg_wh_t;
 typedef struct _ucg_box_t ucg_box_t;
 typedef struct _ucg_color_t ucg_color_t;
+typedef struct _ucg_ccs_t ucg_ccs_t;
 typedef struct _ucg_pixel_t ucg_pixel_t;
 typedef struct _ucg_arg_t ucg_arg_t;
 
@@ -126,6 +126,18 @@ struct _ucg_color_t
   uint8_t color[3];		/* 0: Red, 1: Green, 2: Blue */
 };
 
+struct _ucg_ccs_t
+{
+  uint8_t current;	/* contains the current color component */
+  uint8_t start;
+  uint8_t num;
+  uint8_t quot;
+  
+  ucg_int_t den;
+  ucg_int_t rem;  
+  ucg_int_t frac;
+};
+
 struct _ucg_pixel_t
 {
   ucg_xy_t pos;
@@ -137,8 +149,11 @@ struct _ucg_arg_t
   ucg_pixel_t pixel;
   ucg_int_t len;
   ucg_int_t dir;
+  ucg_int_t offset;			/* calculated offset from the inital point to the start of the clip window */
   const unsigned char *bitmap;
-  ucg_int_t pixel_skip;		/* within the "bitmap" skip the specified number of pixel with the bit. pixel_skip is always <= 7*/
+  ucg_int_t pixel_skip;		/* within the "bitmap" skip the specified number of pixel with the bit. pixel_skip is always <= 7 */
+  ucg_color_t start_color;		/* start and end color for L90SE */
+  ucg_color_t end_color;  
 };
 
 #define UCG_FONT_HEIGHT_MODE_TEXT 0
@@ -193,6 +208,7 @@ struct _ucg_t
 #define UCG_MSG_DRAW_PIXEL 20
 #define UCG_MSG_DRAW_L90FX 21
 #define UCG_MSG_DRAW_L90TC 22	
+#define UCG_MSG_DRAW_L90SE 23
 
 /*================================================*/
 /* ucg_dev_msg_api.c */
@@ -214,6 +230,7 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_com_fnptr com_cb);
 /* ucg_dev_default_cb.c */
 ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 /*================================================*/
 /* ucg_dev_sdl.c */
@@ -254,5 +271,11 @@ void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
 
+
+/*================================================*/
+/* ucg_ccs.c */
+void ucg_ccs_init(ucg_ccs_t *ccs, uint8_t start, uint8_t end, ucg_int_t steps);
+void ucg_ccs_step(ucg_ccs_t *ccs);
+void ucg_ccs_seek(ucg_ccs_t *ccs, ucg_int_t pos);
 
 #endif /* _UCG_H */
