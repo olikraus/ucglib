@@ -53,3 +53,12 @@ void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len)
   ucg->arg.dir = 2;
   ucg_DrawL90FXWithArg(ucg);
 }
+
+void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir)
+{
+  ucg->arg.pixel.pos.x = x;
+  ucg->arg.pixel.pos.y = y;
+  ucg->arg.len = len;
+  ucg->arg.dir = dir;
+  ucg_DrawL90SEWithArg(ucg);
+}

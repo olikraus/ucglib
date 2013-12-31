@@ -194,36 +194,22 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
 
 ucg_int_t ucg_clip_l90tc(ucg_t *ucg)
 {
-  ucg_int_t t;
-  switch(ucg->arg.dir)
+  if ( ucg_clip_l90fx(ucg) == 0 )
+      return 0;
+  ucg->arg.pixel_skip = ucg->arg.offset & 0x07;
+  ucg->arg.bitmap += (ucg->arg.offset >>3);
+  return 1;
+}
+
+ucg_int_t ucg_clip_l90se(ucg_t *ucg)
+{
+  uint8_t i;
+  if ( ucg_clip_l90fx(ucg) == 0 )
+      return 0;
+  for ( i = 0; i < 3; i++ )
   {
-    case 0:
-      t = ucg->arg.pixel.pos.x;
-      if ( ucg_clip_l90fx(ucg) == 0 )
-	return 0;
-      t = ucg->arg.pixel.pos.x - t;
-      break;
-    case 1:
-      t = ucg->arg.pixel.pos.y;
-      if ( ucg_clip_l90fx(ucg) == 0 )
-	return 0;
-      t = ucg->arg.pixel.pos.y - t;
-      break;
-    case 2:
-      t = ucg->arg.pixel.pos.x;
-      if ( ucg_clip_l90fx(ucg) == 0 )
-	return 0;
-      t -= ucg->arg.pixel.pos.x;
-      break;
-    case 3:
-      t = ucg->arg.pixel.pos.y;
-      if ( ucg_clip_l90fx(ucg) == 0 )
-	return 0;
-      t -= ucg->arg.pixel.pos.y;
-      break;
-  } 
-  ucg->arg.pixel_skip = t & 0x07;
-  ucg->arg.bitmap += (t >>3);
+    ucg_ccs_seek(ucg->arg.ccs_line+i, ucg->arg.offset);
+  }  
   return 1;
 }
 

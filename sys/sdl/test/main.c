@@ -23,7 +23,7 @@ int main(void)
   ucg_Init(&ucg, &ucg_sdl_dev_cb, (ucg_com_fnptr)0);
   ucg_SetFont(&ucg, ucg_font_ncenB18);
   
-  ucg_SetColor(&ucg, 255, 0, 0);
+  ucg_SetColor(&ucg, 0, 255, 0, 0);
  
   //ucg_SetFontPosBottom(&ucg);
   
@@ -46,13 +46,13 @@ int main(void)
  
   ucg_SetClipRange(&ucg, 10, 10, 25, 25);
 
-  ucg_SetColor(&ucg, 0, 255, 0);
+  ucg_SetColor(&ucg, 0, 0, 255, 0);
   for( i = 1; i < ucg_GetWidth(&ucg); i+= 2 )  
     ucg_DrawPixel(&ucg, i, 30);
   for( i = 1; i < ucg_GetHeight(&ucg); i+= 2 )  
     ucg_DrawPixel(&ucg, 30, i);
 
-  ucg_SetColor(&ucg, 80, 80, 255);
+  ucg_SetColor(&ucg, 0, 80, 80, 255);
 
   
   ucg_DrawHLine(&ucg, 8, 9, 5);
@@ -85,6 +85,12 @@ int main(void)
   ucg_DrawGlyph(&ucg, 70, 20, 1, 'A');
   ucg_DrawGlyph(&ucg, 70, 20, 2, 'A');
   ucg_DrawGlyph(&ucg, 70, 20, 3, 'A');
+
+
+  ucg_SetMaxClipRange(&ucg);
+  ucg_SetColor(&ucg, 0, 255, 0, 0);
+  ucg_SetColor(&ucg, 1, 0, 255, 0);
+  ucg_DrawGradientLine(&ucg, 10, 40, 100, 0);
 
 
   while( ucg_sdl_get_key() < 0 )

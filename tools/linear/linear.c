@@ -29,8 +29,9 @@ struct _ucg_ccs_t
 {
   uint8_t current;	/* contains the current color component */
   uint8_t start;
-  uint8_t num;
-  uint8_t quot;
+  ucg_int_t dir;		/* 1 if start < end or -1 if start > end */
+  ucg_int_t num;
+  ucg_int_t quot;
   
   ucg_int_t den;
   ucg_int_t rem;  
@@ -46,8 +47,14 @@ void ucg_ccs_init(ucg_ccs_t *ccs, uint8_t start, uint8_t end, ucg_int_t steps)
   ccs->start = start;
   ccs->num = end-start;
   ccs->den = steps-1;
+  ccs->dir = 1;
   
   ccs->quot = ccs->num / ccs->den;
+  if ( ccs->num < 0 )
+  {
+    ccs->num = -ccs->num;
+    ccs->dir = -1;
+  }
   ccs->rem = ccs->num % ccs->den;
   
   ccs->frac = ccs->den/2;
@@ -61,7 +68,7 @@ void ucg_ccs_step(ucg_ccs_t *ccs)
   ccs->frac += ccs->rem;
   if ( ccs->frac >= ccs->den )
   {
-    ccs->current++;
+    ccs->current += ccs->dir;
     ccs->frac -= ccs->den;
   }
   
@@ -77,8 +84,11 @@ void ucg_ccs_seek(ucg_ccs_t *ccs, ucg_int_t pos)
   ucg_int_t p;
   ccs->current = ccs->quot;
   ccs->current *= pos;
-  p = ccs->rem * pos + ccs->den/2;
-  ccs->current += p / ccs->den;
+  p = ccs->rem * pos  + ccs->den/2;
+  if ( ccs->dir >= 0 )
+    ccs->current += p / ccs->den;
+  else
+    ccs->current -= p / ccs->den;
   ccs->frac = p % ccs->den;
   ccs->current += ccs->start;
 }
@@ -90,8 +100,10 @@ int main(void)
   ucg_int_t i, n;
   
   n = 10;
-  ucg_ccs_init(&ccs, 5, 70, n);
-  ucg_ccs_init(&ccs2, 5, 70, n);
+  ucg_ccs_init(&ccs, 70, 5, n);
+  ucg_ccs_init(&ccs2, 70, 5, n);
+  //ucg_ccs_init(&ccs, 5, 70, n);
+  //ucg_ccs_init(&ccs2, 5, 70, n);
   for( i = 0; i < n; i++ )
   {
     ucg_ccs_seek(&ccs2, i);

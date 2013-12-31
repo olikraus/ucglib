@@ -125,5 +125,51 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   }
   return 0;
 }
-    
+ 
+/*
+  handle UCG_MSG_DRAW_L90SE message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL
+  return 1 if something has been drawn
+*/
+ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
+{
+  uint8_t i;
+  
+  /* Setup ccs for l90se. This will be updated by ucg_clip_l90se if required */
+  
+  for ( i = 0; i < 3; i++ )
+  {
+    ucg_ccs_init(ucg->arg.ccs_line+i, ucg->arg.rgb[0].color[i], ucg->arg.rgb[1].color[i], ucg->arg.len);
+  }
+  
+  /* check if the line is visible */
+  
+  if ( ucg_clip_l90se(ucg) != 0 )
+  {
+    ucg_int_t dx, dy;
+    ucg_int_t i, j;
+    switch(ucg->arg.dir)
+    {
+      case 0: dx = 1; dy = 0; break;
+      case 1: dx = 0; dy = 1; break;
+      case 2: dx = -1; dy = 0; break;
+      case 3: dx = 0; dy = -1; break;
+    }
+    for( i = 0; i < ucg->arg.len; i++ )
+    {
+      ucg->arg.pixel.rgb.color[0] = ucg->arg.ccs_line[0].current;
+      ucg->arg.pixel.rgb.color[1] = ucg->arg.ccs_line[1].current; 
+      ucg->arg.pixel.rgb.color[2] = ucg->arg.ccs_line[2].current;
+      dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+      ucg->arg.pixel.pos.x+=dx;
+      ucg->arg.pixel.pos.y+=dy;
+      for ( j = 0; j < 3; j++ )
+      {
+	ucg_ccs_step(ucg->arg.ccs_line+j);
+      }
+    }
+    return 1;
+  }
+  return 0;
+}
+
     

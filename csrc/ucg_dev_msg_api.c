@@ -74,6 +74,14 @@ void ucg_SetClipRange(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int
   ucg_SetClipBox(ucg, &clip_box);
 }
 
+void ucg_SetMaxClipRange(ucg_t *ucg)
+{
+  ucg_box_t new_clip_box;
+  new_clip_box.size = ucg->dimension;
+  new_clip_box.ul.x = 0;
+  new_clip_box.ul.y = 0;
+  ucg_SetClipBox(ucg, &new_clip_box);
+}
 
 /* 
   Query the display dimension from the driver, reset clip window to maximum 
@@ -81,12 +89,8 @@ void ucg_SetClipRange(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int
 */
 void ucg_GetDimension(ucg_t *ucg)
 {
-  ucg_box_t new_clip_box;
   ucg->device_cb(ucg, UCG_MSG_GET_DIMENSION, &(ucg->dimension));
-  new_clip_box.size = ucg->dimension;
-  new_clip_box.ul.x = 0;
-  new_clip_box.ul.y = 0;
-  ucg_SetClipBox(ucg, &new_clip_box);
+  ucg_SetMaxClipRange(ucg);
 }
 
 void ucg_DrawPixelWithArg(ucg_t *ucg)
@@ -104,3 +108,7 @@ void ucg_DrawL90TCWithArg(ucg_t *ucg)
   ucg->device_cb(ucg, UCG_MSG_DRAW_L90TC, &(ucg->arg));
 }
 
+void ucg_DrawL90SEWithArg(ucg_t *ucg)
+{
+  ucg->device_cb(ucg, UCG_MSG_DRAW_L90SE, &(ucg->arg));
+}

@@ -130,8 +130,9 @@ struct _ucg_ccs_t
 {
   uint8_t current;	/* contains the current color component */
   uint8_t start;
-  uint8_t num;
-  uint8_t quot;
+  ucg_int_t dir;		/* 1 if start < end or -1 if start > end */
+  ucg_int_t num;
+  ucg_int_t quot;
   
   ucg_int_t den;
   ucg_int_t rem;  
@@ -149,11 +150,11 @@ struct _ucg_arg_t
   ucg_pixel_t pixel;
   ucg_int_t len;
   ucg_int_t dir;
-  ucg_int_t offset;			/* calculated offset from the inital point to the start of the clip window */
+  ucg_int_t offset;			/* calculated offset from the inital point to the start of the clip window (ucg_clip_l90fx) */
   const unsigned char *bitmap;
   ucg_int_t pixel_skip;		/* within the "bitmap" skip the specified number of pixel with the bit. pixel_skip is always <= 7 */
-  ucg_color_t start_color;		/* start and end color for L90SE */
-  ucg_color_t end_color;  
+  ucg_color_t rgb[2];		/* start and end color for L90SE */
+  ucg_ccs_t ccs_line[3];	/* color component sliders used by L90SE */
 };
 
 #define UCG_FONT_HEIGHT_MODE_TEXT 0
@@ -216,10 +217,12 @@ void ucg_PowerDown(ucg_t *ucg);
 ucg_int_t ucg_PowerUp(ucg_t *ucg);
 void ucg_SetClipBox(ucg_t *ucg, ucg_box_t *clip_box);
 void ucg_SetClipRange(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h);
+void ucg_SetMaxClipRange(ucg_t *ucg);
 void ucg_GetDimension(ucg_t *ucg);
 void ucg_DrawPixelWithArg(ucg_t *ucg);
 void ucg_DrawL90FXWithArg(ucg_t *ucg);
 void ucg_DrawL90TCWithArg(ucg_t *ucg);
+void ucg_DrawL90SEWithArg(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_init.c */
@@ -227,30 +230,19 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_com_fnptr com_cb);
 
 
 /*================================================*/
-/* ucg_dev_default_cb.c */
-ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
-ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
-ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
-
-/*================================================*/
 /* ucg_dev_sdl.c */
 ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data);
 
 /*================================================*/
-/* ucg_clip.c */
-ucg_int_t ucg_clip_is_pixel_visible(ucg_t *ucg);
-ucg_int_t ucg_clip_l90fx(ucg_t *ucg);
-ucg_int_t ucg_clip_l90tc(ucg_t *ucg);
-
-/*================================================*/
 /* ucg_pixel.c */
-void ucg_SetColor(ucg_t *ucg, uint8_t r, uint8_t g, uint8_t b);
+void ucg_SetColor(ucg_t *ucg, uint8_t idx, uint8_t r, uint8_t g, uint8_t b);
 void ucg_DrawPixel(ucg_t *ucg, ucg_int_t x, ucg_int_t y);
 
 /*================================================*/
 /* ucg_line.c */
 void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
+void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir);
 
 /*================================================*/
 /* ucg_bitmap.c */
@@ -273,9 +265,30 @@ void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
 
 
 /*================================================*/
+/* LOW LEVEL PROCEDRUES, ONLY CALLED BY DEV CB */
+
+/*================================================*/
+/* ucg_clip.c */
+ucg_int_t ucg_clip_is_pixel_visible(ucg_t *ucg);
+ucg_int_t ucg_clip_l90fx(ucg_t *ucg);
+ucg_int_t ucg_clip_l90tc(ucg_t *ucg);
+ucg_int_t ucg_clip_l90se(ucg_t *ucg);
+
+
+/*================================================*/
 /* ucg_ccs.c */
 void ucg_ccs_init(ucg_ccs_t *ccs, uint8_t start, uint8_t end, ucg_int_t steps);
 void ucg_ccs_step(ucg_ccs_t *ccs);
 void ucg_ccs_seek(ucg_ccs_t *ccs, ucg_int_t pos);
+
+
+/*================================================*/
+/* ucg_dev_default_cb.c */
+ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+
+
 
 #endif /* _UCG_H */
