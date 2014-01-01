@@ -100,7 +100,7 @@ typedef struct _ucg_pixel_t ucg_pixel_t;
 typedef struct _ucg_arg_t ucg_arg_t;
 
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
-typedef ucg_int_t (*ucg_com_fnptr)(ucg_t *ucg, ucg_int_t msg, ucg_int_t arg, void *data); 
+typedef ucg_int_t (*ucg_com_fnptr)(ucg_t *ucg, ucg_int_t msg, int16_t arg, void *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 
 struct _ucg_xy_t
@@ -195,7 +195,14 @@ struct _ucg_t
   uint8_t font_height_mode;
   int8_t font_ref_ascent;
   int8_t font_ref_descent;
-  
+
+  /* 
+    Small amount of RAM for the com interface (com_cb).
+    Might be unused on unix systems, where the com sub system is 
+    not required, but should be usefull for all uC projects.
+  */
+  uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status*/
+  uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
 };
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
@@ -210,6 +217,51 @@ struct _ucg_t
 #define UCG_MSG_DRAW_L90FX 21
 #define UCG_MSG_DRAW_L90TC 22	
 #define UCG_MSG_DRAW_L90SE 23
+
+/*
+  arg:	clock speed in ns (0..4095)
+  note: power up is the first command, which is sent
+*/
+#define UCG_COM_MSG_POWER_UP 10
+
+/*
+  note: power down my be followed only by power up command
+*/
+#define UCG_COM_MSG_POWER_DOWN 11
+
+/*
+  arg:	delay in microseconds  (0..4095) 
+*/
+#define UCG_COM_MSG_DELAY
+
+/*
+  arg:	new logic level for reset line
+*/
+#define UCG_COM_MSG_CHANGE_RESET_LINE
+  
+/*
+  arg:	new logic level for cs line
+*/
+#define UCG_COM_MSG_CHANGE_CS_LINE
+
+/*
+  arg:	new logic level for cd line
+*/
+#define UCG_COM_MSG_CHANGE_CD_LINE
+
+/*
+  ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
+  arg:			byte for display
+*/
+#define UCG_COM_MSG_SEND_BYTE
+
+/*
+  ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
+  arg:			length of string 	
+  data:			string
+*/
+#define UCG_COM_MSG_SEND_STR
+
 
 /*================================================*/
 /* ucg_dev_msg_api.c */

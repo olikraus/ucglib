@@ -92,9 +92,9 @@ int main(void)
   ucg_SetColor(&ucg, 1, 0, 255, 0);
   
   ucg_SetColor(&ucg, 0, 255, 0, 0);
-  ucg_SetColor(&ucg, 1, 0, 253, 0);
-  ucg_SetColor(&ucg, 2, 30, 255, 255);
-  ucg_SetColor(&ucg, 3, 255, 30, 255);
+  ucg_SetColor(&ucg, 1, 0, 255, 0);
+  ucg_SetColor(&ucg, 2, 255, 0, 255);
+  ucg_SetColor(&ucg, 3, 0, 255, 255);
 
   ucg_DrawGradientLine(&ucg, 10, 40, 100, 0);
 
