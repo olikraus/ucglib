@@ -100,7 +100,7 @@ typedef struct _ucg_pixel_t ucg_pixel_t;
 typedef struct _ucg_arg_t ucg_arg_t;
 
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
-typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, int16_t arg, uint8_t *data); 
+typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 
 struct _ucg_xy_t
@@ -267,10 +267,20 @@ struct _ucg_t
 
 /*
   ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
+  arg:			how often to repeat the 2/3 byte sequence 	
+  data:			pointer to two or three bytes
+*/
+#define UCG_COM_MSG_REPEAT_1_BYTE 17
+#define UCG_COM_MSG_REPEAT_2_BYTES 18
+#define UCG_COM_MSG_REPEAT_3_BYTES 19
+
+/*
+  ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
   arg:			length of string 	
   data:			string
 */
-#define UCG_COM_MSG_SEND_STR 17
+#define UCG_COM_MSG_SEND_STR 20
+
 
 
 /*================================================*/
@@ -356,6 +366,51 @@ ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
+
+/*================================================*/
+/* ucg_com_msg_api.c */
+
+#define C10(c0)				0x010, (c0)
+#define C20(c0,c1)				0x020, (c0),(c1)
+#define C11(c0,a0)				0x011, (c0),(a0)
+#define C21(c0,c1,a0)			0x021, (c0),(c1),(a0)
+#define C12(c0,a0,a1)			0x012, (c0),(a0),(a1)
+#define C22(c0,c1,a0,a1)		0x022, (c0),(c1),(a0),(a1)
+#define C13(c0,a0,a1,a2)		0x013, (c0),(a0),(a1),(a2)
+#define C23(c0,c1,a0,a1,a2)		0x023, (c0),(c1),(a0),(a1),(a2)
+#define C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
+#define C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
+
+#define D1(d0)				0x071, (d0)
+#define D2(d0,d1)				0x072, (d0),(d1)
+#define D3(d0,d1,d3)			0x073, (d0),(d1),(d2)
+#define D4(d0,d1,d3,d4)			0x074, (d0),(d1),(d2),(d3)
+#define D5(d0,d1,d3,d4,d5)		0x075, (d0),(d1),(d2),(d3),(d5)
+#define D6(d0,d1,d3,d4,d5,d6)	0x076, (d0),(d1),(d2),(d3),(d5),(d6)
+
+#define DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
+#define DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
+
+#define RST(level)				0x0f0 | ((level)&1)
+#define CS(level)				0x0f4 | ((level)&1)
+#define CFG_CD(c,a)			0x0fc | (((c)&1)<<1) | ((a)&1)
+
+#define END()					0x00
+
+void ucg_com_PowerDown(ucg_t *ucg);
+int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t clk_speed);
+void ucg_com_SetLineStatus(ucg_t *ucg, uint8_t level, uint8_t mask, uint8_t msg) UCG_NOINLINE;
+void ucg_com_SetResetLineStatus(ucg_t *ucg, uint8_t level);
+void ucg_com_SetCSLineStatus(ucg_t *ucg, uint8_t level);
+void ucg_com_SetCDLineStatus(ucg_t *ucg, uint8_t level);
+void ucg_com_DelayMicroseconds(ucg_t *ucg, uint16_t delay) UCG_NOINLINE;
+void ucg_com_DelayMilliseconds(ucg_t *ucg, uint16_t delay) UCG_NOINLINE;
+void ucg_com_SendByte(ucg_t *ucg, uint8_t byte);
+void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte);
+void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+void ucg_com_SendCmdSeq(ucg_t *ucg, uint8_t *data);
 
 
 #endif /* _UCG_H */

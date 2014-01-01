@@ -350,12 +350,18 @@ static void ucg_FillEmptyGlyphCache(ucg_t *ucg)
 ucg_glyph_t ucg_GetGlyph(ucg_t *ucg, uint8_t requested_encoding)
 {
   uint8_t *p = (uint8_t *)(ucg->font);
-  uint8_t font_format = ucg_font_GetFormat(ucg->font);
-  uint8_t data_structure_size = ucg_font_GetFontGlyphStructureSize(ucg->font);
+  uint8_t font_format;
+  uint8_t data_structure_size;
   uint8_t start, end;
   uint16_t pos;
   uint8_t i;
   uint8_t mask = 255;
+  
+  if ( p == NULL )
+    return NULL;
+  
+  font_format = ucg_font_GetFormat(ucg->font);
+  data_structure_size = ucg_font_GetFontGlyphStructureSize(ucg->font);
 
   if ( font_format == 1 )
     mask = 15;
