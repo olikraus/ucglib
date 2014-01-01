@@ -100,7 +100,7 @@ typedef struct _ucg_pixel_t ucg_pixel_t;
 typedef struct _ucg_arg_t ucg_arg_t;
 
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
-typedef ucg_int_t (*ucg_com_fnptr)(ucg_t *ucg, ucg_int_t msg, int16_t arg, void *data); 
+typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, int16_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 
 struct _ucg_xy_t
@@ -201,7 +201,8 @@ struct _ucg_t
     Might be unused on unix systems, where the com sub system is 
     not required, but should be usefull for all uC projects.
   */
-  uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status*/
+  uint8_t com_initial_change_sent;	/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status */
+  uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status,  Bit 3: 1 for power up */
   uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
 };
 
@@ -218,9 +219,16 @@ struct _ucg_t
 #define UCG_MSG_DRAW_L90TC 22	
 #define UCG_MSG_DRAW_L90SE 23
 
+#define UCG_COM_STATUS_MASK_POWER 8
+#define UCG_COM_STATUS_MASK_RESET 4
+#define UCG_COM_STATUS_MASK_CS 2
+#define UCG_COM_STATUS_MASK_CD 1
+
 /*
   arg:	clock speed in ns (0..4095)
-  note: power up is the first command, which is sent
+  return:	0 for error
+  note: 
+    - power up is the first command, which is sent
 */
 #define UCG_COM_MSG_POWER_UP 10
 
@@ -232,35 +240,37 @@ struct _ucg_t
 /*
   arg:	delay in microseconds  (0..4095) 
 */
-#define UCG_COM_MSG_DELAY
+#define UCG_COM_MSG_DELAY 12
 
 /*
-  arg:	new logic level for reset line
+  ucg->com_status	contains previous status of reset line
+  arg:			new logic level for reset line
 */
-#define UCG_COM_MSG_CHANGE_RESET_LINE
-  
+#define UCG_COM_MSG_CHANGE_RESET_LINE 13
 /*
+  ucg->com_status	contains previous status of cs line
   arg:	new logic level for cs line
 */
-#define UCG_COM_MSG_CHANGE_CS_LINE
+#define UCG_COM_MSG_CHANGE_CS_LINE 14
 
 /*
+  ucg->com_status	contains previous status of cd line
   arg:	new logic level for cd line
 */
-#define UCG_COM_MSG_CHANGE_CD_LINE
+#define UCG_COM_MSG_CHANGE_CD_LINE 15
 
 /*
   ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
   arg:			byte for display
 */
-#define UCG_COM_MSG_SEND_BYTE
+#define UCG_COM_MSG_SEND_BYTE 16
 
 /*
   ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
   arg:			length of string 	
   data:			string
 */
-#define UCG_COM_MSG_SEND_STR
+#define UCG_COM_MSG_SEND_STR 17
 
 
 /*================================================*/
