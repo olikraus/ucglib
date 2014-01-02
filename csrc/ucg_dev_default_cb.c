@@ -69,6 +69,7 @@ ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       case 1: dx = 0; dy = 1; break;
       case 2: dx = -1; dy = 0; break;
       case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
     for( i = 0; i < ucg->arg.len; i++ )
     {
@@ -100,6 +101,7 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       case 1: dx = 0; dy = 1; break;
       case 2: dx = -1; dy = 0; break;
       case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
     pixmap = *(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
@@ -154,6 +156,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       case 1: dx = 0; dy = 1; break;
       case 2: dx = -1; dy = 0; break;
       case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
     for( i = 0; i < ucg->arg.len; i++ )
     {

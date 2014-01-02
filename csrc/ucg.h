@@ -54,6 +54,12 @@
 #include <stddef.h>
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
 #ifdef __GNUC__
 #  define UCG_NOINLINE __attribute__((noinline))
 #  define UCG_SECTION(name) __attribute__ ((section (name)))
@@ -370,32 +376,32 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 /*================================================*/
 /* ucg_com_msg_api.c */
 
-#define C10(c0)				0x010, (c0)
-#define C20(c0,c1)				0x020, (c0),(c1)
-#define C11(c0,a0)				0x011, (c0),(a0)
-#define C21(c0,c1,a0)			0x021, (c0),(c1),(a0)
-#define C12(c0,a0,a1)			0x012, (c0),(a0),(a1)
-#define C22(c0,c1,a0,a1)		0x022, (c0),(c1),(a0),(a1)
-#define C13(c0,a0,a1,a2)		0x013, (c0),(a0),(a1),(a2)
-#define C23(c0,c1,a0,a1,a2)		0x023, (c0),(c1),(a0),(a1),(a2)
-#define C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
-#define C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
+#define UCG_C10(c0)				0x010, (c0)
+#define UCG_C20(c0,c1)				0x020, (c0),(c1)
+#define UCG_C11(c0,a0)				0x011, (c0),(a0)
+#define UCG_C21(c0,c1,a0)			0x021, (c0),(c1),(a0)
+#define UCG_C12(c0,a0,a1)			0x012, (c0),(a0),(a1)
+#define UCG_C22(c0,c1,a0,a1)		0x022, (c0),(c1),(a0),(a1)
+#define UCG_C13(c0,a0,a1,a2)		0x013, (c0),(a0),(a1),(a2)
+#define UCG_C23(c0,c1,a0,a1,a2)		0x023, (c0),(c1),(a0),(a1),(a2)
+#define UCG_C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
+#define UCG_C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
 
-#define D1(d0)				0x071, (d0)
-#define D2(d0,d1)				0x072, (d0),(d1)
-#define D3(d0,d1,d3)			0x073, (d0),(d1),(d2)
-#define D4(d0,d1,d3,d4)			0x074, (d0),(d1),(d2),(d3)
-#define D5(d0,d1,d3,d4,d5)		0x075, (d0),(d1),(d2),(d3),(d5)
-#define D6(d0,d1,d3,d4,d5,d6)	0x076, (d0),(d1),(d2),(d3),(d5),(d6)
+#define UCG_D1(d0)				0x071, (d0)
+#define UCG_D2(d0,d1)				0x072, (d0),(d1)
+#define UCG_D3(d0,d1,d3)			0x073, (d0),(d1),(d2)
+#define UCG_D4(d0,d1,d3,d4)			0x074, (d0),(d1),(d2),(d3)
+#define UCG_D5(d0,d1,d3,d4,d5)		0x075, (d0),(d1),(d2),(d3),(d5)
+#define UCG_D6(d0,d1,d3,d4,d5,d6)	0x076, (d0),(d1),(d2),(d3),(d5),(d6)
 
-#define DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
-#define DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
+#define UCG_DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
+#define UCG_DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
 
-#define RST(level)				0x0f0 | ((level)&1)
-#define CS(level)				0x0f4 | ((level)&1)
-#define CFG_CD(c,a)			0x0fc | (((c)&1)<<1) | ((a)&1)
+#define UCG_RST(level)				0x0f0 | ((level)&1)
+#define UCG_CS(level)				0x0f4 | ((level)&1)
+#define UCG_CFG_CD(c,a)			0x0fc | (((c)&1)<<1) | ((a)&1)
 
-#define END()					0x00
+#define UCG_END()					0x00
 
 void ucg_com_PowerDown(ucg_t *ucg);
 int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t clk_speed);
@@ -411,6 +417,10 @@ void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendCmdSeq(ucg_t *ucg, uint8_t *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* _UCG_H */

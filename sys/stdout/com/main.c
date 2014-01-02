@@ -11,13 +11,13 @@ int ucg_sdl_get_key(void);
 ucg_t ucg;
 
 uint8_t my_init_sequence[] = {
-  CFG_CD(0,0),
-  RST(0),
-  DLY_MS(2),
-  RST(1),
-  DLY_MS(2),
-  C11(0xaa, 0x055),
-  END()
+  UCG_CFG_CD(0,0),
+  UCG_RST(0),
+  UCG_DLY_MS(2),
+  UCG_RST(1),
+  UCG_DLY_MS(2),
+  UCG_C11(0xaa, 0x055),
+  UCG_END()
 };
 
 ucg_int_t ucg_my_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
