@@ -37,6 +37,14 @@
 
 #include "ucg.h"
 
+const uint8_t ucg_ssd1351_set_pos_seq[] = 
+{
+  UCG_C10(0x015),	UCG_VAR0(0,0x0ff, 0),		/* set x position */
+  UCG_C10(0x075),	UCG_VAR1(0,0x0ff, 0),		/* set y position */
+  UCG_C10(0x05c),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
 
 
 ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
@@ -57,11 +65,9 @@ ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
-	/*
-	  cmd 0x015	x value
-	  cmd 0x075	y value
-	  cmd 0x05c
-	*/
+	ucg->com_var[0] = ucg->arg.pixel.pos.x;
+	ucg->com_var[1] = ucg->arg.pixel.pos.y;
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_seq);	
 	ucg_com_SendRepeat3Bytes(ucg, 1, ucg->arg.pixel.rgb.color);
       }
       return 1;

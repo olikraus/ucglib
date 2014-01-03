@@ -233,6 +233,7 @@ struct _ucg_t
   uint8_t com_initial_change_sent;	/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status */
   uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status,  Bit 3: 1 for power up */
   uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
+  uint16_t com_var[2];		
 };
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
@@ -428,6 +429,8 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 #define UCG_DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define UCG_DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
+#define UCG_VAR0(s,a,o)				0x0a0 | ((s)&15), (a), (o)
+#define UCG_VAR1(s,a,o)				0x0b0 | ((s)&15), (a), (o)
 
 #define UCG_RST(level)				0x0f0 | ((level)&1)
 #define UCG_CS(level)				0x0f4 | ((level)&1)

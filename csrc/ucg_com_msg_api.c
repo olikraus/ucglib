@@ -218,8 +218,8 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 0111xxxx			Data Bytes 0...15
 1000xxxx	xxxxxxxx	DLY MS
 1001xxxx	xxxxxxxx	DLY US
-1010xxxx			
-1011xxxx
+1010sssss aaaaaaaa oooooooo		(var0>>s)&a|o, send as argument
+1011sssss aaaaaaaa oooooooo		(var1>>s)&a|o, send as argument
 1100xxxx
 1101xxxx
 1110xxxx
@@ -243,6 +243,7 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 #define C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
 #define C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
 
+#define UCG_DATA()			0x070
 #define D1(d0)				0x071, (d0)
 #define D2(d0,d1)				0x072, (d0),(d1)
 #define D3(d0,d1,d3)			0x073, (d0),(d1),(d2)
@@ -252,6 +253,8 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 
 #define DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
+#define UCG_VAR0(s,a,o)		0x0a0 | ((s)&15), (a), (o)
+#define UCG_VAR1(s,a,o)		0x0b0 | ((s)&15), (a), (o)
 
 #define RST(level)				0x0f0 | ((level)&1)
 #define CS(level)				0x0f4 | ((level)&1)
@@ -297,9 +300,10 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 	ucg_com_SendString(ucg, lo, data+1);
 	data+=1+lo;      
 	break;
-      case 7:
+      case 7:	/* note: 0x070 is used to set data line status */
 	ucg_com_SetCDLineStatus(ucg, ((ucg->com_cfg_cd>>1)&1)^1 );
-	ucg_com_SendString(ucg, lo, data+1);
+	if ( lo > 0 )
+	  ucg_com_SendString(ucg, lo, data+1);
 	data+=1+lo;      
 	break;
       case 8:
@@ -311,6 +315,13 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 	data++;
 	ucg_com_DelayMicroseconds(ucg, (((uint16_t)lo)<<8) + *data );
 	data++;
+	break;
+      case 10:
+      case 11:
+	data++;
+	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
+	ucg_com_SendByte(ucg, (((uint8_t)((ucg->com_var[hi-10]>>lo)))&data[0])|data[1] );
+	data+=2;
 	break;
       case 15:
 	hi = lo >> 2;

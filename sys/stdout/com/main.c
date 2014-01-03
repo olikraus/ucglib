@@ -10,17 +10,18 @@ int ucg_sdl_get_key(void);
 
 ucg_t ucg;
 
-uint8_t x_my_init_sequence[] = {
+uint8_t my_init_sequence[] = {
   UCG_CFG_CD(0,0),
   UCG_RST(0),
   UCG_DLY_MS(2),
   UCG_RST(1),
   UCG_DLY_MS(2),
+  UCG_VAR1(7,255,0),
   UCG_C11(0xaa, 0x055),
   UCG_END()
 };
 
-uint8_t my_init_sequence[] = {
+uint8_t x_my_init_sequence[] = {
 	UCG_CS(0),					/* disable chip */
 	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
 	UCG_DLY_MS(20),
@@ -78,7 +79,8 @@ ucg_int_t ucg_my_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
-      ucg_com_PowerUp(ucg, 66);
+      ucg_com_PowerUp(ucg, 66, 300);
+      ucg->com_var[1] = 0x05555;
       ucg_com_SendCmdSeq(ucg, my_init_sequence);
       return 1;
     case UCG_MSG_DEV_POWER_DOWN:
