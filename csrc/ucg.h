@@ -94,6 +94,8 @@ typedef uint8_t ucg_fntpgm_uint8_t;
 #define UCG_PSTR(s) ((ucg_pgm_uint8_t *)(s))
 #endif
 
+/*================================================*/
+/* several type and forward definitions */
 
 typedef int16_t ucg_int_t;
 typedef struct _ucg_t ucg_t;
@@ -104,10 +106,26 @@ typedef struct _ucg_color_t ucg_color_t;
 typedef struct _ucg_ccs_t ucg_ccs_t;
 typedef struct _ucg_pixel_t ucg_pixel_t;
 typedef struct _ucg_arg_t ucg_arg_t;
+typedef struct _ucg_com_info_t ucg_com_info_t;
 
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
 typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
+
+/*================================================*/
+/* list of supported display modules */
+
+ucg_int_t u8g_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
+
+
+/*================================================*/
+/* list of supported display controllers */
+
+ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
+
+
+/*================================================*/
+/* struct declarations */
 
 struct _ucg_xy_t
 {
@@ -167,6 +185,11 @@ struct _ucg_arg_t
 #define UCG_FONT_HEIGHT_MODE_XTEXT 1
 #define UCG_FONT_HEIGHT_MODE_ALL 2
 
+struct _ucg_com_info_t
+{
+  uint16_t serial_clk_speed;
+  uint16_t parallel_clk_speed;
+};
 
 struct _ucg_t
 {
@@ -387,12 +410,21 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
 #define UCG_C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
 
+#define UCG_A1(d0)					0x061, (d0)
+#define UCG_A2(d0,d1)					0x062, (d0),(d1)
+#define UCG_A3(d0,d1,d2)				0x063, (d0),(d1),(d2)
+#define UCG_A4(d0,d1,d2,d3)				0x064, (d0),(d1),(d2),(d3)
+#define UCG_A5(d0,d1,d2,d3,d4)			0x065, (d0),(d1),(d2),(d3),(d4)
+#define UCG_A6(d0,d1,d2,d3,d4,d5)		0x066, (d0),(d1),(d2),(d3),(d4),(d5)
+#define UCG_A7(d0,d1,d2,d3,d4,d5,d6)		0x067, (d0),(d1),(d2),(d3),(d4),(d5),(d6)
+#define UCG_A8(d0,d1,d2,d3,d4,d5,d6,d7)	0x068, (d0),(d1),(d2),(d3),(d4),(d5),(d6),(d7)
+
 #define UCG_D1(d0)				0x071, (d0)
 #define UCG_D2(d0,d1)				0x072, (d0),(d1)
-#define UCG_D3(d0,d1,d3)			0x073, (d0),(d1),(d2)
-#define UCG_D4(d0,d1,d3,d4)			0x074, (d0),(d1),(d2),(d3)
-#define UCG_D5(d0,d1,d3,d4,d5)		0x075, (d0),(d1),(d2),(d3),(d5)
-#define UCG_D6(d0,d1,d3,d4,d5,d6)	0x076, (d0),(d1),(d2),(d3),(d5),(d6)
+#define UCG_D3(d0,d1,d2)			0x073, (d0),(d1),(d2)
+#define UCG_D4(d0,d1,d2,d3)			0x074, (d0),(d1),(d2),(d3)
+#define UCG_D5(d0,d1,d2,d3,d4)		0x075, (d0),(d1),(d2),(d3),(d4)
+#define UCG_D6(d0,d1,d2,d3,d4,d5)	0x076, (d0),(d1),(d2),(d3),(d4),(d5)
 
 #define UCG_DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define UCG_DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
@@ -404,7 +436,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_END()					0x00
 
 void ucg_com_PowerDown(ucg_t *ucg);
-int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t clk_speed);
+int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t serial_clk_speed, uint16_t parallel_clk_speed);
 void ucg_com_SetLineStatus(ucg_t *ucg, uint8_t level, uint8_t mask, uint8_t msg) UCG_NOINLINE;
 void ucg_com_SetResetLineStatus(ucg_t *ucg, uint8_t level);
 void ucg_com_SetCSLineStatus(ucg_t *ucg, uint8_t level);
@@ -415,8 +447,8 @@ void ucg_com_SendByte(ucg_t *ucg, uint8_t byte);
 void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte);
 void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
-void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
-void ucg_com_SendCmdSeq(ucg_t *ucg, uint8_t *data);
+void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
+void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data);
 
 #ifdef __cplusplus
 }

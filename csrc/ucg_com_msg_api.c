@@ -76,12 +76,16 @@ void ucg_com_PowerDown(ucg_t *ucg)
 /*
   clk_speed in nano-seconds, range: 0..4095
 */
-int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t clk_speed)
+int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t serial_clk_speed, uint16_t parallel_clk_speed)
 {
   int16_t r;
+  ucg_com_info_t com_info;
+  com_info.serial_clk_speed = serial_clk_speed;
+  com_info.parallel_clk_speed = parallel_clk_speed;
+  
   ucg_com_PowerDown(ucg);  
   ucg->com_initial_change_sent = 0;
-  r = ucg->com_cb(ucg, UCG_COM_MSG_POWER_UP, clk_speed, NULL);
+  r = ucg->com_cb(ucg, UCG_COM_MSG_POWER_UP, 0UL, (uint8_t *)&com_info);
   if ( r != 0 )
   {
     ucg->com_status |= UCG_COM_STATUS_MASK_POWER;
@@ -162,9 +166,9 @@ void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_3_BYTES, cnt, byte_ptr);
 }
 
-void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
+void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
 {
-  ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, cnt, byte_ptr);
+  ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, cnt, (uint8_t *)byte_ptr);
 }
 
 
@@ -210,7 +214,7 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 0011xxxx			3x CMD Byte, 0..15 Argument Data Bytes
 0100xxxx
 0101xxxx
-0110xxxx
+0110xxxx			Arg Bytes 0..15
 0111xxxx			Data Bytes 0...15
 1000xxxx	xxxxxxxx	DLY MS
 1001xxxx	xxxxxxxx	DLY US
@@ -257,16 +261,19 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 
 */
 
-static void ucg_com_SendCmdArg(ucg_t *ucg, uint8_t *data, uint8_t cmd_cnt, uint8_t arg_cnt)
+static void ucg_com_SendCmdArg(ucg_t *ucg, const uint8_t *data, uint8_t cmd_cnt, uint8_t arg_cnt)
 {
   ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd>>1)&1 );
   ucg_com_SendString(ucg, cmd_cnt, data);
-  data += cmd_cnt;
-  ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-  ucg_com_SendString(ucg, arg_cnt, data);
+  if ( arg_cnt > 0 )
+  {
+    data += cmd_cnt;
+    ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
+    ucg_com_SendString(ucg, arg_cnt, data);
+  }
 }
 
-void ucg_com_SendCmdSeq(ucg_t *ucg, uint8_t *data)
+void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 {
   uint8_t hi;
   uint8_t lo;
@@ -284,6 +291,11 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, uint8_t *data)
       case 3:
 	ucg_com_SendCmdArg(ucg, data+1, hi, lo);
 	data+=1+hi+lo;
+	break;
+      case 6:
+	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
+	ucg_com_SendString(ucg, lo, data+1);
+	data+=1+lo;      
 	break;
       case 7:
 	ucg_com_SetCDLineStatus(ucg, ((ucg->com_cfg_cd>>1)&1)^1 );
