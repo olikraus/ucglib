@@ -39,8 +39,9 @@
 
 const uint8_t ucg_ssd1351_set_pos_seq[] = 
 {
-  UCG_C10(0x015),	UCG_VAR0(0,0x0ff, 0),		/* set x position */
-  UCG_C10(0x075),	UCG_VAR1(0,0x0ff, 0),		/* set y position */
+  UCG_CS(0),					/* enable chip */
+  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
+  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
   UCG_C10(0x05c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
@@ -65,10 +66,13 @@ ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
-	ucg->com_var[0] = ucg->arg.pixel.pos.x;
-	ucg->com_var[1] = ucg->arg.pixel.pos.y;
+	uint8_t c[3];
 	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_seq);	
-	ucg_com_SendRepeat3Bytes(ucg, 1, ucg->arg.pixel.rgb.color);
+	c[0] = ucg->arg.pixel.rgb.color[0]>>2;
+	c[1] = ucg->arg.pixel.rgb.color[1]>>2;
+	c[2] = ucg->arg.pixel.rgb.color[2]>>2;
+	ucg_com_SendRepeat3Bytes(ucg, 1, c);
+	ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:

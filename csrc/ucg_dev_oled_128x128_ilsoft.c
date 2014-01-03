@@ -39,7 +39,65 @@
 
 //static const uint8_t u8g_dev_ssd1351_128x128_init_seq[] PROGMEM = {
 static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
-	UCG_CS(0),					/* disable chip */
+	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
+  	UCG_RST(1),					
+
+	UCG_CS(1),					/* disable chip */
+	UCG_DLY_MS(20),
+	UCG_CS(0),					/* enable chip */
+	UCG_DLY_MS(50),
+	UCG_C11(0x0fd, 0x012),			/* Unock normal commands */
+	UCG_C11(0x0fd, 0x0b1),			/* Unock extra commands */
+  
+  	UCG_C10(0x0af),				/* Set Display On */
+	UCG_C10(0x0a6),				/* Set Display Mode Reset */
+  	UCG_C11(0x0a0, 0x0b4),			/* Set Colour Depth */
+  	UCG_C11(0x0a1, 0x000),			/* Set Display Start Line */
+  	UCG_C11(0x0a2, 0x000),			/* Set Display Offset */
+  	UCG_C12(0x015, 0x000, 0x07f),	/* Set Column Address */
+  	UCG_C12(0x075, 0x000, 0x07f),	/* Set Row Address */
+
+  	UCG_C11(0x0b3, 0x0f1),			/* Front Clock Div */
+  	UCG_C11(0x0ca, 0x07f),			/* Set Multiplex Ratio */
+  	UCG_C11(0x0b5, 0x000),		/* Set GPIO */
+  	UCG_C11(0x0ab, 0x001),			/* Set Function Selection */
+  	UCG_C11(0x0b1, 0x032),		/* Set Phase Length */
+  	UCG_C13(0x0b4, 0xa0,0xb5,0x55),		/* Set Segment Low Voltage */
+  	UCG_C11(0x0bb, 0x017),		/* Set Precharge Voltage */
+  	UCG_C11(0x0be, 0x005),			/* Set VComH Voltage */
+  	UCG_C13(0x0c1, 0xc8, 0x80, 0xc8),	/* Set Contrast */
+  	UCG_C11(0x0c7, 0x00f),			/* Set Master Contrast (0..15) */
+  	UCG_C11(0x0b6, 0x001),		/* Set Second Precharge Period */
+
+  
+	
+	UCG_DLY_MS(2000),
+
+	UCG_C10(0x05c),				/* Write RAM */
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,0,0),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_CS(1),					/* disable chip */
+	UCG_END(),					/* end of sequence */
+
+  
+  
+	UCG_CS(1),					/* disable chip */
 	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
 	UCG_DLY_MS(20),
   	UCG_RST(1),					
@@ -48,11 +106,12 @@ static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
 	UCG_DLY_MS(20),
   	UCG_RST(1),
 	UCG_DLY_MS(20),
-	UCG_CS(1),					/* enable chip */
+	UCG_CS(0),					/* enable chip */
 	UCG_DLY_MS(50),
 	UCG_C11(0x0fd, 0x012),			/* Unock normal commands */
 	UCG_C11(0x0fd, 0x0b1),			/* Unock extra commands */
-	UCG_C10(0xae),				/* Set Display Off */
+	UCG_C10(0x0af),				/* Set Display On */
+	//UCG_C10(0x0ae),				/* Set Display Off */
 
   	UCG_C11(0x0b3, 0x0f1),			/* Front Clock Div */
   	UCG_C11(0x0ca, 0x07f),			/* Set Multiplex Ratio */
@@ -85,8 +144,15 @@ static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
 
 	UCG_C10(0x0af),				/* Set Display On */
 	UCG_C10(0x05c),				/* Write RAM */
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
 	UCG_DLY_MS(50),
-	UCG_CS(0),					/* disable chip */
+	UCG_CS(1),					/* disable chip */
 	
 	UCG_END()					/* end of sequence */
 };

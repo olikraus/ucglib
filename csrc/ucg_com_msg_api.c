@@ -253,8 +253,8 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 
 #define DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
-#define UCG_VAR0(s,a,o)		0x0a0 | ((s)&15), (a), (o)
-#define UCG_VAR1(s,a,o)		0x0b0 | ((s)&15), (a), (o)
+#define UCG_VARX(s,a,o)		0x0a0 | ((s)&15), (a), (o)
+#define UCG_VARY(s,a,o)		0x0b0 | ((s)&15), (a), (o)
 
 #define RST(level)				0x0f0 | ((level)&1)
 #define CS(level)				0x0f4 | ((level)&1)
@@ -317,10 +317,15 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 	data++;
 	break;
       case 10:
+	data++;
+	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
+	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.x>>lo)))&data[0])|data[1] );
+	data+=2;
+	break;
       case 11:
 	data++;
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendByte(ucg, (((uint8_t)((ucg->com_var[hi-10]>>lo)))&data[0])|data[1] );
+	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.y>>lo)))&data[0])|data[1] );
 	data+=2;
 	break;
       case 15:

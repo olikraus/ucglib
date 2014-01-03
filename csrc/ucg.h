@@ -233,7 +233,6 @@ struct _ucg_t
   uint8_t com_initial_change_sent;	/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status */
   uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status,  Bit 3: 1 for power up */
   uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
-  uint16_t com_var[2];		
 };
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
@@ -400,6 +399,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 /*================================================*/
 /* ucg_com_msg_api.c */
 
+/* send command bytes and optional arguments */
 #define UCG_C10(c0)				0x010, (c0)
 #define UCG_C20(c0,c1)				0x020, (c0),(c1)
 #define UCG_C11(c0,a0)				0x011, (c0),(a0)
@@ -408,9 +408,10 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_C22(c0,c1,a0,a1)		0x022, (c0),(c1),(a0),(a1)
 #define UCG_C13(c0,a0,a1,a2)		0x013, (c0),(a0),(a1),(a2)
 #define UCG_C23(c0,c1,a0,a1,a2)		0x023, (c0),(c1),(a0),(a1),(a2)
-#define UCG_C14(c0,a0,a1,a2,a3)		0x013, (c0),(a0),(a1),(a2),(a3)
-#define UCG_C24(c0,c1,a0,a1,a2,a3)	0x023, (c0),(c1),(a0),(a1),(a2),(a3)
+#define UCG_C14(c0,a0,a1,a2,a3)		0x014, (c0),(a0),(a1),(a2),(a3)
+#define UCG_C24(c0,c1,a0,a1,a2,a3)	0x024, (c0),(c1),(a0),(a1),(a2),(a3)
 
+/* send one or more argument bytes */
 #define UCG_A1(d0)					0x061, (d0)
 #define UCG_A2(d0,d1)					0x062, (d0),(d1)
 #define UCG_A3(d0,d1,d2)				0x063, (d0),(d1),(d2)
@@ -420,6 +421,9 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_A7(d0,d1,d2,d3,d4,d5,d6)		0x067, (d0),(d1),(d2),(d3),(d4),(d5),(d6)
 #define UCG_A8(d0,d1,d2,d3,d4,d5,d6,d7)	0x068, (d0),(d1),(d2),(d3),(d4),(d5),(d6),(d7)
 
+/* force data mode on CD line */
+#define UCG_DATA()					0x070
+/* send one or more data bytes */
 #define UCG_D1(d0)				0x071, (d0)
 #define UCG_D2(d0,d1)				0x072, (d0),(d1)
 #define UCG_D3(d0,d1,d2)			0x073, (d0),(d1),(d2)
@@ -427,15 +431,22 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_D5(d0,d1,d2,d3,d4)		0x075, (d0),(d1),(d2),(d3),(d4)
 #define UCG_D6(d0,d1,d2,d3,d4,d5)	0x076, (d0),(d1),(d2),(d3),(d4),(d5)
 
+/* delay by specified value. t = [0..4095] */
 #define UCG_DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define UCG_DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
-#define UCG_VAR0(s,a,o)				0x0a0 | ((s)&15), (a), (o)
-#define UCG_VAR1(s,a,o)				0x0b0 | ((s)&15), (a), (o)
 
+/* access procedures to ucg->arg.pixel.pos.x und ucg->arg.pixel.pos.y */
+#define UCG_VARX(s,a,o)				0x0a0 | ((s)&15), (a), (o)
+#define UCG_VARY(s,a,o)				0x0b0 | ((s)&15), (a), (o)
+
+/* force specific level on RST und CS */
 #define UCG_RST(level)				0x0f0 | ((level)&1)
 #define UCG_CS(level)				0x0f4 | ((level)&1)
+
+/* Configure CD line for command, arguments and data */
 #define UCG_CFG_CD(c,a)			0x0fc | (((c)&1)<<1) | ((a)&1)
 
+/* Termination byte */
 #define UCG_END()					0x00
 
 void ucg_com_PowerDown(ucg_t *ucg);

@@ -10,18 +10,18 @@ int ucg_sdl_get_key(void);
 
 ucg_t ucg;
 
-uint8_t my_init_sequence[] = {
+uint8_t x_my_init_sequence[] = {
   UCG_CFG_CD(0,0),
   UCG_RST(0),
   UCG_DLY_MS(2),
   UCG_RST(1),
   UCG_DLY_MS(2),
-  UCG_VAR1(7,255,0),
+  UCG_VARY(7,255,0),
   UCG_C11(0xaa, 0x055),
   UCG_END()
 };
 
-uint8_t x_my_init_sequence[] = {
+uint8_t my_init_sequence[] = {
 	UCG_CS(0),					/* disable chip */
 	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
 	UCG_DLY_MS(20),
@@ -68,7 +68,14 @@ uint8_t x_my_init_sequence[] = {
 
 	UCG_C10(0x0af),				/* Set Display On */
 	UCG_C10(0x05c),				/* Write RAM */
-	UCG_DLY_MS(5),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_D3(255,255,255),
+	UCG_DLY_MS(50),
 	UCG_CS(0),					/* disable chip */
 	
 	UCG_END()					/* end of sequence */
@@ -80,7 +87,7 @@ ucg_int_t ucg_my_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
   {
     case UCG_MSG_DEV_POWER_UP:
       ucg_com_PowerUp(ucg, 66, 300);
-      ucg->com_var[1] = 0x05555;
+      ucg->arg.pixel.pos.y = 0x05555;
       ucg_com_SendCmdSeq(ucg, my_init_sequence);
       return 1;
     case UCG_MSG_DEV_POWER_DOWN:
@@ -114,12 +121,13 @@ int16_t ucg_my_com_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
     case UCG_COM_MSG_POWER_DOWN:
       break;
     case UCG_COM_MSG_DELAY:
-      printf("%s com_status=0x%02x arg=%lu\n", "UCG_COM_MSG_DELAY", ucg->com_status, (long unsigned int)arg);
+      //printf("%s com_status=0x%02x arg=%lu\n", "UCG_COM_MSG_DELAY", ucg->com_status, (long unsigned int)arg);
       break;
     case UCG_COM_MSG_CHANGE_RESET_LINE:
       printf("%s com_status=0x%02x arg=%lu\n", "UCG_COM_MSG_CHANGE_RESET_LINE", ucg->com_status, (long unsigned int)arg);
       break;
     case UCG_COM_MSG_CHANGE_CS_LINE:
+      printf("%s com_status=0x%02x arg=%lu\n", "UCG_COM_MSG_CHANGE_CS_LINE", ucg->com_status, (long unsigned int)arg);
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
       printf("%s com_status=0x%02x arg=%lu\n", "UCG_COM_MSG_CHANGE_CD_LINE", ucg->com_status, (long unsigned int)arg);

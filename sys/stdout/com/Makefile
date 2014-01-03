@@ -8,5 +8,5 @@ all: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) `sdl-config --libs` -o ucg_com
 
 clean:	
-	-rm $(OBJ) ucg_sdl
+	-rm $(OBJ) ucg_com
 
