@@ -1,5 +1,5 @@
 
-//#include <SPI.h>
+#include <SPI.h>
 #include "ucg.h"
 
 ucg_t ucg;
@@ -50,13 +50,13 @@ int16_t ucg_com_arduino_spi(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data
       pinMode(ucg_cs_pin, OUTPUT);
       
       /* setup Arduino SPI */
-      //SPI.begin();
-      //SPI.setClockDivider( SPI_CLOCK_DIV128 );
-      //SPI.setDataMode( SPI_MODE0 );
-      //SPI.setBitOrder(MSBFIRST);
+      SPI.begin();
+      //SPI.setClockDivider( SPI_CLOCK_DIV2 );
+      SPI.setDataMode( SPI_MODE0 );
+      SPI.setBitOrder(MSBFIRST);
       break;
     case UCG_COM_MSG_POWER_DOWN:
-      //SPI.end(); 
+      SPI.end(); 
       break;
     case UCG_COM_MSG_DELAY:
       delayMicroseconds(arg);
@@ -71,33 +71,33 @@ int16_t ucg_com_arduino_spi(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data
       digitalWrite(ucg_cd_pin, arg);
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      //SPI.transfer(arg); 
-      u8g_arduino_sw_spi_shift_out(arg);
+      SPI.transfer(arg); 
+      //u8g_arduino_sw_spi_shift_out(arg);
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	u8g_arduino_sw_spi_shift_out(data[0]);
+	SPI.transfer(data[0]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	u8g_arduino_sw_spi_shift_out(data[0]);
-	u8g_arduino_sw_spi_shift_out(data[1]);
+	SPI.transfer(data[0]);
+	SPI.transfer(data[1]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	u8g_arduino_sw_spi_shift_out(data[0]);
-	u8g_arduino_sw_spi_shift_out(data[1]);
-	u8g_arduino_sw_spi_shift_out(data[2]);
+	SPI.transfer(data[0]);
+	SPI.transfer(data[1]);
+	SPI.transfer(data[2]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	u8g_arduino_sw_spi_shift_out(*data++);
+	SPI.transfer(*data++);
 	arg--;
       }
       break;
@@ -111,6 +111,7 @@ void setup(void)
   ucg_Init(&ucg, u8g_dev_ssd1351_128x128_oled_ilsoft, ucg_com_arduino_spi);
 }
 
+uint8_t r,g,b;
 void loop(void)
 {
   ucg_SetColor(&ucg, 0, 255, 0, 0);
@@ -124,10 +125,42 @@ void loop(void)
   ucg_DrawHLine(&ucg, 0, 6, 20);
   ucg_DrawHLine(&ucg, 0, 7, 20);
   
-  ucg_SetColor(&ucg, 0, 255, 0, 0);
-  ucg_SetColor(&ucg, 1, 0, 255, 0);
+  ucg_SetColor(&ucg, 0, 255, g, 0);
+  ucg_SetColor(&ucg, 1, r, 255, b);
   ucg_SetColor(&ucg, 2, 255, 0, 255);
   ucg_SetColor(&ucg, 3, 0, 255, 255);
 
+  r +=3;
+  g+=7;
+  b += 11;
+
   ucg_DrawGradientBox(&ucg, 10, 43, 100, 20);
+  
+  if ( (r&1) == 0 )
+    ucg_SetColor(&ucg, 0, 0, 0, 0);
+  else
+    ucg_SetColor(&ucg, 0, r,g,b);
+  ucg.arg.pixel.pos.x = 60;
+  ucg.arg.pixel.pos.y = 90;
+  ucg.arg.len = 30;
+  ucg.arg.dir = 0;
+  ucg_DrawL90FXWithArg(&ucg);
+  ucg.arg.pixel.pos.x = 60;
+  ucg.arg.pixel.pos.y = 90;
+  ucg.arg.len = 30;
+  ucg.arg.dir = 1;
+  ucg_DrawL90FXWithArg(&ucg);
+  ucg.arg.pixel.pos.x = 60;
+  ucg.arg.pixel.pos.y = 90;
+  ucg.arg.len = 30;
+  ucg.arg.dir = 2;
+  ucg_DrawL90FXWithArg(&ucg);
+  ucg.arg.pixel.pos.x = 60;
+  ucg.arg.pixel.pos.y = 90;
+  ucg.arg.len = 30;
+  ucg.arg.dir = 3;
+  ucg_DrawL90FXWithArg(&ucg);
+
+  delay(50);
+  
 }

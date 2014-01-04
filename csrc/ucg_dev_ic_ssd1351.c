@@ -47,6 +47,78 @@ const uint8_t ucg_ssd1351_set_pos_seq[] =
   UCG_END()
 };
 
+ucg_int_t ucg_handle_ssd1351_l90fx(ucg_t *ucg)
+{
+  if ( ucg_clip_l90fx(ucg) != 0 )
+  {
+    ucg_int_t dx, dy;
+    ucg_int_t i;
+    switch(ucg->arg.dir)
+    {
+      case 0: dx = 1; dy = 0; break;
+      case 1: dx = 0; dy = 1; break;
+      case 2: dx = -1; dy = 0; break;
+      case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
+    }
+    for( i = 0; i < ucg->arg.len; i++ )
+    {
+      dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+      ucg->arg.pixel.pos.x+=dx;
+      ucg->arg.pixel.pos.y+=dy;
+    }
+    return 1;
+  }
+  return 0;
+}
+
+
+ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
+{
+  uint8_t i;
+  uint8_t c[3];
+  
+  /* Setup ccs for l90se. This will be updated by ucg_clip_l90se if required */
+  
+  for ( i = 0; i < 3; i++ )
+  {
+    ucg_ccs_init(ucg->arg.ccs_line+i, ucg->arg.rgb[0].color[i], ucg->arg.rgb[1].color[i], ucg->arg.len);
+  }
+  
+  /* check if the line is visible */
+  
+  if ( ucg_clip_l90se(ucg) != 0 )
+  {
+    ucg_int_t dx, dy;
+    ucg_int_t i, j;
+    switch(ucg->arg.dir)
+    {
+      case 0: dx = 1; dy = 0; break;
+      case 1: dx = 0; dy = 1; break;
+      case 2: dx = -1; dy = 0; break;
+      case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
+    }
+    ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_seq);	
+    for( i = 0; i < ucg->arg.len; i++ )
+    {
+      c[0] = ucg->arg.ccs_line[0].current >> 2;
+      c[1] = ucg->arg.ccs_line[1].current >> 2; 
+      c[2] = ucg->arg.ccs_line[2].current >> 2;
+      ucg_com_SendRepeat3Bytes(ucg, 1, c);
+      ucg->arg.pixel.pos.x+=dx;
+      ucg->arg.pixel.pos.y+=dy;
+      for ( j = 0; j < 3; j++ )
+      {
+	ucg_ccs_step(ucg->arg.ccs_line+j);
+      }
+    }
+    ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
+    return 1;
+  }
+  return 0;
+}
+
 
 ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
 {
@@ -82,7 +154,8 @@ ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg_handle_l90tc(ucg, u8g_dev_ic_ssd1351);
       return 1;
     case UCG_MSG_DRAW_L90SE:
-      ucg_handle_l90se(ucg, u8g_dev_ic_ssd1351);
+      //ucg_handle_l90se(ucg, u8g_dev_ic_ssd1351);
+      ucg_handle_ssd1351_l90se(ucg);
       return 1;
   }
   return ucg_dev_default_cb(ucg, msg, data);  
