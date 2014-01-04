@@ -118,6 +118,7 @@ typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 ucg_int_t u8g_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
+
 /*================================================*/
 /* list of supported display controllers */
 
@@ -463,6 +464,16 @@ void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
 void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data);
+
+
+/*================================================*/
+/* ucg_dev_tga.c */
+int tga_init(uint16_t w, uint16_t h);
+void tga_save(const char *name);
+
+ucg_int_t ucg_dev_tga(ucg_t *ucg, ucg_int_t msg, void *data);
+
+
 
 #ifdef __cplusplus
 }

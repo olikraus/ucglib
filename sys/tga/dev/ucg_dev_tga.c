@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "ucg.h"
 
 static uint16_t tga_width;
 static uint16_t tga_height;
@@ -20,7 +21,7 @@ int tga_init(uint16_t w, uint16_t h)
     return 0;
   tga_width = w;
   tga_height = h;
-  memset(tga_data, 255, w*h*3);
+  memset(tga_data, 255, tga_width*tga_height*3);
   return 1;
 }
 
@@ -72,6 +73,44 @@ void tga_save(const char *name)
   }
 }
 
+ucg_int_t ucg_dev_tga(ucg_t *ucg, ucg_int_t msg, void *data)
+{
+  switch(msg)
+  {
+    case UCG_MSG_DEV_POWER_UP:
+      /* tga_init() must be called outside */
+      return 1;
+    case UCG_MSG_DEV_POWER_DOWN:
+      return 1;
+    case UCG_MSG_GET_DIMENSION:
+      ((ucg_wh_t *)data)->w = tga_width;
+      ((ucg_wh_t *)data)->h = tga_height;
+      return 1;
+    case UCG_MSG_DRAW_PIXEL:
+      if ( ucg_clip_is_pixel_visible(ucg) !=0 )
+      {
+	tga_set_pixel(ucg->arg.pixel.pos.x, ucg->arg.pixel.pos.y, 
+	  ucg->arg.pixel.rgb.color[0],
+	  ucg->arg.pixel.rgb.color[1],
+	  ucg->arg.pixel.rgb.color[2]);
+      }
+      return 1;
+    case UCG_MSG_DRAW_L90FX:
+      ucg_handle_l90fx(ucg, ucg_dev_tga);
+      return 1;
+    case UCG_MSG_DRAW_L90TC:
+      ucg_handle_l90tc(ucg, ucg_dev_tga);
+      return 1;
+    case UCG_MSG_DRAW_L90SE:
+      ucg_handle_l90se(ucg, ucg_dev_tga);
+      return 1;
+  }
+  return ucg_dev_default_cb(ucg, msg, data);  
+}
+
+
+
+/*
 int main(void)
 {
   tga_init(10, 20);
@@ -79,3 +118,4 @@ int main(void)
   tga_set_pixel(2,2, 0,255,0);
   tga_save("ucg.tga");
 }
+*/
