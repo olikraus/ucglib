@@ -83,7 +83,7 @@ static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
 	// UCG_A7(0x96,0x9B,0xA0,0xA5,0xAA,0xAF,0xB4),
 
 
-	//UCG_C10(0x05c),				/* Write RAM */
+	UCG_C10(0x05c),				/* Write RAM */
 	UCG_CS(1),					/* disable chip */
 	UCG_END(),					/* end of sequence */
 };

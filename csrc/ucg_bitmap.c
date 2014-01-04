@@ -38,6 +38,9 @@
 
 void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap)
 {
+  ucg->arg.pixel.rgb.color[0] = ucg->arg.rgb[0].color[0];
+  ucg->arg.pixel.rgb.color[1] = ucg->arg.rgb[0].color[1];
+  ucg->arg.pixel.rgb.color[2] = ucg->arg.rgb[0].color[2];
   ucg->arg.pixel.pos.x = x;
   ucg->arg.pixel.pos.y = y;
   ucg->arg.dir = dir;

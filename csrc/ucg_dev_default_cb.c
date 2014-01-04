@@ -103,7 +103,8 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       case 3: dx = 0; dy = -1; break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
-    pixmap = *(ucg->arg.bitmap);
+    //pixmap = *(ucg->arg.bitmap);
+    pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
     for( i = 0; i < ucg->arg.len; i++ )
@@ -119,7 +120,8 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       if ( bitcnt >= 8 )
       {
 	ucg->arg.bitmap++;
-	pixmap = *(ucg->arg.bitmap);
+	//pixmap = *(ucg->arg.bitmap);
+	pixmap = ucg_pgm_read(ucg->arg.bitmap);
 	bitcnt = 0;
       }
     }
