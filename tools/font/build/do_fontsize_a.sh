@@ -7,9 +7,9 @@
 PT=$1
 ARG3=$3
 BDF=${ARG3}.bdf
-CFILE=ucg_font_${ARG3}.c
-CFILER=ucg_font_${ARG3}r.c
-CFILEN=ucg_font_${ARG3}n.c
+CFILE=./ttf/ucg_font_${ARG3}.c
+CFILER=./ttf/ucg_font_${ARG3}r.c
+CFILEN=./ttf/ucg_font_${ARG3}n.c
 IDENTIFIER=ucg_font_${ARG3}
 echo $2  ... ${CFILE}
 ../otf2bdf/otf2bdf -a -p $1 -r 72 $2 -o ${BDF}

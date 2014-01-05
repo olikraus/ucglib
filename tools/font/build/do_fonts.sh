@@ -302,39 +302,39 @@ echo "orgdot"
 #./do_fontsize.sh 40 ../ttf/GenBasB.ttf gdb25
 #./do_fontsize.sh 48 ../ttf/GenBasB.ttf gdb30
 
-./do_fontsize_a.sh 16 ../ttf/FreeUniversal-Bold.ttf fub11
-./do_fontsize_a.sh 20 ../ttf/FreeUniversal-Bold.ttf fub14
-./do_fontsize_a.sh 23 ../ttf/FreeUniversal-Bold.ttf fub17
-./do_fontsize_a.sh 27 ../ttf/FreeUniversal-Bold.ttf fub20
-./do_fontsize_a.sh 34 ../ttf/FreeUniversal-Bold.ttf fub25
-./do_fontsize_a.sh 40 ../ttf/FreeUniversal-Bold.ttf fub30
-./do_fontsize_a_n.sh 49 ../ttf/FreeUniversal-Bold.ttf fub35n
-./do_fontsize_a_n.sh 58 ../ttf/FreeUniversal-Bold.ttf fub42n
-./do_fontsize_a_n.sh 68 ../ttf/FreeUniversal-Bold.ttf fub49n
+./do_fontsize_a.sh 16 ../ttf/fu/FreeUniversal-Bold.ttf fub11
+./do_fontsize_a.sh 20 ../ttf/fu/FreeUniversal-Bold.ttf fub14
+./do_fontsize_a.sh 23 ../ttf/fu/FreeUniversal-Bold.ttf fub17
+./do_fontsize_a.sh 27 ../ttf/fu/FreeUniversal-Bold.ttf fub20
+./do_fontsize_a.sh 34 ../ttf/fu/FreeUniversal-Bold.ttf fub25
+./do_fontsize_a.sh 40 ../ttf/fu/FreeUniversal-Bold.ttf fub30
+./do_fontsize_a_n.sh 49 ../ttf/fu/FreeUniversal-Bold.ttf fub35n
+./do_fontsize_a_n.sh 58 ../ttf/fu/FreeUniversal-Bold.ttf fub42n
+./do_fontsize_a_n.sh 68 ../ttf/fu/FreeUniversal-Bold.ttf fub49n
   
-./do_fontsize_a.sh 15 ../ttf/FreeUniversal-Regular.ttf fur11
-./do_fontsize_a.sh 19 ../ttf/FreeUniversal-Regular.ttf fur14
-./do_fontsize_a.sh 23 ../ttf/FreeUniversal-Regular.ttf fur17
-./do_fontsize_a.sh 28 ../ttf/FreeUniversal-Regular.ttf fur20
-./do_fontsize_a.sh 34 ../ttf/FreeUniversal-Regular.ttf fur25
-./do_fontsize_a.sh 40 ../ttf/FreeUniversal-Regular.ttf fur30
-./do_fontsize_a_n.sh 48 ../ttf/FreeUniversal-Regular.ttf fur35n
-./do_fontsize_a_n.sh 58 ../ttf/FreeUniversal-Regular.ttf fur42n
-./do_fontsize_a_n.sh 68 ../ttf/FreeUniversal-Regular.ttf fur49n
+./do_fontsize_a.sh 15 ../ttf/fu/FreeUniversal-Regular.ttf fur11
+./do_fontsize_a.sh 19 ../ttf/fu/FreeUniversal-Regular.ttf fur14
+./do_fontsize_a.sh 23 ../ttf/fu/FreeUniversal-Regular.ttf fur17
+./do_fontsize_a.sh 28 ../ttf/fu/FreeUniversal-Regular.ttf fur20
+./do_fontsize_a.sh 34 ../ttf/fu/FreeUniversal-Regular.ttf fur25
+./do_fontsize_a.sh 40 ../ttf/fu/FreeUniversal-Regular.ttf fur30
+./do_fontsize_a_n.sh 48 ../ttf/fu/FreeUniversal-Regular.ttf fur35n
+./do_fontsize_a_n.sh 58 ../ttf/fu/FreeUniversal-Regular.ttf fur42n
+./do_fontsize_a_n.sh 68 ../ttf/fu/FreeUniversal-Regular.ttf fur49n
 
-./do_fontsize_a.sh 25 ../ttf/OldStandard-Bold.ttf osb18
-./do_fontsize_a.sh 28 ../ttf/OldStandard-Bold.ttf osb21
-./do_fontsize_a.sh 34 ../ttf/OldStandard-Bold.ttf osb26
-./do_fontsize_a.sh 38 ../ttf/OldStandard-Bold.ttf osb29
-./do_fontsize_a.sh 48 ../ttf/OldStandard-Bold.ttf osb35
-#./do_fontsize_a.sh 55 ../ttf/OldStandard-Bold.ttf osb41
+./do_fontsize_a.sh 25 ../ttf/os/OldStandard-Bold.ttf osb18
+./do_fontsize_a.sh 28 ../ttf/os/OldStandard-Bold.ttf osb21
+./do_fontsize_a.sh 34 ../ttf/os/OldStandard-Bold.ttf osb26
+./do_fontsize_a.sh 38 ../ttf/os/OldStandard-Bold.ttf osb29
+./do_fontsize_a.sh 48 ../ttf/os/OldStandard-Bold.ttf osb35
+#./do_fontsize_a.sh 55 ../ttf/os/OldStandard-Bold.ttf osb41
 
-./do_fontsize_a.sh 26 ../ttf/OldStandard-Regular.ttf osr18
-./do_fontsize_a.sh 29 ../ttf/OldStandard-Regular.ttf osr21
-./do_fontsize_a.sh 36 ../ttf/OldStandard-Regular.ttf osr26
-./do_fontsize_a.sh 41 ../ttf/OldStandard-Regular.ttf osr29
-./do_fontsize_a.sh 49 ../ttf/OldStandard-Regular.ttf osr35
-#./do_fontsize_a.sh 57 ../ttf/OldStandard-Reglar.ttf osr41
+./do_fontsize_a.sh 26 ../ttf/os/OldStandard-Regular.ttf osr18
+./do_fontsize_a.sh 29 ../ttf/os/OldStandard-Regular.ttf osr21
+./do_fontsize_a.sh 36 ../ttf/os/OldStandard-Regular.ttf osr26
+./do_fontsize_a.sh 41 ../ttf/os/OldStandard-Regular.ttf osr29
+./do_fontsize_a.sh 49 ../ttf/os/OldStandard-Regular.ttf osr35
+#./do_fontsize_a.sh 57 ../ttf/os/OldStandard-Reglar.ttf osr41
 
 
 
