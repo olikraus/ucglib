@@ -357,7 +357,38 @@ void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg
 
 /*================================================*/
 /* ucg_font.c */
+
+/* Information on a specific given font */
+uint8_t ucg_font_GetFontStartEncoding(const void *font);
+uint8_t ucg_font_GetFontEndEncoding(const void *font);
+
+uint8_t ucg_font_GetCapitalAHeight(const void *font);
+
+int8_t ucg_font_GetFontAscent(const void *font);
+int8_t ucg_font_GetFontDescent(const void *font);
+
+int8_t ucg_font_GetFontXAscent(const void *font);
+int8_t ucg_font_GetFontXDescent(const void *font);
+
+size_t ucg_font_GetSize(const void *font);
+
+/* Information on the current font */
+
+uint8_t ucg_GetFontBBXWidth(ucg_t *ucg);
+uint8_t ucg_GetFontBBXHeight(ucg_t *ucg);
+uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg) UCG_NOINLINE; 
+uint8_t ucg_IsGlyph(ucg_t *ucg, uint8_t requested_encoding);
+int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding);
+
+#define ucg_GetFontAscent(ucg)	((ucg)->font_ref_ascent)
+#define ucg_GetFontDescent(ucg)	((ucg)->font_ref_descent)
+
+/* Drawing procedures */
+
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, char *str);
+
+/* Mode selection/Font assignment */
 
 void ucg_SetFontRefHeightText(ucg_t *ucg);
 void ucg_SetFontRefHeightExtendedText(ucg_t *ucg);

@@ -10,7 +10,7 @@
   Max Font    ascent =11 descent=-2
 */
 #include "ucg.h"
-const ucg_fntpgm_uint8_t u8g_font_7x13[2157] UCG_FONT_SECTION("ucg_font_7x13") = {
+const ucg_fntpgm_uint8_t ucg_font_7x13[2157] UCG_FONT_SECTION("ucg_font_7x13") = {
   1,7,13,0,254,9,1,95,2,207,32,255,254,11,254,10,
   254,13,0,112,50,25,121,128,128,128,128,128,128,128,0,128,
   40,51,115,160,160,160,19,87,119,80,80,248,80,248,80,80,

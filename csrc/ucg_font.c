@@ -430,11 +430,20 @@ uint8_t ucg_IsGlyph(ucg_t *ucg, uint8_t requested_encoding)
   return 0;
 }
 
+/*
 int8_t ucg_GetGlyphDeltaX(ucg_t *ucg, uint8_t requested_encoding)
 {
   if ( ucg_GetGlyph(ucg, requested_encoding) == NULL )
-    return 0;  /* should never happen, so return something */
+    return 0; 
   return ucg->glyph_dx;
+}
+*/
+
+int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
+{
+  if ( ucg_GetGlyph(ucg, requested_encoding) == NULL )
+    return 0; 
+  return ucg->glyph_width;
 }
 
 ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
@@ -501,7 +510,6 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
-  /*
   switch(dir)
   {
     case 0:
@@ -517,9 +525,38 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
-  */
   return ucg_draw_glyph(ucg, x, y, dir, encoding);
 }
+
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, char *str)
+{
+  ucg_int_t delta, sum;
+  sum = 0;
+  while( *str != '\0' )
+  {
+    delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
+    
+    switch(dir)
+    {
+      case 0:
+	x += delta;
+	break;
+      case 1:
+	y += delta;
+	break;
+      case 2:
+	x -= delta;
+	break;
+      case 3:
+	y -= delta;
+	break;
+    }
+    sum += delta;    
+    str++;
+  }
+  return sum;
+}
+
 
 /*===============================================*/
 
