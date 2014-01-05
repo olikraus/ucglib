@@ -473,6 +473,7 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
       break;
     case 2:
       x -= ucg->glyph_x;
+      //x++;
       y += ucg->glyph_y;
       y += ucg->glyph_height;
       dy = -1;
@@ -480,6 +481,7 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
     case 3:
       x -= ucg->glyph_y;
       y -= ucg->glyph_x;
+      //y++;
       x -= ucg->glyph_height;
       dx = 1;
       break;
@@ -487,6 +489,7 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
 
   for( j = 0; j < ucg->glyph_height; j++ )
   {
+    //ucg_DrawPixel(ucg, x,y);
     ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
     data += bytes_per_line;
     y+=dy;
@@ -498,6 +501,7 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
+  /*
   switch(dir)
   {
     case 0:
@@ -513,6 +517,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
+  */
   return ucg_draw_glyph(ucg, x, y, dir, encoding);
 }
 
