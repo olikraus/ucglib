@@ -261,34 +261,46 @@ echo "contributed"
 
 
 echo "fontstruct"
-./do_fontsize_pixel.sh 8 ../ttf/p01type.ttf p01type
-./do_fontsize_pixel.sh 8 ../ttf/lucasfont_alternate.ttf lucasfont_alternate
-./do_fontsize_pixel.sh 8 ../ttf/chikita.ttf chikita
-./do_fontsize_pixel.sh 8 ../ttf/pixelle_micro.ttf pixelle_micro
-./do_fontsize_pixel.sh 8 ../ttf/trixel_square.ttf trixel_square
-./do_fontsize_pixel.sh 16 ../ttf/robot_de_niro.ttf robot_de_niro
-./do_fontsize_pixel.sh 8 ../ttf/baby.ttf baby
-./do_fontsize_pixel.sh 8 ../ttf/blipfest_07.ttf blipfest_07
+./do_fontsize_pixel.sh 8 ../ttf/pixel/p01type.ttf p01type
+./do_fontsize_pixel.sh 8 ../ttf/pixel/lucasfont_alternate.ttf lucasfont_alternate
+./do_fontsize_pixel.sh 8 ../ttf/pixel/chikita.ttf chikita
+./do_fontsize_pixel.sh 8 ../ttf/pixel/pixelle_micro.ttf pixelle_micro
+./do_fontsize_pixel.sh 8 ../ttf/pixel/trixel_square.ttf trixel_square
+./do_fontsize_pixel.sh 16 ../ttf/pixel/robot_de_niro.ttf robot_de_niro
+./do_fontsize_pixel.sh 8 ../ttf/pixel/baby.ttf baby
+./do_fontsize_pixel.sh 8 ../ttf/pixel/blipfest_07.ttf blipfest_07
+
+echo "04B"
+./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_03B_.TTF 04b_03b 
+./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_03__.TTF 04b_03 
+./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_24__.TTF 04b_24 
+
+echo "orgdot"
+./do_fontsize_pixel.sh 8 ../ttf/pixel/TEACPSS_.TTF tpss 
+./do_fontsize_pixel.sh 8 ../ttf/pixel/TEACPSSB.TTF tpssb 
+./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/ORG_V01_.TTF orgv01 
+./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/FIXED_V0.TTF fixed_v0 
 
 
 
-./do_fontsize.sh 15 ../ttf/GenBasR.ttf gdr9
-./do_fontsize.sh 17 ../ttf/GenBasR.ttf gdr10
-./do_fontsize.sh 18 ../ttf/GenBasR.ttf gdr11
-./do_fontsize.sh 19 ../ttf/GenBasR.ttf gdr12
-./do_fontsize.sh 23 ../ttf/GenBasR.ttf gdr14
-./do_fontsize.sh 27 ../ttf/GenBasR.ttf gdr17
-./do_fontsize.sh 32 ../ttf/GenBasR.ttf gdr20
-./do_fontsize.sh 40 ../ttf/GenBasR.ttf gdr25
-./do_fontsize.sh 48 ../ttf/GenBasR.ttf gdr30
+
+#./do_fontsize.sh 15 ../ttf/GenBasR.ttf gdr9
+#./do_fontsize.sh 17 ../ttf/GenBasR.ttf gdr10
+#./do_fontsize.sh 18 ../ttf/GenBasR.ttf gdr11
+#./do_fontsize.sh 19 ../ttf/GenBasR.ttf gdr12
+#./do_fontsize.sh 23 ../ttf/GenBasR.ttf gdr14
+#./do_fontsize.sh 27 ../ttf/GenBasR.ttf gdr17
+#./do_fontsize.sh 32 ../ttf/GenBasR.ttf gdr20
+#./do_fontsize.sh 40 ../ttf/GenBasR.ttf gdr25
+#./do_fontsize.sh 48 ../ttf/GenBasR.ttf gdr30
   
-./do_fontsize.sh 18 ../ttf/GenBasB.ttf gdb11
-./do_fontsize.sh 19 ../ttf/GenBasB.ttf gdb12
-./do_fontsize.sh 23 ../ttf/GenBasB.ttf gdb14
-./do_fontsize.sh 27 ../ttf/GenBasB.ttf gdb17
-./do_fontsize.sh 32 ../ttf/GenBasB.ttf gdb20
-./do_fontsize.sh 40 ../ttf/GenBasB.ttf gdb25
-./do_fontsize.sh 48 ../ttf/GenBasB.ttf gdb30
+#./do_fontsize.sh 18 ../ttf/GenBasB.ttf gdb11
+#./do_fontsize.sh 19 ../ttf/GenBasB.ttf gdb12
+#./do_fontsize.sh 23 ../ttf/GenBasB.ttf gdb14
+#./do_fontsize.sh 27 ../ttf/GenBasB.ttf gdb17
+#./do_fontsize.sh 32 ../ttf/GenBasB.ttf gdb20
+#./do_fontsize.sh 40 ../ttf/GenBasB.ttf gdb25
+#./do_fontsize.sh 48 ../ttf/GenBasB.ttf gdb30
 
 ./do_fontsize_a.sh 16 ../ttf/FreeUniversal-Bold.ttf fub11
 ./do_fontsize_a.sh 20 ../ttf/FreeUniversal-Bold.ttf fub14
@@ -323,19 +335,6 @@ echo "fontstruct"
 ./do_fontsize_a.sh 41 ../ttf/OldStandard-Regular.ttf osr29
 ./do_fontsize_a.sh 49 ../ttf/OldStandard-Regular.ttf osr35
 #./do_fontsize_a.sh 57 ../ttf/OldStandard-Reglar.ttf osr41
-
-echo "04B"
-#./do_fontsize.sh 7 ../ttf/7px4bus.ttf 7px4bus              # status nicht ganz klar
-./do_fontsize_f1.sh 8 ../ttf/04B_03B_.TTF 04b_03b 
-./do_fontsize_f1.sh 8 ../ttf/04B_03__.TTF 04b_03 
-./do_fontsize_f1.sh 8 ../ttf/04B_24__.TTF 04b_24 
-
-echo "orgdot"
-./do_fontsize.sh 8 ../ttf/TEACPSS_.TTF tpss 
-./do_fontsize.sh 8 ../ttf/TEACPSSB.TTF tpssb 
-./do_fontsize_f1.sh 8 ../ttf/ORG_V01_.TTF orgv01 
-./do_fontsize_f1.sh 8 ../ttf/FIXED_V0.TTF fixed_v0 
-
 
 
 

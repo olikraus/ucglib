@@ -17,7 +17,7 @@ PT=$1
 #./font_overview $2$' nh pt '$1
 #mv ucg_font.png ucg_font_${PT}_nh.png
 
-../../../tools/font/otf2bdf/otf2bdf -a -p $1 -r 100 $2 -o ucg_font.bdf
+../../../tools/font/otf2bdf/otf2bdf -a -p $1 -r 72 $2 -o ucg_font.bdf
 ../../../tools/font/bdf2ucg/bdf2ucg -b 32 -e 255 ucg_font.bdf ucg_font ucg_font.c >/dev/null
 echo ">>> make -a"
 make
@@ -25,7 +25,7 @@ echo ">>> font_overview -a"
 ./font_overview $2$' autohint pt '$1
 mv ucg_font.png ucg_font_${PT}_a.png
 
-../../../tools/font/otf2bdf/otf2bdf -p $1 -r 100 $2 -o ucg_font.bdf
+../../../tools/font/otf2bdf/otf2bdf -p $1 -r 72 $2 -o ucg_font.bdf
 ../../../tools/font/bdf2ucg/bdf2ucg -b 32 -e 255 ucg_font.bdf ucg_font ucg_font.c >/dev/null
 echo ">>> make"
 make
