@@ -158,10 +158,10 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.x, ucg->clip_box.ul.x+ucg->clip_box.size.w) == 0 )
 	return 0;
       
-      ucg->arg.offset = ucg->arg.pixel.pos.x-b;
       ucg->arg.len = b-a;
       
       b--;
+      ucg->arg.offset = ucg->arg.pixel.pos.x-b;
       ucg->arg.pixel.pos.x = b;
       
       break;
@@ -179,10 +179,10 @@ ucg_int_t ucg_clip_l90fx(ucg_t *ucg)
       if ( ucg_clip_intersection(&a, &b, ucg->clip_box.ul.y, ucg->clip_box.ul.y+ucg->clip_box.size.h) == 0 )
 	return 0;
       
-      ucg->arg.offset = ucg->arg.pixel.pos.y-b;
       ucg->arg.len = b-a;
       
       b--;
+      ucg->arg.offset = ucg->arg.pixel.pos.y-b;
       ucg->arg.pixel.pos.y = b;
       
       
@@ -200,6 +200,43 @@ ucg_int_t ucg_clip_l90tc(ucg_t *ucg)
   ucg->arg.bitmap += (ucg->arg.offset >>3);
   return 1;
 }
+
+/* old code
+ucg_int_t ucg_clip_l90tc(ucg_t *ucg)
+{
+  ucg_int_t t;
+  switch(ucg->arg.dir)
+  {
+    case 0:
+      t = ucg->arg.pixel.pos.x;
+      if ( ucg_clip_l90fx(ucg) == 0 )
+	return 0;
+      t = ucg->arg.pixel.pos.x - t;
+      break;
+    case 1:
+      t = ucg->arg.pixel.pos.y;
+      if ( ucg_clip_l90fx(ucg) == 0 )
+	return 0;
+      t = ucg->arg.pixel.pos.y - t;
+      break;
+    case 2:
+      t = ucg->arg.pixel.pos.x;
+      if ( ucg_clip_l90fx(ucg) == 0 )
+	return 0;
+      t -= ucg->arg.pixel.pos.x;
+      break;
+    case 3:
+      t = ucg->arg.pixel.pos.y;
+      if ( ucg_clip_l90fx(ucg) == 0 )
+	return 0;
+      t -= ucg->arg.pixel.pos.y;
+      break;
+  } 
+  ucg->arg.pixel_skip = t & 0x07;
+  ucg->arg.bitmap += (t >>3);
+  return 1;
+}
+*/
 
 ucg_int_t ucg_clip_l90se(ucg_t *ucg)
 {
