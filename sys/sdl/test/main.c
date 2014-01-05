@@ -12,7 +12,10 @@ extern const ucg_fntpgm_uint8_t ucg_font_ncenB18[] UCG_FONT_SECTION("ucg_font_nc
 
 ucg_t ucg;
 
-
+unsigned char rl_bitmap[] = 
+{
+  3, 0x033, 0x022, 0x011
+};
 
 unsigned char bitmap[2] = { 0x0f0, 0x0f0 };
 
@@ -97,7 +100,10 @@ int main(void)
   ucg_SetColor(&ucg, 3, 0, 255, 255);
 
   ucg_DrawGradientLine(&ucg, 10, 40, 100, 0);
-
+  
+  ucg_SetColor(&ucg, 0, 255, 255, 0);
+  ucg_DrawRLBitmap(&ucg, 10, 41, 0, rl_bitmap);
+  
   ucg_DrawGradientBox(&ucg, 10, 43, 100, 20);
 
 

@@ -295,6 +295,9 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_L90SE:
       ucg_handle_l90se(ucg, ucg_sdl_dev_cb);
       return 1;
+    case UCG_MSG_DRAW_L90RL:
+      ucg_handle_l90rl(ucg, ucg_sdl_dev_cb);
+      return 1;
   }
   return ucg_dev_default_cb(ucg, msg, data);  
 }

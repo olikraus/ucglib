@@ -248,6 +248,7 @@ struct _ucg_t
 #define UCG_MSG_DRAW_L90FX 21
 #define UCG_MSG_DRAW_L90TC 22	
 #define UCG_MSG_DRAW_L90SE 23
+#define UCG_MSG_DRAW_L90RL 24
 
 #define UCG_COM_STATUS_MASK_POWER 8
 #define UCG_COM_STATUS_MASK_RESET 4
@@ -325,6 +326,7 @@ void ucg_DrawPixelWithArg(ucg_t *ucg);
 void ucg_DrawL90FXWithArg(ucg_t *ucg);
 void ucg_DrawL90TCWithArg(ucg_t *ucg);
 void ucg_DrawL90SEWithArg(ucg_t *ucg);
+void ucg_DrawL90RLWithArg(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_init.c */
@@ -354,6 +356,7 @@ void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_
 /*================================================*/
 /* ucg_bitmap.c */
 void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap);
+void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap);
 
 /*================================================*/
 /* ucg_font.c */
@@ -426,6 +429,7 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 
 /*================================================*/

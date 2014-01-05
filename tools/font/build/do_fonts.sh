@@ -338,6 +338,6 @@ echo "orgdot"
 
 
 
-echo "copy fonts..."
-cp ucg_font_*.c ../../../fntsrc/.
+#echo "copy fonts..."
+#cp ucg_font_*.c ../../../fntsrc/.
 

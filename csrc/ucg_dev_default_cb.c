@@ -178,4 +178,59 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   return 0;
 }
 
+/*
+  l90rl run lenth encoded constant color pattern
+
+  yyllllll wwwwbbbb wwwwbbbb wwwwbbbb wwwwbbbb ...
+  sequence terminates if wwwwbbbb = 0
+  wwww: number of pixel to skip
+  bbbb: number of pixel to draw with color
+  llllll: number of bytes which follow, can be 0
+*/
+
+void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb)
+{
+  ucg_int_t dx, dy;
+  uint8_t i, cnt;
+  uint8_t rl_code;
+  ucg_int_t skip;
+  
+  switch(ucg->arg.dir)
+  {
+    case 0: dx = 1; dy = 0; break;
+    case 1: dx = 0; dy = 1; break;
+    case 2: dx = -1; dy = 0; break;
+    case 3: dx = 0; dy = -1; break;
+    default: dx = 1; dy = 0; break;	/* avoid compiler warning */
+  }
     
+  cnt = ucg_pgm_read(ucg->arg.bitmap);
+  cnt &= 63;
+  ucg->arg.bitmap++;
+  for( i = 0; i < cnt; i++ )
+  {
+    rl_code = ucg_pgm_read(ucg->arg.bitmap);
+    if ( rl_code == 0 )
+      break;
+    
+    skip = (ucg_int_t)(rl_code >> 4);
+    switch(ucg->arg.dir)
+    {
+      case 0: ucg->arg.pixel.pos.x+=skip; break;
+      case 1: ucg->arg.pixel.pos.y+=skip; break;
+      case 2: ucg->arg.pixel.pos.x-=skip; break;
+      default:
+      case 3: ucg->arg.pixel.pos.y-=skip; break;
+    }
+
+    rl_code &= 15;
+    while( rl_code )
+    {
+      dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+      ucg->arg.pixel.pos.x+=dx;
+      ucg->arg.pixel.pos.y+=dy;
+      rl_code--;
+    }
+    ucg->arg.bitmap++;
+  }
+}
