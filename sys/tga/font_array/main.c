@@ -6,38 +6,43 @@
 
 
 extern const ucg_fntpgm_uint8_t *ucg_font_array[];
+extern char *ucg_font_name[];
 
 
-/*
-void pic_gen_short_desc(const u8g_pgm_uint8_t *font, const char *name, u8g_uint_t width, const char *real_name)
+
+void pic_gen_short_desc(const ucg_pgm_uint8_t *font, const char *fname)
 {
   char s[256];
-  u8g_t u8g;
-  u8g_Init(&u8g, &u8g_dev_pbm);
-    u8g_SetFont(&u8g, font);
+  ucg_t ucg;
+  ucg_int_t dx;
+
+  tga_init(1024,900);
+  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
+
+  ucg_SetFont(&ucg, font);
+  ucg_SetFontPosTop(&ucg);
   
-  if ( u8g_IsGlyph(&u8g, 'a') != 0 )
-    sprintf(s, "%s: 123 ABC abcdefg", name);
+  if ( ucg_IsGlyph(&ucg, 'a') != 0 )
+    sprintf(s, "123 ABC abcdefg");
   else
     sprintf(s, "0123456789");
-    
-  u8g_FirstPage(&u8g);
-  do
-  {
-    u8g_SetFont(&u8g, font);
-    u8g_DrawStr(&u8g, 0, 100, s);    
-  }while( u8g_NextPage(&u8g) );
+
+  dx = ucg_DrawString(&ucg, 0, 2, 0, s);
+
+  ucg_SetFont(&ucg, ucg_font_7x13);    
+  ucg_DrawString(&ucg, dx+7, 2, 0, fname);
   
+  
+   tga_save("ucg_font.tga");
+
   {
     char cmd[256];
-    u8g_SetFont(&u8g, font);
-    sprintf(cmd, "convert u8g.pbm -trim %s_short.png", name );
+    sprintf(cmd, "convert ucg_font.tga -trim %s_short.png", fname);
     system(cmd);
   }
 }
-*/
 
-void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
+void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fname )
 {
   //ucg_int_t width;
   char s[256];
@@ -48,10 +53,10 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
   //ucg_int_t indent;
   ucg_t ucg;
   
-  //pic_gen_short_desc(font, name, width, real_name);
+  pic_gen_short_desc(font, fname);
   
   
-  tga_init(1024,800);
+  tga_init(1024,900);
   ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
   
   disp_font = ucg_font_7x13;
@@ -71,7 +76,13 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
   
   //w = ucg_GetFontBBXWidth(&ucg)+2;
   w = ucg_GetGlyphWidth(&ucg, 'W') + 3;
-
+  if ( w < ucg_GetGlyphWidth(&ucg, '0') + 3 )
+    w = ucg_GetGlyphWidth(&ucg, '0') + 3;
+  if ( w < ucg_GetGlyphWidth(&ucg, ' ') + 3 )
+    w = ucg_GetGlyphWidth(&ucg, ' ') + 3;
+  
+  printf("%s w=%d\n", fname, w);
+ 
   //w = width;
   h = ucg_GetFontBBXHeight(&ucg);
   if ( h < disp_line_height )
@@ -122,7 +133,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
 
   {
     char cmd[256];
-    sprintf(cmd, "convert ucg_font.tga -trim ucg_font.png");
+    sprintf(cmd, "convert ucg_font.tga -trim %s.png", fname);
     system(cmd);
   }
 }
@@ -133,34 +144,27 @@ unsigned char bitmap[2] = { 0x0f0, 0x0f0 };
 
 int main(int argc, char **argv)
 {
-  ucg_int_t i;
-  char *name = "";
-  if ( argc <= 1 )
+  int i;
+  
+  i = 0;
+  for(;;)
   {
-    printf("%s <fonttitle>\n", argv[0]);
-    return 0;
+    if ( ucg_font_array[i] == NULL )
+    {
+      if ( ucg_font_name[i] != NULL )
+      {
+	fprintf(stderr, "font pointer do not match font name, do_combine wrong?\n");
+  
+      }
+      break;
+    }
+    
+    printf("Processing Font '%s'\n", ucg_font_name[i]);
+    pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
+    
+    i++;
   }
-  name = argv[1];
   
-  
-  tga_init(128,64);
-  pic_gen_font(ucg_font_6x10, name);
-  /*
-  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
-  ucg_SetFont(&ucg, u8g_font_7x13);
-  
-  ucg_SetColor(&ucg, 0, 0, 0, 0255);
-  ucg_DrawPixel(&ucg, 70,20);
-  ucg_SetColor(&ucg, 0, 255, 0, 0);
- 
-  //ucg_SetFontPosBottom(&ucg);
-  
-  ucg_DrawGlyph(&ucg, 70, 20, 0, 'A');
-  ucg_DrawGlyph(&ucg, 70, 20, 1, 'A');
-  ucg_DrawGlyph(&ucg, 70, 20, 2, 'A');
-  ucg_DrawGlyph(&ucg, 70, 20, 3, 'A');
-  */
-
     
   
   return 0;

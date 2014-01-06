@@ -528,7 +528,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
   return ucg_draw_glyph(ucg, x, y, dir, encoding);
 }
 
-ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, char *str)
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
 {
   ucg_int_t delta, sum;
   sum = 0;

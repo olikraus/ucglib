@@ -12,5 +12,5 @@ all: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) `sdl-config --libs` -o font_array
 
 clean:	
-	-rm $(OBJ) font_array
+	-rm $(OBJ) font_array *.tga *.png
 

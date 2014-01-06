@@ -389,7 +389,7 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding);
 /* Drawing procedures */
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
-ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, char *str);
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
 
 /* Mode selection/Font assignment */
 
