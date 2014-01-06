@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# "execute do_combine.sh after executing this script"
 
 echo u8glib_4
 ../bdf2ucg/bdf2ucg -f 1 ../bdf/u8glib_4.bdf ucg_font_u8glib_4 ./pixel/ucg_font_u8glib_4.c > /dev/null
@@ -338,6 +339,4 @@ echo "orgdot"
 
 
 
-#echo "copy fonts..."
-#cp ucg_font_*.c ../../../fntsrc/.
-
+echo "execute do_combine.sh after executing this script"
