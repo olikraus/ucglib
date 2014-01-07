@@ -201,6 +201,9 @@ struct _ucg_t
   //ucg_dev_fnptr display_cb;
   /* controller and device specific code, high level procedure will call this */
   ucg_dev_fnptr device_cb;
+  /* if rotation is applied, than this cb is called after rotation */
+  ucg_dev_fnptr rotate_chain_device_cb;
+
   /* communication interface */
   ucg_com_fnptr com_cb;
   /* data which is passed to the cb procedures */
@@ -234,6 +237,7 @@ struct _ucg_t
   uint8_t com_initial_change_sent;	/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status */
   uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status,  Bit 3: 1 for power up */
   uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
+  
 };
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
@@ -369,6 +373,12 @@ void ucg_DrawCircle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8
 /* ucg_bitmap.c */
 void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap);
 void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap);
+
+
+/*================================================*/
+/* ucg_rotate.c */
+void ucg_UndoRotate(ucg_t *ucg);
+void ucg_SetRotate90(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_font.c */
