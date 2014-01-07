@@ -237,7 +237,7 @@ struct _ucg_t
 };
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
-#define ucg_GetHeight(ucg) ((ucg)->dimension.w)
+#define ucg_GetHeight(ucg) ((ucg)->dimension.h)
 
 #define UCG_MSG_DEV_POWER_UP	10
 #define UCG_MSG_DEV_POWER_DOWN 11
@@ -345,6 +345,7 @@ void ucg_DrawPixel(ucg_t *ucg, ucg_int_t x, ucg_int_t y);
 /*================================================*/
 /* ucg_line.c */
 void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
+void ucg_DrawVLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir);
 
@@ -352,6 +353,17 @@ void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, u
 /*================================================*/
 /* ucg_box.c */
 void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h);
+
+
+/*================================================*/
+/* ucg_circle.c */
+#define UCG_DRAW_UPPER_RIGHT 0x01
+#define UCG_DRAW_UPPER_LEFT  0x02
+#define UCG_DRAW_LOWER_LEFT 0x04
+#define UCG_DRAW_LOWER_RIGHT  0x08
+#define UCG_DRAW_ALL (U8G_DRAW_UPPER_RIGHT|U8G_DRAW_UPPER_LEFT|U8G_DRAW_LOWER_RIGHT|U8G_DRAW_LOWER_LEFT)
+void ucg_DrawDisc(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
+void ucg_DrawCircle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
 
 /*================================================*/
 /* ucg_bitmap.c */

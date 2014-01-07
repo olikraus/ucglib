@@ -16,7 +16,7 @@ void pic_gen_short_desc(const ucg_pgm_uint8_t *font, const char *fname)
   ucg_t ucg;
   ucg_int_t dx;
 
-  tga_init(1024,900);
+  tga_init(1024,500);
   ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
 
   ucg_SetFont(&ucg, font);
@@ -56,7 +56,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   pic_gen_short_desc(font, fname);
   
   
-  tga_init(1024,900);
+  tga_init(1200,1200);
   ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
   
   disp_font = ucg_font_7x13;

@@ -48,6 +48,18 @@ void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len)
   ucg_DrawL90FXWithArg(ucg);
 }
 
+void ucg_DrawVLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len)
+{
+  ucg->arg.pixel.rgb.color[0] = ucg->arg.rgb[0].color[0];
+  ucg->arg.pixel.rgb.color[1] = ucg->arg.rgb[0].color[1];
+  ucg->arg.pixel.rgb.color[2] = ucg->arg.rgb[0].color[2];
+  ucg->arg.pixel.pos.x = x;
+  ucg->arg.pixel.pos.y = y;
+  ucg->arg.len = len;
+  ucg->arg.dir = 1;
+  ucg_DrawL90FXWithArg(ucg);
+}
+
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len)
 {
   ucg->arg.pixel.rgb.color[0] = ucg->arg.rgb[0].color[0];
