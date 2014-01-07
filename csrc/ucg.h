@@ -203,7 +203,8 @@ struct _ucg_t
   ucg_dev_fnptr device_cb;
   /* if rotation is applied, than this cb is called after rotation */
   ucg_dev_fnptr rotate_chain_device_cb;
-
+  ucg_wh_t rotate_dimension;
+  
   /* communication interface */
   ucg_com_fnptr com_cb;
   /* data which is passed to the cb procedures */
@@ -379,6 +380,7 @@ void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const
 /* ucg_rotate.c */
 void ucg_UndoRotate(ucg_t *ucg);
 void ucg_SetRotate90(ucg_t *ucg);
+void ucg_SetRotate180(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_font.c */

@@ -36,17 +36,7 @@
 
 
 #include "ucg.h"
-
-static void ucg_rotate_90_xy(ucg_xy_t *xy, ucg_int_t display_width)
-{
-    ucg_int_t x, y;
-    y = xy->x;
-    x = display_width;
-    x -= xy->y; 
-    x--;
-    xy->x = x;
-    xy->y = y;  
-}
+#include <assert.h>
 
 void ucg_UndoRotate(ucg_t *ucg)
 {
@@ -57,18 +47,45 @@ void ucg_UndoRotate(ucg_t *ucg)
   }
 }
 
-ucg_int_t u8g_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
+/*================================================*/
+/* 90 degree */
+
+static void ucg_rotate_90_xy(ucg_xy_t *xy, ucg_int_t display_width)
+{   
+    ucg_int_t x, y;
+    y = xy->x;
+    x = display_width;
+    x -= xy->y;
+    x--;
+    xy->x = x;
+    xy->y = y;  
+  
+}
+
+ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_GET_DIMENSION:
-      ucg->rotate_chain_device_cb(ucg, msg, data); 
+      /*
+      why does this code not work???
+      ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension)); 
+      ((ucg_wh_t *)data)->h = ucg->rotate_dimension.w;
+      ((ucg_wh_t *)data)->w = ucg->rotate_dimension.h;
+    */
+    
+      ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension));
+       *((ucg_wh_t *)data) = ucg->rotate_dimension;
+    
       {
-	ucg_int_t tmp;
-	tmp = ((ucg_wh_t *)data)->w;
-	((ucg_wh_t *)data)->h = ((ucg_wh_t *)data)->w;
-	((ucg_wh_t *)data)->w = tmp;
+        ucg_int_t tmp;
+        tmp = ((ucg_wh_t *)data)->w;
+        ((ucg_wh_t *)data)->h = ((ucg_wh_t *)data)->w;
+        ((ucg_wh_t *)data)->w = tmp;
       }
+      
+    
+      //printf("w=%d h=%d\n", ucg->rotate_dimension.w, ucg->rotate_dimension.h);
       return 1;
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
@@ -77,7 +94,9 @@ ucg_int_t u8g_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_L90RL:
       ucg->arg.dir+=1;
       ucg->arg.dir&=3;
-      ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->dimension.h); /* use h, because it has been swapped and contains w */
+      //ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->rotate_dimension.w); 
+      //printf("dw=%d dh=%d\n", ucg->dimension.w, ucg->dimension.h);
+      ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->rotate_dimension.w); 
       break;
   }
   return ucg->rotate_chain_device_cb(ucg, msg, data);  
@@ -87,7 +106,54 @@ void ucg_SetRotate90(ucg_t *ucg)
 {
   ucg_UndoRotate(ucg);
   ucg->rotate_chain_device_cb = ucg->device_cb;
-  ucg->device_cb = u8g_dev_rotate90;
+  ucg->device_cb = ucg_dev_rotate90;
+  ucg_GetDimension(ucg);
+}
+
+/*================================================*/
+/* 180 degree */
+
+static void ucg_rotate_180_xy(ucg_t *ucg, ucg_xy_t *xy)
+{
+    ucg_int_t x, y;
+    y = ucg->rotate_dimension.h;
+    y -= xy->y;
+    y--;
+    xy->y = y;
+  
+    x = ucg->rotate_dimension.w;
+    x -= xy->x;
+    x--;
+    xy->x = x;
+  
+}
+
+ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
+{
+  switch(msg)
+  {
+    case UCG_MSG_GET_DIMENSION:
+      ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension)); 
+      *((ucg_wh_t *)data) = (ucg->rotate_dimension);
+      return 1;
+    case UCG_MSG_DRAW_PIXEL:
+    case UCG_MSG_DRAW_L90FX:
+    case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90SE:
+    case UCG_MSG_DRAW_L90RL:
+      ucg->arg.dir+=2;
+      ucg->arg.dir&=3;
+      ucg_rotate_180_xy(ucg, &(ucg->arg.pixel.pos)); 
+      break;
+  }
+  return ucg->rotate_chain_device_cb(ucg, msg, data);  
+}
+
+void ucg_SetRotate180(ucg_t *ucg)
+{
+  ucg_UndoRotate(ucg);
+  ucg->rotate_chain_device_cb = ucg->device_cb;
+  ucg->device_cb = ucg_dev_rotate180;
   ucg_GetDimension(ucg);
 }
 

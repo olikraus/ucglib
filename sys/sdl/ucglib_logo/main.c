@@ -87,7 +87,7 @@ int main(void)
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, (ucg_com_fnptr)0);
   ucg_SetFont(&ucg, ucg_font_ncenB24);  
-  //ucg_SetRotate90(&ucg);
+  ucg_SetRotate180(&ucg);
 
   
   a = 2;
