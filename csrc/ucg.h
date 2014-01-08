@@ -115,14 +115,36 @@ typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 /*================================================*/
 /* list of supported display modules */
 
-ucg_int_t u8g_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ili9325_240x320_tft_itdb02(ucg_t *ucg, ucg_int_t msg, void *data);
 
+
+/*================================================*/
+/* 
+  list of extensions for the controllers 
+  
+  each module can have the "none" extension (ucg_ext_none) or the specific
+  extensions, that matches the controller name.
+  
+  example: for the module u8g_dev_ssd1351_128x128_oled_ilsoft
+  valid extensions are:
+  
+  extensions are only valid if the controller name matches, for example
+    ucg_ext_none
+    ucg_ext_ssd1351
+*/
+
+ucg_int_t ucg_ext_none(ucg_t *ucg, ucg_int_t msg, void *data);
+
+ucg_int_t ucg_ext_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_ext_ili9325(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
 /* list of supported display controllers */
 
-ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
@@ -201,6 +223,8 @@ struct _ucg_t
   //ucg_dev_fnptr display_cb;
   /* controller and device specific code, high level procedure will call this */
   ucg_dev_fnptr device_cb;
+  /* name of the extension cb. will be called by device_cb if required */
+  ucg_dev_fnptr ext_cb;
   /* if rotation is applied, than this cb is called after rotation */
   ucg_dev_fnptr rotate_chain_device_cb;
   ucg_wh_t rotate_dimension;
@@ -335,7 +359,7 @@ void ucg_DrawL90RLWithArg(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_init.c */
-ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_com_fnptr com_cb);
+ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, ucg_com_fnptr com_cb);
 
 
 /*================================================*/
@@ -357,6 +381,7 @@ void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, u
 
 /*================================================*/
 /* ucg_box.c */
+void ucg_DrawBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h);
 void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h);
 
 
@@ -422,7 +447,7 @@ void ucg_SetFontRefHeightText(ucg_t *ucg);
 void ucg_SetFontRefHeightExtendedText(ucg_t *ucg);
 void ucg_SetFontRefHeightAll(ucg_t *ucg);
 
-void ucg_SetFontPosBaseline(ucg_t *ucg);
+void ucg_SetFontPosBaseline(ucg_t *ucg) UCG_NOINLINE;
 void ucg_SetFontPosBottom(ucg_t *ucg);
 void ucg_SetFontPosTop(ucg_t *ucg);
 void ucg_SetFontPosCenter(ucg_t *ucg);

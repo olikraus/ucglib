@@ -37,8 +37,8 @@
 
 #include "ucg.h"
 
-//static const uint8_t u8g_dev_ssd1351_128x128_init_seq[] PROGMEM = {
-static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
+//static const uint8_t ucg_dev_ssd1351_128x128_init_seq[] PROGMEM = {
+static const uint8_t ucg_ilsoft_ssd1351_init_seq[] = {
 	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
   	UCG_RST(1),					
 	UCG_CS(1),					/* disable chip */
@@ -46,7 +46,7 @@ static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
   	UCG_RST(0),					
 	UCG_DLY_MS(1),
   	UCG_RST(1),
-	UCG_DLY_MS(1),
+	UCG_DLY_MS(50),
 	UCG_CS(0),					/* enable chip */
 	//UCG_C11(0x0fd, 0x012),			/* Unlock normal commands, reset default: unlocked */
 	UCG_C11(0x0fd, 0x0b1),			/* Unlock extra commands, reset default: locked */
@@ -88,22 +88,22 @@ static const uint8_t u8g_ilsoft_ssd1351_init_seq[] = {
 	UCG_END(),					/* end of sequence */
 };
 
-ucg_int_t u8g_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
       /* 1. Call to the controller procedures to setup the com interface */
-      if ( u8g_dev_ic_ssd1351(ucg, msg, data) == 0 )
+      if ( ucg_dev_ic_ssd1351(ucg, msg, data) == 0 )
 	return 0;
 
       /* 2. Send specific init sequence for this display module */
-      ucg_com_SendCmdSeq(ucg, u8g_ilsoft_ssd1351_init_seq);
+      ucg_com_SendCmdSeq(ucg, ucg_ilsoft_ssd1351_init_seq);
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:
       /* let do power down by the conroller procedures */
-      return u8g_dev_ic_ssd1351(ucg, msg, data);  
+      return ucg_dev_ic_ssd1351(ucg, msg, data);  
     
     case UCG_MSG_GET_DIMENSION:
       ((ucg_wh_t *)data)->w = 128;
@@ -112,5 +112,5 @@ ucg_int_t u8g_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *d
   }
   
   /* all other messages are handled by the controller procedures */
-  return u8g_dev_ic_ssd1351(ucg, msg, data);  
+  return ucg_dev_ic_ssd1351(ucg, msg, data);  
 }

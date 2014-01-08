@@ -52,6 +52,15 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data)
   return 1;	/* all ok */
 }
 
+/*
+  will be used as default cb if no extentions callback is provided
+*/
+ucg_int_t ucg_ext_none(ucg_t *ucg, ucg_int_t msg, void *data)
+{
+  return 1;	/* all ok */  
+}
+
+
 
 /*
   handle UCG_MSG_DRAW_L90FX message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL

@@ -35,6 +35,16 @@
 
 #include "ucg.h"
 
+void ucg_DrawBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)
+{
+  while( h > 0 )
+  {
+    ucg_DrawHLine(ucg, x, y, w);
+    h--;
+    y++;
+  }  
+}
+
 ucg_ccs_t ucg_ccs_box[6];	/* color component sliders used by GradientBox */
 
 void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)
@@ -42,6 +52,7 @@ void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_
   uint8_t i;
   
   /* Setup ccs for l90se. This will be updated by ucg_clip_l90se if required */
+  /* 8. Jan 2014: correct? */
 
   //printf("%d %d %d\n", ucg->arg.rgb[3].color[0], ucg->arg.rgb[3].color[1], ucg->arg.rgb[3].color[2]);
   
@@ -73,3 +84,4 @@ void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_
     y++;
   }
 }
+
