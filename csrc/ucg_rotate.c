@@ -67,26 +67,32 @@ ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_GET_DIMENSION:
-      /*
-      why does this code not work???
       ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension)); 
       ((ucg_wh_t *)data)->h = ucg->rotate_dimension.w;
       ((ucg_wh_t *)data)->w = ucg->rotate_dimension.h;
-    */
     
-      ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension));
-       *((ucg_wh_t *)data) = ucg->rotate_dimension;
-    
+      //printf("rw=%d rh=%d\n", ucg->rotate_dimension.w, ucg->rotate_dimension.h);
+      //printf("aw=%d ah=%d\n",  ((ucg_wh_t volatile * volatile )data)->w, ((ucg_wh_t volatile * volatile )data)->h);
+      //printf("dw=%d dh=%d\n", ucg->dimension.w, ucg->dimension.h);
+      return 1;
+      
+    case UCG_MSG_SET_CLIP_BOX:
+      /* to rotate the box, the lower left corner will become the new xy value pair */
+      /* so the unrotated lower left is put into "ul" */
+      //printf("pre clipbox x=%d y=%d\n", ((ucg_box_t * )data)->ul.x, ((ucg_box_t * )data)->ul.y);
+      ((ucg_box_t * )data)->ul.y += ((ucg_box_t * )data)->size.h-1;
+      //printf("pre clipbox lower left x=%d y=%d\n", ((ucg_box_t * )data)->ul.x, ((ucg_box_t * )data)->ul.y);
+      /* then apply rotation */
+      ucg_rotate_90_xy(&(((ucg_box_t * )data)->ul), ucg->rotate_dimension.w); 
+      /* finally, swap dimensions */
       {
         ucg_int_t tmp;
-        tmp = ((ucg_wh_t *)data)->w;
-        ((ucg_wh_t *)data)->h = ((ucg_wh_t *)data)->w;
-        ((ucg_wh_t *)data)->w = tmp;
+        tmp = ((ucg_box_t *)data)->size.w;
+        ((ucg_box_t * )data)->size.w = ((ucg_box_t *)data)->size.h;
+        ((ucg_box_t * )data)->size.h = tmp;
       }
-      
-    
-      //printf("w=%d h=%d\n", ucg->rotate_dimension.w, ucg->rotate_dimension.h);
-      return 1;
+      //printf("post clipbox x=%d y=%d\n", ((ucg_box_t * )data)->ul.x, ((ucg_box_t * )data)->ul.y);
+      break;
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
     case UCG_MSG_DRAW_L90TC:
@@ -96,18 +102,22 @@ ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->arg.dir&=3;
       //ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->rotate_dimension.w); 
       //printf("dw=%d dh=%d\n", ucg->dimension.w, ucg->dimension.h);
+      //printf("pre x=%d y=%d\n", ucg->arg.pixel.pos.x, ucg->arg.pixel.pos.y);
       ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->rotate_dimension.w); 
+      //printf("post x=%d y=%d\n", ucg->arg.pixel.pos.x, ucg->arg.pixel.pos.y);
       break;
   }
   return ucg->rotate_chain_device_cb(ucg, msg, data);  
 }
 
+/* Side-Effects: Update dimension and reset clip range to max */
 void ucg_SetRotate90(ucg_t *ucg)
 {
   ucg_UndoRotate(ucg);
   ucg->rotate_chain_device_cb = ucg->device_cb;
   ucg->device_cb = ucg_dev_rotate90;
   ucg_GetDimension(ucg);
+  ucg_SetMaxClipRange(ucg);
 }
 
 /*================================================*/
@@ -136,6 +146,13 @@ ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension)); 
       *((ucg_wh_t *)data) = (ucg->rotate_dimension);
       return 1;
+    case UCG_MSG_SET_CLIP_BOX:
+      /* calculate and rotate lower right point of the clip box */
+      ((ucg_box_t * )data)->ul.y += ((ucg_box_t * )data)->size.h-1;
+      ((ucg_box_t * )data)->ul.x += ((ucg_box_t * )data)->size.w-1;
+      ucg_rotate_180_xy(ucg, &(((ucg_box_t * )data)->ul)); 
+      /* box dimensions are the same */
+      break;
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
     case UCG_MSG_DRAW_L90TC:
@@ -149,11 +166,13 @@ ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
   return ucg->rotate_chain_device_cb(ucg, msg, data);  
 }
 
+/* Side-Effects: Update dimension and reset clip range to max */
 void ucg_SetRotate180(ucg_t *ucg)
 {
   ucg_UndoRotate(ucg);
   ucg->rotate_chain_device_cb = ucg->device_cb;
   ucg->device_cb = ucg_dev_rotate180;
   ucg_GetDimension(ucg);
+  ucg_SetMaxClipRange(ucg);
 }
 
