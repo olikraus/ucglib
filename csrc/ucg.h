@@ -381,6 +381,7 @@ void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const
 void ucg_UndoRotate(ucg_t *ucg);
 void ucg_SetRotate90(ucg_t *ucg);
 void ucg_SetRotate180(ucg_t *ucg);
+void ucg_SetRotate270(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_font.c */

@@ -38,6 +38,7 @@
 #include "ucg.h"
 #include <assert.h>
 
+/* Side-Effects: Update dimension and reset clip range to max */
 void ucg_UndoRotate(ucg_t *ucg)
 {
   if ( ucg->rotate_chain_device_cb != NULL )
@@ -45,6 +46,8 @@ void ucg_UndoRotate(ucg_t *ucg)
     ucg->device_cb = ucg->rotate_chain_device_cb;
     ucg->rotate_chain_device_cb = NULL;
   }
+  ucg_GetDimension(ucg);
+  ucg_SetMaxClipRange(ucg);
 }
 
 /*================================================*/
@@ -172,6 +175,66 @@ void ucg_SetRotate180(ucg_t *ucg)
   ucg_UndoRotate(ucg);
   ucg->rotate_chain_device_cb = ucg->device_cb;
   ucg->device_cb = ucg_dev_rotate180;
+  ucg_GetDimension(ucg);
+  ucg_SetMaxClipRange(ucg);
+}
+
+/*================================================*/
+/* 270 degree */
+
+static void ucg_rotate_270_xy(ucg_t *ucg, ucg_xy_t *xy)
+{
+    ucg_int_t x, y;
+    x = xy->y;
+  
+    y = ucg->rotate_dimension.h;
+    y -= xy->x;
+    y--;
+  
+    xy->y = y;
+    xy->x = x;  
+}
+
+ucg_int_t ucg_dev_rotate270(ucg_t *ucg, ucg_int_t msg, void *data)
+{
+  switch(msg)
+  {
+    case UCG_MSG_GET_DIMENSION:
+      ucg->rotate_chain_device_cb(ucg, msg, &(ucg->rotate_dimension)); 
+      ((ucg_wh_t *)data)->h = ucg->rotate_dimension.w;
+      ((ucg_wh_t *)data)->w = ucg->rotate_dimension.h;
+      return 1;
+    case UCG_MSG_SET_CLIP_BOX:
+      /* calculate and rotate upper right point of the clip box */
+      ((ucg_box_t * )data)->ul.x += ((ucg_box_t * )data)->size.w-1;
+      ucg_rotate_270_xy(ucg, &(((ucg_box_t * )data)->ul)); 
+      /* finally, swap dimensions */
+      {
+        ucg_int_t tmp;
+        tmp = ((ucg_box_t *)data)->size.w;
+        ((ucg_box_t * )data)->size.w = ((ucg_box_t *)data)->size.h;
+        ((ucg_box_t * )data)->size.h = tmp;
+      }
+      break;
+    case UCG_MSG_DRAW_PIXEL:
+    case UCG_MSG_DRAW_L90FX:
+    case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90SE:
+    case UCG_MSG_DRAW_L90RL:
+      ucg->arg.dir+=3;
+      ucg->arg.dir&=3;
+      ucg_rotate_270_xy(ucg, &(ucg->arg.pixel.pos)); 
+      break;
+  }
+  return ucg->rotate_chain_device_cb(ucg, msg, data);  
+}
+
+/* Side-Effects: Update dimension and reset clip range to max */
+void ucg_SetRotate270(ucg_t *ucg)
+{
+  ucg_UndoRotate(ucg);
+  ucg->rotate_chain_device_cb = ucg->device_cb;
+  ucg->device_cb = ucg_dev_rotate270;
   ucg_GetDimension(ucg);
   ucg_SetMaxClipRange(ucg);
 }
