@@ -179,7 +179,6 @@ int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *d
 void setup(void)
 {
   ucg_Init(&ucg, ucg_dev_ssd1351_128x128_oled_ilsoft, ucg_ext_ssd1351, ucg_com_arduino_spi);
-  //ucg_Init(&ucg, ucg_dev_ssd1351_128x128_oled_ilsoft, 0, ucg_com_arduino_spi);
 }
 
 void setup(void)

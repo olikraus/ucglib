@@ -59,6 +59,11 @@ extern "C"
 {
 #endif
 
+#ifdef ARDUINO
+#ifndef USE_PIN_ARRAY
+#define USE_PIN_ARRAY
+#endif
+#endif
 
 #ifdef __GNUC__
 #  define UCG_NOINLINE __attribute__((noinline))
@@ -214,6 +219,18 @@ struct _ucg_com_info_t
   uint16_t parallel_clk_speed;
 };
 
+#ifdef USE_PIN_LIST
+#define UCG_PIN_RST 0
+#define UCG_PIN_CD 1
+#define UCG_PIN_CS 2
+#define UCG_PIN_SCL 3
+#define UCG_PIN_WR 3
+#define UCG_PIN_SDA 4
+#define UCG_PIN_COUNT 5
+
+#define UCG_PIN_VAL_NONE 255
+#endif
+
 struct _ucg_t
 {
   unsigned is_power_up:1;
@@ -254,6 +271,11 @@ struct _ucg_t
   int8_t font_ref_ascent;
   int8_t font_ref_descent;
 
+  /* only for Arduino/C++ Interface */
+#ifdef USE_PIN_LIST
+  uint8_t pin_list[UCG_PIN_COUNT];
+#endif
+
   /* 
     Small amount of RAM for the com interface (com_cb).
     Might be unused on unix systems, where the com sub system is 
@@ -262,6 +284,7 @@ struct _ucg_t
   uint8_t com_initial_change_sent;	/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status */
   uint8_t com_status;		/* Bit 0: CD/A0 Line Status, Bit 1: CS Line Status, Bit 2: Reset Line Status,  Bit 3: 1 for power up */
   uint8_t com_cfg_cd;		/* Bit 0: Argument Level, Bit 1: Command Level */
+  
   
 };
 
