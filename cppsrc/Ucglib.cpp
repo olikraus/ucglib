@@ -126,7 +126,6 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
   return 1;
 }
 
-
 static int16_t ucg_com_arduino_4wire_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
   switch(msg)
@@ -227,9 +226,9 @@ void Ucglib::beginSerial(uint8_t cd, uint8_t cs, uint8_t reset) {
   ucg.pin_list[UCG_PIN_RST] = reset;
   ucg.pin_list[UCG_PIN_CD] = cd;
   ucg.pin_list[UCG_PIN_CS] = cs;
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_SPI);
   //ucg.pin_list[UCG_PIN_SCL] = scl
   //ucg.pin_list[UCG_PIN_SDA] = sda;
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_SPI);
 }
 
 void Ucglib::beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset) {

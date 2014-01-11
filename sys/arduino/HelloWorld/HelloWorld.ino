@@ -5,6 +5,7 @@ Ucglib ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_dev_ic_ili9325_18);
 
 void setup(void)
 {
+  delay(1000);
   ucg.beginParallel(18 /* wr */, 19 /* cd */, 17 /* cs */, 16 /* reset */);
 }
 
