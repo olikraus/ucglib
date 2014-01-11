@@ -38,16 +38,29 @@
 #include "ucg.h"
 
 
+const uint8_t ucg_ili9325_set_pos_seq[] = 
+{
+  UCG_CS(0),					/* enable chip */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C10(0x022),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
+
 
 const uint8_t ucg_ili9325_set_pos_dir0_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
+  
+  /* last byte: 0x030 horizontal increment (dir = 0) */
+  /* last byte: 0x038 vertical increment (dir = 1) */
+  /* last byte: 0x000 horizontal deccrement (dir = 2) */
+  /* last byte: 0x008 vertical deccrement (dir = 3) */
+  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x030),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x021),	UCG_VARY(0,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
-  UCG_C10(0x050),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x052),	UCG_VARY(0,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
-  UCG_C10(0x051),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x053),	UCG_VARY(0,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+
   UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
@@ -55,6 +68,52 @@ const uint8_t ucg_ili9325_set_pos_dir0_seq[] =
 
 const uint8_t ucg_ili9325_set_pos_dir1_seq[] = 
 {
+  UCG_CS(0),					/* enable chip */
+  
+  /* last byte: 0x030 horizontal increment (dir = 0) */
+  /* last byte: 0x038 vertical increment (dir = 1) */
+  /* last byte: 0x000 horizontal deccrement (dir = 2) */
+  /* last byte: 0x008 vertical deccrement (dir = 3) */
+  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x038),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+
+  UCG_C10(0x022),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
+
+const uint8_t ucg_ili9325_set_pos_dir2_seq[] = 
+{
+  UCG_CS(0),					/* enable chip */
+  
+  /* last byte: 0x030 horizontal increment (dir = 0) */
+  /* last byte: 0x038 vertical increment (dir = 1) */
+  /* last byte: 0x000 horizontal deccrement (dir = 2) */
+  /* last byte: 0x008 vertical deccrement (dir = 3) */
+  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x000),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+
+  UCG_C10(0x022),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
+
+const uint8_t ucg_ili9325_set_pos_dir3_seq[] = 
+{
+  UCG_CS(0),					/* enable chip */
+  
+  /* last byte: 0x030 horizontal increment (dir = 0) */
+  /* last byte: 0x038 vertical increment (dir = 1) */
+  /* last byte: 0x000 horizontal deccrement (dir = 2) */
+  /* last byte: 0x008 vertical deccrement (dir = 3) */
+  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x008),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+
+  UCG_C10(0x022),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
 
@@ -72,20 +131,16 @@ ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
 	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir1_seq);	
 	break;
       case 2: 
-	ucg->arg.pixel.pos.x -= ucg->arg.len;
-	ucg->arg.pixel.pos.x++;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir2_seq);	
 	break;
       case 3: 
       default: 
-	ucg->arg.pixel.pos.y -= ucg->arg.len;
-	ucg->arg.pixel.pos.y++;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir3_seq);	
 	break;
     }
-    c[0] = ucg->arg.pixel.rgb.color[0]>>2;
-    c[1] = ucg->arg.pixel.rgb.color[1]>>2;
-    c[2] = ucg->arg.pixel.rgb.color[2]>>2;
+    c[0] = ucg->arg.pixel.rgb.color[0];
+    c[1] = ucg->arg.pixel.rgb.color[1];
+    c[2] = ucg->arg.pixel.rgb.color[2];
     ucg_com_SendRepeat3Bytes(ucg, ucg->arg.len, c);
     ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
     return 1;
@@ -100,34 +155,18 @@ ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
   
 */
 
-const uint8_t ucg_ili9325_set_pos_for_x_seq[] = 
-{
-  UCG_CS(0),					/* enable chip */
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
-  UCG_END()
-};
-
-const uint8_t ucg_ili9325_set_pos_for_y_seq[] = 
-{
-  UCG_CS(0),					/* enable chip */
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),		/* set x position */
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
-  UCG_END()
-};
-
 const uint8_t ucg_ili9325_set_x_pos_seq[] = 
 {
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
-  UCG_C10(0x05c),							/* write to RAM */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
 
 const uint8_t ucg_ili9325_set_y_pos_seq[] = 
 {
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
-  UCG_C10(0x05c),							/* write to RAM */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
@@ -144,36 +183,33 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
     unsigned char pixmap;
     uint8_t bitcnt;
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
+    ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
 	seq = ucg_ili9325_set_x_pos_seq;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_for_x_seq);	
 	break;
       case 1: 
 	dx = 0; dy = 1; 
 	seq = ucg_ili9325_set_y_pos_seq;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_for_y_seq);	
 	break;
       case 2: 
 	dx = -1; dy = 0; 
 	seq = ucg_ili9325_set_x_pos_seq;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_for_x_seq);	
 	break;
       case 3: 
       default:
 	dx = 0; dy = -1; 
 	seq = ucg_ili9325_set_y_pos_seq;
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_for_y_seq);
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
-    buf[0] = ucg->arg.pixel.rgb.color[0]>>2;
-    buf[1] = ucg->arg.pixel.rgb.color[1]>>2;
-    buf[2] = ucg->arg.pixel.rgb.color[2]>>2;
+    buf[0] = ucg->arg.pixel.rgb.color[0];
+    buf[1] = ucg->arg.pixel.rgb.color[1];
+    buf[2] = ucg->arg.pixel.rgb.color[2];
     //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
     
     for( i = 0; i < ucg->arg.len; i++ )
@@ -181,7 +217,6 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
       if ( (pixmap & 128) != 0 )
       {
 	ucg_com_SendCmdSeq(ucg, seq);	
-	//ucg_com_SendString(ucg, 3, buf);
 	ucg_com_SendRepeat3Bytes(ucg, 1, buf);
       }
       pixmap<<=1;
@@ -218,29 +253,33 @@ ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
   
   if ( ucg_clip_l90se(ucg) != 0 )
   {
-    ucg_int_t dx, dy;
-    ucg_int_t i, j;
+    ucg_int_t i;
     switch(ucg->arg.dir)
     {
-      case 0: dx = 1; dy = 0; break;
-      case 1: dx = 0; dy = 1; break;
-      case 2: dx = -1; dy = 0; break;
-      case 3: dx = 0; dy = -1; break;
-      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
+      case 0: 
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+	break;
+      case 1: 
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir1_seq);	
+	break;
+      case 2: 
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir2_seq);	
+	break;
+      case 3: 
+      default: 
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir3_seq);	
+	break;
     }
-    ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+    
     for( i = 0; i < ucg->arg.len; i++ )
     {
-      c[0] = ucg->arg.ccs_line[0].current >> 2;
-      c[1] = ucg->arg.ccs_line[1].current >> 2; 
-      c[2] = ucg->arg.ccs_line[2].current >> 2;
+      c[0] = ucg->arg.ccs_line[0].current;
+      c[1] = ucg->arg.ccs_line[1].current; 
+      c[2] = ucg->arg.ccs_line[2].current;
       ucg_com_SendRepeat3Bytes(ucg, 1, c);
-      ucg->arg.pixel.pos.x+=dx;
-      ucg->arg.pixel.pos.y+=dy;
-      for ( j = 0; j < 3; j++ )
-      {
-	ucg_ccs_step(ucg->arg.ccs_line+j);
-      }
+      ucg_ccs_step(ucg->arg.ccs_line+0);
+      ucg_ccs_step(ucg->arg.ccs_line+1);
+      ucg_ccs_step(ucg->arg.ccs_line+2);
     }
     ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
     return 1;
@@ -268,7 +307,7 @@ ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
 	uint8_t c[3];
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
 	c[0] = ucg->arg.pixel.rgb.color[0];
 	c[1] = ucg->arg.pixel.rgb.color[1];
 	c[2] = ucg->arg.pixel.rgb.color[2];
@@ -277,12 +316,12 @@ ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325);
-      //ucg_handle_ili9325_l90fx(ucg);
+      //ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325);
+      ucg_handle_ili9325_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      ucg_handle_l90tc(ucg, ucg_dev_ic_ili9325);
-      //ucg_handle_ili9325_l90tc(ucg);
+      //ucg_handle_l90tc(ucg, ucg_dev_ic_ili9325);
+      ucg_handle_ili9325_l90tc(ucg);
       return 1;
     /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
     /*
@@ -298,8 +337,8 @@ ucg_int_t ucg_ext_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      ucg_handle_l90se(ucg, ucg_dev_ic_ili9325);
-      //ucg_handle_ili9325_l90se(ucg);
+      //ucg_handle_l90se(ucg, ucg_dev_ic_ili9325);
+      ucg_handle_ili9325_l90se(ucg);
       break;
   }
   return 1;

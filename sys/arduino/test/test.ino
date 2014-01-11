@@ -251,7 +251,7 @@ void loop(void)
   ucg.arg.dir = 3;
   ucg_DrawL90FXWithArg(&ucg);
 
-  ucg_SetFont(&ucg, ucg_font_4x6r);
+  ucg_SetFont(&ucg, ucg_font_10x20r);
   ucg_SetColor(&ucg, 0, 255, 255, b);
   //ucg_SetFontPosBottom(&ucg);  
   ucg_DrawGlyph(&ucg, 70, 20, 0, 'A');

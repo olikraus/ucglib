@@ -171,6 +171,18 @@ void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, cnt, (uint8_t *)byte_ptr);
 }
 
+void ucg_com_SendStringP(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
+{
+  uint8_t b;
+  while( cnt > 0 )
+  {
+    b = *byte_ptr;
+    ucg->com_cb(ucg, UCG_COM_MSG_SEND_BYTE, b, NULL);
+    byte_ptr++;
+    cnt--;
+  }
+}
+
 
 /*
 
@@ -276,15 +288,20 @@ static void ucg_com_SendCmdArg(ucg_t *ucg, const uint8_t *data, uint8_t cmd_cnt,
   }
 }
 
+
+//void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data)
 void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 {
+  uint8_t b;
   uint8_t hi;
   uint8_t lo;
 
   for(;;)
   {
-    hi = (*data) >> 4;
-    lo = (*data) & 0x0f;
+    //b = ucg_pgm_read(data);
+    b = *data;
+    hi = (b) >> 4;
+    lo = (b) & 0x0f;
     switch( hi )
     {
       case 0:

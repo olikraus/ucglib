@@ -49,25 +49,27 @@ static const uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_DLY_MS(50),
   UCG_CS(0),					/* enable chip */
   UCG_C22(0x000, 0x001,0x001, 0x000), /* Driver Output Control, bits 8 & 10 */
-  UCG_C22(0x000, 0x002, 0x002, 0x000),              /* LCD Driving Wave Control, bit 9: Set line inversion */
-  UCG_C22(0x000, 0x003, 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR=1 */
-  UCG_C22(0x000, 0x004, 0x000, 0x000),              /* Resize register */
-  UCG_C22(0x000, 0x008, 0x002, 0x007),              /* Display Control 2: set the back porch and front porch */
-  UCG_C22(0x000, 0x009, 0x000, 0x000),              /* Display Control 3 */
-  UCG_C22(0x000, 0x00a, 0x000, 0x000),              /* Display Control 4: FMARK */
+  //UCG_C22(0x000, 0x002, 0x002, 0x000),              /* LCD Driving Wave Control, bit 9: Set line inversion */
+  //UCG_C22(0x000, 0x003, 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR (Bit 12)=1 (16 bit transfer, 65K Mode)*/
+  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  //UCG_C22(0x000, 0x004, 0x000, 0x000),              /* Resize register, all 0: no resize */
+  //UCG_C22(0x000, 0x008, 0x002, 0x007),              /* Display Control 2: set the back porch and front porch */
+  //UCG_C22(0x000, 0x009, 0x000, 0x000),              /* Display Control 3: normal scan */
+  //UCG_C22(0x000, 0x00a, 0x000, 0x000),              /* Display Control 4: set to "no FMARK output" */
   UCG_C22(0x000, 0x00c, 0x000, 0x002),              /* RGB Display Interface Control 1, RIM=10 (3x6 Bit)*/
-  UCG_C22(0x000, 0x00d, 0x000, 0x000),              /* Frame Maker Position */
-  UCG_C22(0x000, 0x00f, 0x000, 0x000),               /* RGB Display Interface Control 2 */
-  UCG_C22(0x000, 0x010, 0x000, 0x000),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB */
+  //UCG_C22(0x000, 0x00d, 0x000, 0x000),              /* Frame Maker Position */
+  //UCG_C22(0x000, 0x00f, 0x000, 0x000),               /* RGB Display Interface Control 2 */
+  UCG_C22(0x000, 0x010, 0x000, 0x000),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB, actual setting is done below */
   UCG_C22(0x000, 0x011, 0x000, 0x007),              /* Power Control 2: DC1[2:0], DC0[2:0], VC[2:0] */
   UCG_C22(0x000, 0x012, 0x000, 0x000),              /* Power Control 3: VREG1OUT voltage */
   UCG_C22(0x000, 0x013, 0x000, 0x000),              /* Power Control 4: VDV[4:0] for VCOM amplitude */
   UCG_C22(0x000, 0x007, 0x000, 0x001),              /* Display Control 1: Operate, but do not display */
   UCG_DLY_MS(100),         /* delay 100 ms */  /*  ITDB02 none D verion:  50ms */
-  UCG_DLY_MS(100),         /* delay 100 ms */
+  //UCG_DLY_MS(100),         /* delay 100 ms */
   UCG_C22(  0x000, 0x010, 0x016, 0x090),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB */
 										  /*  ITDB02 none D verion:  0x010, 0x090 */
-  UCG_C22(  0x000, 0x011, 0x002, 0x027),              /* Power Control 2: SAP, BT[3:0], AP, DSTB, SLP, STB */
+  //UCG_C22(  0x000, 0x010, 0x017, 0x0f0),              /* Power Control 1: Setting for max quality & power consumption: SAP(Bit 12)=1, BT[3:0]=7 (max), APE (Bit 8)=1, AP=7 (max), disable sleep: SLP=0, STB=0 */
+  UCG_C22(  0x000, 0x011, 0x002, 0x027),              /* Power Control 2 VCI ration, step up circuits 1 & 2 */
   UCG_DLY_MS(50),         /* delay 50 ms */
   
   UCG_C22(  0x000, 0x012, 0x000, 0x00d),              /* Power Control 3: VCI: External, VCI*1.80 */
@@ -77,64 +79,35 @@ static const uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
                    /*  ITDB02 none D verion:  0x015, 0x000 */
   UCG_C22(  0x000, 0x029, 0x000, 0x00a),              /* Power Control 7 */
                    /*  ITDB02 none D verion:  0x000, 0x027 */
-  UCG_C22(  0x000, 0x02b, 0x000, 0x00d),              /* Frame Rate: 83 */
+  UCG_C22(  0x000, 0x02b, 0x000, 0x00d),              /* Frame Rate: 93 */
+  //UCG_C22(  0x000, 0x02b, 0x000, 0x00b),              /* Frame Rate: 70, too less, some flicker visible */
   UCG_DLY_MS(50),         /* delay 50 ms */
   UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
   UCG_C22(  0x000, 0x021, 0x000, 0x000),              /* Vertical GRAM Address Set */
+  
   UCG_C22(  0x000, 0x050, 0x000, 0x000),              /* Horizontal GRAM Start Address */
   UCG_C22(  0x000, 0x051, 0x000, 0x0EF),              /* Horizontal GRAM End Address: 239 */
   UCG_C22(  0x000, 0x052, 0x000, 0x000),              /* Vertical GRAM Start Address */
   UCG_C22(  0x000, 0x053, 0x001, 0x03F),              /* Vertical GRAM End Address: 319 */
-  UCG_C22(  0x000, 0x060, 0x0a7, 0x000),              /* Driver Output Control 2 */
-  UCG_C22(  0x000, 0x061, 0x000, 0x001),              /* Base Image Display Control: NDL,VLE, REV */
-  UCG_C22(  0x000, 0x06a, 0x000, 0x000),              /* Vertical Scroll Control */
-  UCG_C22(  0x000, 0x080, 0x000, 0x000),              /* Partial Image 1 Display Position */
-  UCG_C22(  0x000, 0x081, 0x000, 0x000),              /* Partial Image 1 RAM Start Address */
-  UCG_C22(  0x000, 0x082, 0x000, 0x000),              /* Partial Image 1 RAM End Address */
-  UCG_C22(  0x000, 0x083, 0x000, 0x000),              /* Partial Image 2 Display Position */
-  UCG_C22(  0x000, 0x084, 0x000, 0x000),              /* Partial Image 2 RAM Start Address */
-  UCG_C22(  0x000, 0x085, 0x000, 0x000),              /* Partial Image 2 RAM End Address */
+  
+  UCG_C22(  0x000, 0x060, 0x0a7, 0x000),              /* Driver Output Control 2, NL = 0x027 = 320 lines, GS (bit 15) = 1 */
+  UCG_C22(  0x000, 0x061, 0x000, 0x001),              /* Base Image Display Control: NDL,VLE = 0 (Disbale Vertical Scroll), REV */
+  //UCG_C22(  0x000, 0x06a, 0x000, 0x000),              /* Vertical Scroll Control */
+  //UCG_C22(  0x000, 0x080, 0x000, 0x000),              /* Partial Image 1 Display Position */
+  //UCG_C22(  0x000, 0x081, 0x000, 0x000),              /* Partial Image 1 RAM Start Address */
+  //UCG_C22(  0x000, 0x082, 0x000, 0x000),              /* Partial Image 1 RAM End Address */
+  //UCG_C22(  0x000, 0x083, 0x000, 0x000),              /* Partial Image 2 Display Position */
+  //UCG_C22(  0x000, 0x084, 0x000, 0x000),              /* Partial Image 2 RAM Start Address */
+  //UCG_C22(  0x000, 0x085, 0x000, 0x000),              /* Partial Image 2 RAM End Address */
   UCG_C22(  0x000, 0x090, 0x000, 0x010),              /* Panel Interface Control 1 */
   UCG_C22(  0x000, 0x092, 0x000, 0x000),              /* Panel Interface Control 2 */
             /* 0x006, 0x000 */
-  UCG_C22(  0x000, 0x007, 0x001, 0x033),              /* Display Control 1: Operate, display ON */
+  UCG_C22(  0x000, 0x007, 0x001, 0x033),              /* Display Control 1: Operate, display ON, Partial image off */
   UCG_DLY_MS(10),               /* delay 10 ms */
   /* write test pattern */  
-  UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
-  UCG_C22(  0x000, 0x021, 0x000, 0x010),              /* Vertical GRAM Address Set */
-  UCG_C20(  0x000, 0x022),               /* Write Data to GRAM */
-  UCG_D2(0x00, 0x03f),
-
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x00, 0x03f),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0ff, 0x0ff),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
-  UCG_D2(0x000, 0x000),
-  UCG_D2(0x0fe, 0x0fe),
+  //UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
+  //UCG_C22(  0x000, 0x021, 0x000, 0x011),              /* Vertical GRAM Address Set */
+  //UCG_C20(  0x000, 0x022),               /* Write Data to GRAM */
 	
   UCG_CS(1),					/* disable chip */
   UCG_END(),					/* end of sequence */
