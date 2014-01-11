@@ -183,6 +183,7 @@ void xsetup(void)
 
 void setup(void)
 {
+  delay(1000);
   ucg_Init(&ucg, ucg_dev_ili9325_240x320_tft_itdb02, ucg_ext_ili9325, ucg_com_arduino_port_d);
   delay(50);
 }

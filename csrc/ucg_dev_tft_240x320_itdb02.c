@@ -55,7 +55,7 @@ static const uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_C22(0x000, 0x008, 0x002, 0x007),              /* Display Control 2: set the back porch and front porch */
   UCG_C22(0x000, 0x009, 0x000, 0x000),              /* Display Control 3 */
   UCG_C22(0x000, 0x00a, 0x000, 0x000),              /* Display Control 4: FMARK */
-  UCG_C22(0x000, 0x00c, 0x000, 0x000),              /* RGB Display Interface Control 1 */
+  UCG_C22(0x000, 0x00c, 0x000, 0x002),              /* RGB Display Interface Control 1, RIM=10 (3x6 Bit)*/
   UCG_C22(0x000, 0x00d, 0x000, 0x000),              /* Frame Maker Position */
   UCG_C22(0x000, 0x00f, 0x000, 0x000),               /* RGB Display Interface Control 2 */
   UCG_C22(0x000, 0x010, 0x000, 0x000),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB */
@@ -103,6 +103,21 @@ static const uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
   UCG_C22(  0x000, 0x021, 0x000, 0x010),              /* Vertical GRAM Address Set */
   UCG_C20(  0x000, 0x022),               /* Write Data to GRAM */
+  UCG_D2(0x00, 0x03f),
+
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x00, 0x03f),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
+  UCG_D2(0x0ff, 0x0ff),
   UCG_D2(0x0fe, 0x0fe),
   UCG_D2(0x000, 0x000),
   UCG_D2(0x0fe, 0x0fe),
