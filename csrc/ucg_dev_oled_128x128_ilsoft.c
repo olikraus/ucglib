@@ -38,7 +38,7 @@
 #include "ucg.h"
 
 //static const uint8_t ucg_dev_ssd1351_128x128_init_seq[] PROGMEM = {
-static const uint8_t ucg_ilsoft_ssd1351_init_seq[] = {
+static const ucg_pgm_uint8_t ucg_ilsoft_ssd1351_init_seq[] = {
 	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
   	UCG_RST(1),					
 	UCG_CS(1),					/* disable chip */
@@ -88,13 +88,13 @@ static const uint8_t ucg_ilsoft_ssd1351_init_seq[] = {
 	UCG_END(),					/* end of sequence */
 };
 
-ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ssd1351_18x128x128_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
       /* 1. Call to the controller procedures to setup the com interface */
-      if ( ucg_dev_ic_ssd1351(ucg, msg, data) == 0 )
+      if ( ucg_dev_ic_ssd1351_18(ucg, msg, data) == 0 )
 	return 0;
 
       /* 2. Send specific init sequence for this display module */
@@ -103,7 +103,7 @@ ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *d
       
     case UCG_MSG_DEV_POWER_DOWN:
       /* let do power down by the conroller procedures */
-      return ucg_dev_ic_ssd1351(ucg, msg, data);  
+      return ucg_dev_ic_ssd1351_18(ucg, msg, data);  
     
     case UCG_MSG_GET_DIMENSION:
       ((ucg_wh_t *)data)->w = 128;
@@ -112,5 +112,5 @@ ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *d
   }
   
   /* all other messages are handled by the controller procedures */
-  return ucg_dev_ic_ssd1351(ucg, msg, data);  
+  return ucg_dev_ic_ssd1351_18(ucg, msg, data);  
 }

@@ -120,8 +120,8 @@ typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 /*================================================*/
 /* list of supported display modules */
 
-ucg_int_t ucg_dev_ssd1351_128x128_oled_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
-ucg_int_t ucg_dev_ili9325_240x320_tft_itdb02(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ssd1351_18x128x128_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ili9325_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
@@ -131,25 +131,25 @@ ucg_int_t ucg_dev_ili9325_240x320_tft_itdb02(ucg_t *ucg, ucg_int_t msg, void *da
   each module can have the "none" extension (ucg_ext_none) or the specific
   extensions, that matches the controller name.
   
-  example: for the module u8g_dev_ssd1351_128x128_oled_ilsoft
+  example: for the module ucg_dev_ssd1351_128x128_oled_ilsoft
   valid extensions are:
   
   extensions are only valid if the controller name matches, for example
     ucg_ext_none
-    ucg_ext_ssd1351
+    ucg_ext_ssd1351_18bit
 */
 
 ucg_int_t ucg_ext_none(ucg_t *ucg, ucg_int_t msg, void *data);
 
-ucg_int_t ucg_ext_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
-ucg_int_t ucg_ext_ili9325(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_ext_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
 /* list of supported display controllers */
 
-ucg_int_t ucg_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
-ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
@@ -415,7 +415,7 @@ void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_
 #define UCG_DRAW_UPPER_LEFT  0x02
 #define UCG_DRAW_LOWER_LEFT 0x04
 #define UCG_DRAW_LOWER_RIGHT  0x08
-#define UCG_DRAW_ALL (U8G_DRAW_UPPER_RIGHT|U8G_DRAW_UPPER_LEFT|U8G_DRAW_LOWER_RIGHT|U8G_DRAW_LOWER_LEFT)
+#define UCG_DRAW_ALL (UCG_DRAW_UPPER_RIGHT|UCG_DRAW_UPPER_LEFT|UCG_DRAW_LOWER_RIGHT|UCG_DRAW_LOWER_LEFT)
 void ucg_DrawDisc(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
 void ucg_DrawCircle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
 
@@ -572,7 +572,7 @@ void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte);
 void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
 void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
-void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data);
+void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data);
 
 
 /*================================================*/

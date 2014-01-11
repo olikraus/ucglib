@@ -54,13 +54,28 @@ class Ucglib : public Print
   private:
     ucg_t ucg;
     ucg_int_t tx, ty;          // current position for the Print base class procedures
+    uint8_t tdir;
     ucg_dev_fnptr dev_cb;
     ucg_dev_fnptr ext_cb;
     void init(void);
   public:
     Ucglib(void) { init(); }
-    Ucglib(ucg_dev_fnptr dev, ucg_dev_fnptr ext = ucg_ext_none) { dev_cb = dev; ext_cb = ext; }
+    Ucglib(ucg_dev_fnptr dev, ucg_dev_fnptr ext = ucg_ext_none) { init(); dev_cb = dev; ext_cb = ext; }
+
+    void setPrintPos(ucg_int_t x, ucg_int_t y) { tx = x; ty = y; }
+    void setPrintDir(uint8_t dir) { tdir = dir; }
+    size_t write(uint8_t c);
     ucg_t *getUcg(void) { return &ucg; }
+    
+    void setFont(const ucg_fntpgm_uint8_t  *font)
+      { ucg_SetFont(&ucg, font); }
+    
+    void setColor(uint8_t idx, uint8_t r, uint8_t g, uint8_t b)
+      { ucg_SetColor(&ucg, idx, r, g, b); }
+    void setColor(uint8_t r, uint8_t g, uint8_t b)
+      { ucg_SetColor(&ucg, 0, r, g, b); }
+
+    
     void beginSerial(uint8_t cd, uint8_t cs, uint8_t reset);
     void beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset);
 

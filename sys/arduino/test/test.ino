@@ -88,7 +88,7 @@ uint8_t ucg_port_d_wr_pin = 18;	/* write enable */
 uint8_t ucg_port_d_cs_pin = 17;	/* chip select */
 uint8_t ucg_port_d_reset_pin = 16;
 
-void ucg_com_arduino_port_d_send(uint8_t data)
+static void ucg_com_arduino_port_d_send(uint8_t data)
 {
   PORTD = data;
   digitalWrite(ucg_port_d_wr_pin, 0);
@@ -178,13 +178,13 @@ int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *d
 
 void xsetup(void)
 {
-  ucg_Init(&ucg, ucg_dev_ssd1351_128x128_oled_ilsoft, ucg_ext_ssd1351, ucg_com_arduino_spi);
+  ucg_Init(&ucg, ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, ucg_com_arduino_spi);
 }
 
 void setup(void)
 {
   delay(1000);
-  ucg_Init(&ucg, ucg_dev_ili9325_240x320_tft_itdb02, ucg_ext_ili9325, ucg_com_arduino_port_d);
+  ucg_Init(&ucg, ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, ucg_com_arduino_port_d);
   delay(50);
 }
 

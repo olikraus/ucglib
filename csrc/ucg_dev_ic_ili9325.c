@@ -38,7 +38,7 @@
 #include "ucg.h"
 
 
-const uint8_t ucg_ili9325_set_pos_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_pos_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
@@ -49,7 +49,7 @@ const uint8_t ucg_ili9325_set_pos_seq[] =
 };
 
 
-const uint8_t ucg_ili9325_set_pos_dir0_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir0_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -66,7 +66,7 @@ const uint8_t ucg_ili9325_set_pos_dir0_seq[] =
   UCG_END()
 };
 
-const uint8_t ucg_ili9325_set_pos_dir1_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir1_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -83,7 +83,7 @@ const uint8_t ucg_ili9325_set_pos_dir1_seq[] =
   UCG_END()
 };
 
-const uint8_t ucg_ili9325_set_pos_dir2_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir2_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -100,7 +100,7 @@ const uint8_t ucg_ili9325_set_pos_dir2_seq[] =
   UCG_END()
 };
 
-const uint8_t ucg_ili9325_set_pos_dir3_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir3_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -155,7 +155,7 @@ ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
   
 */
 
-const uint8_t ucg_ili9325_set_x_pos_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_x_pos_seq[] = 
 {
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x022),							/* write to RAM */
@@ -163,7 +163,7 @@ const uint8_t ucg_ili9325_set_x_pos_seq[] =
   UCG_END()
 };
 
-const uint8_t ucg_ili9325_set_y_pos_seq[] = 
+const ucg_pgm_uint8_t ucg_ili9325_set_y_pos_seq[] = 
 {
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
   UCG_C10(0x022),							/* write to RAM */
@@ -288,7 +288,7 @@ ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -332,7 +332,7 @@ ucg_int_t ucg_dev_ic_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
   return ucg_dev_default_cb(ucg, msg, data);  
 }
 
-ucg_int_t ucg_ext_ili9325(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
