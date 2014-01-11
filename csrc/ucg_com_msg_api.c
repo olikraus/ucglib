@@ -279,12 +279,12 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 static void ucg_com_SendCmdArg(ucg_t *ucg, const uint8_t *data, uint8_t cmd_cnt, uint8_t arg_cnt)
 {
   ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd>>1)&1 );
-  ucg_com_SendString(ucg, cmd_cnt, data);
+  ucg_com_SendStringP(ucg, cmd_cnt, data);
   if ( arg_cnt > 0 )
   {
     data += cmd_cnt;
     ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-    ucg_com_SendString(ucg, arg_cnt, data);
+    ucg_com_SendStringP(ucg, arg_cnt, data);
   }
 }
 
@@ -293,6 +293,7 @@ static void ucg_com_SendCmdArg(ucg_t *ucg, const uint8_t *data, uint8_t cmd_cnt,
 void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 {
   uint8_t b;
+  uint8_t bb;
   uint8_t hi;
   uint8_t lo;
 
@@ -314,35 +315,45 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const uint8_t *data)
 	break;
       case 6:
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendString(ucg, lo, data+1);
+	ucg_com_SendStringP(ucg, lo, data+1);
 	data+=1+lo;      
 	break;
       case 7:	/* note: 0x070 is used to set data line status */
 	ucg_com_SetCDLineStatus(ucg, ((ucg->com_cfg_cd>>1)&1)^1 );
 	if ( lo > 0 )
-	  ucg_com_SendString(ucg, lo, data+1);
+	  ucg_com_SendStringP(ucg, lo, data+1);
 	data+=1+lo;      
 	break;
       case 8:
 	data++;
-	ucg_com_DelayMilliseconds(ucg, (((uint16_t)lo)<<8) + *data );
+	//b = ucg_pgm_read(data);
+	b = *data;
+	ucg_com_DelayMilliseconds(ucg, (((uint16_t)lo)<<8) + b );
 	data++;
 	break;
       case 9:
 	data++;
-	ucg_com_DelayMicroseconds(ucg, (((uint16_t)lo)<<8) + *data );
+	//b = ucg_pgm_read(data);
+	b = *data;
+	ucg_com_DelayMicroseconds(ucg, (((uint16_t)lo)<<8) + b );
 	data++;
 	break;
       case 10:
 	data++;
+	//b = ucg_pgm_read(data);
+	b = data[0];
+	bb = data[1];
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.x>>lo)))&data[0])|data[1] );
+	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.x>>lo)))&b)|bb );
 	data+=2;
 	break;
       case 11:
 	data++;
+	//b = ucg_pgm_read(data);
+	b = data[0];
+	bb = data[1];
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.y>>lo)))&data[0])|data[1] );
+	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.y>>lo)))&b)|bb );
 	data+=2;
 	break;
       case 15:
