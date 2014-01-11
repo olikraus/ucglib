@@ -41,8 +41,12 @@
 #define _UCGLIB_HH
 
 #include <Print.h>
-#include "ucg.h"
 
+#ifndef USE_PIN_LIST
+#define USE_PIN_LIST
+#endif
+
+#include "ucg.h"
 
 
 class Ucglib : public Print
@@ -57,13 +61,13 @@ class Ucglib : public Print
     Ucglib(void) { init(); }
     Ucglib(ucg_dev_fnptr dev, ucg_dev_fnptr ext = ucg_ext_none) { dev_cb = dev; ext_cb = ext; }
     ucg_t *getUcg(void) { return &ucg; }
-    beginSerial(uint8_t cd, uint8_t cs, uint8_t reset);
-    beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset);
+    void beginSerial(uint8_t cd, uint8_t cs, uint8_t reset);
+    void beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset);
 
     // Procedures, which are always available as part of the BASIC drawing procedure set
       
     void setClipRange(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_SetClipRange(&ucg, x,y,w,h); }
-    void setMaxClipRange(); { ucg_SetMaxClipRange(&ucg); }
+    void setMaxClipRange(void) { ucg_SetMaxClipRange(&ucg); }
       
     void drawHLine(ucg_int_t x, ucg_int_t y, ucg_int_t len) { ucg_DrawHLine(&ucg, x, y, len); }
     void drawVLine(ucg_int_t x, ucg_int_t y, ucg_int_t len) { ucg_DrawVLine(&ucg, x, y, len); }
@@ -72,7 +76,7 @@ class Ucglib : public Print
     
     void drawGradientLine(ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir) {ucg_DrawGradientLine(&ucg, x, y, len, dir); }
       
-}
+};
 
 
 

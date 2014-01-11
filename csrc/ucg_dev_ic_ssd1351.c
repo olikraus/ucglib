@@ -287,8 +287,11 @@ ucg_int_t ucg_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data)
       //ucg_handle_l90tc(ucg, ucg_dev_ic_ssd1351);
       ucg_handle_ssd1351_l90tc(ucg);
       return 1;
+    /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
+    /*
     case UCG_MSG_DRAW_L90SE:
       return ucg->ext_cb(ucg, msg, data);
+    */
   }
   return ucg_dev_default_cb(ucg, msg, data);  
 }

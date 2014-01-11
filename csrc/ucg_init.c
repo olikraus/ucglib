@@ -47,7 +47,6 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, uc
 {
   ucg_int_t r;
   ucg_init_struct(ucg);
-  //ucg->display_cb = display_cb;
   if ( ext_cb == (ucg_dev_fnptr)0 )
     ucg->ext_cb = ucg_ext_none;
  else 

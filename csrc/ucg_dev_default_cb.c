@@ -45,6 +45,8 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
+    case UCG_MSG_DRAW_L90SE:
+      return ucg->ext_cb(ucg, msg, data);
     case UCG_MSG_SET_CLIP_BOX:
       ucg->clip_box = *(ucg_box_t *)data;
       break;

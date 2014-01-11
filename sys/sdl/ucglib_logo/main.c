@@ -85,12 +85,11 @@ int main(void)
 {
   ucg_int_t a,b;
   
-  ucg_Init(&ucg, &ucg_sdl_dev_cb, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFont(&ucg, ucg_font_ncenB24);  
   
-  ucg_SetRotate270(&ucg);
-  
-  ucg_SetClipRange(&ucg, 10,5,40,20);
+  //ucg_SetRotate270(&ucg);  
+  //ucg_SetClipRange(&ucg, 10,5,40,20);
 
 
   

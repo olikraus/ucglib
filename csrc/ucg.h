@@ -60,8 +60,8 @@ extern "C"
 #endif
 
 #ifdef ARDUINO
-#ifndef USE_PIN_ARRAY
-#define USE_PIN_ARRAY
+#ifndef USE_PIN_LIST
+#define USE_PIN_LIST
 #endif
 #endif
 
@@ -399,6 +399,7 @@ void ucg_DrawPixel(ucg_t *ucg, ucg_int_t x, ucg_int_t y);
 void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawVLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
+/* the following procedure is only available with the extended callback */
 void ucg_DrawGradientLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir);
 
 
