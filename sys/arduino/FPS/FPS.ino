@@ -37,7 +37,8 @@ uint8_t lcg_rnd(void)
 
 void draw_text(void) {
   ucg.setFont(ucg_font_ncenR14r);
-  ucg.setColor(255, 255, 255);
+  //ucg.setColor(255, 255, 255);
+  ucg.setColor(lcg_rnd(),lcg_rnd(),lcg_rnd());
   ucg.setPrintPos(0,20);
   ucg.print("The quick brown");
   ucg.setPrintPos(0,40);
