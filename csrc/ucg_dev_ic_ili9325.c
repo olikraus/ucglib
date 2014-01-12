@@ -316,7 +316,7 @@ ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      //ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325);
+      //ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325_18);
       ucg_handle_ili9325_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:

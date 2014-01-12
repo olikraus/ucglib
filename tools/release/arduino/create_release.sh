@@ -3,6 +3,7 @@ mkdir libraries
 mkdir libraries/Ucglib
 mkdir libraries/Ucglib/examples
 mkdir libraries/Ucglib/examples/HelloWorld
+mkdir libraries/Ucglib/examples/FPS
 mkdir libraries/Ucglib/utility
 cp ../../../ChangeLog ./libraries/Ucglib/.
 cp ../../../license.txt ./libraries/Ucglib/.
@@ -13,6 +14,7 @@ sed -i 's|ucg.h|utility/ucg.h|g' ./libraries/Ucglib/Ucglib.h
 cp ../../../csrc/*.c ./libraries/Ucglib/utility/.
 cp ../../../csrc/*.h ./libraries/Ucglib/utility/.
 cp ../../../sys/arduino/HelloWorld/*.ino ./libraries/Ucglib/examples/HelloWorld/.
+cp ../../../sys/arduino/FPS/*.ino ./libraries/Ucglib/examples/FPS/.
 
 
 chmod -R og=u libraries

@@ -9,9 +9,11 @@ void setup(void)
   ucg.begin();
 }
 
+
+
 void loop(void)
 {
-  ucg.setFont(ucg_font_ncenB18r);
+  ucg.setFont(ucg_font_helvR18r);
   ucg.setPrintPos(0,25);
   ucg.setColor(255, 255, 255);
   //ucg.setColor(255, 0, 0);

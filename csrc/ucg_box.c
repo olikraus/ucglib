@@ -45,6 +45,19 @@ void ucg_DrawBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)
   }  
 }
 
+/*
+  - clear the screen with black color
+  - reset clip range to max
+  - set draw color to white
+*/
+void ucg_ClearScreen(ucg_t *ucg)
+{
+  ucg_SetColor(ucg, 0, 0, 0, 0);
+  ucg_SetMaxClipRange(ucg);
+  ucg_DrawBox(ucg, 0, 0, ucg_GetWidth(ucg), ucg_GetHeight(ucg));
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+}
+
 ucg_ccs_t ucg_ccs_box[6];	/* color component sliders used by GradientBox */
 
 void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)

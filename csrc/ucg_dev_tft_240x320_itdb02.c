@@ -3,6 +3,7 @@
   ucg_dev_tft_240x320_itdb02.c
   
   ITDB02 Module Shield
+  Documentation: code.google.com/p/itdb02/
 
   Universal uC Color Graphics Library
   
@@ -48,15 +49,15 @@ static const ucg_pgm_uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_RST(1),
   UCG_DLY_MS(50),
   UCG_CS(0),					/* enable chip */
-  UCG_C22(0x000, 0x001,0x001, 0x000), /* Driver Output Control, bits 8 & 10 */
-  //UCG_C22(0x000, 0x002, 0x002, 0x000),              /* LCD Driving Wave Control, bit 9: Set line inversion */
+  UCG_C22(0x000, 0x001,0x001, 0x000), 	/* Driver Output Control, bits 8 & 10 */
+  UCG_C22(0x000, 0x002, 0x007, 0x000),              /* LCD Driving Wave Control, bit 9: Set line inversion */
   //UCG_C22(0x000, 0x003, 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR (Bit 12)=1 (16 bit transfer, 65K Mode)*/
   UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   //UCG_C22(0x000, 0x004, 0x000, 0x000),              /* Resize register, all 0: no resize */
-  //UCG_C22(0x000, 0x008, 0x002, 0x007),              /* Display Control 2: set the back porch and front porch */
+  UCG_C22(0x000, 0x008, 0x002, 0x007),              /* Display Control 2: set the back porch and front porch */
   //UCG_C22(0x000, 0x009, 0x000, 0x000),              /* Display Control 3: normal scan */
   //UCG_C22(0x000, 0x00a, 0x000, 0x000),              /* Display Control 4: set to "no FMARK output" */
-  UCG_C22(0x000, 0x00c, 0x000, 0x002),              /* RGB Display Interface Control 1, RIM=10 (3x6 Bit)*/
+  UCG_C22(0x000, 0x00c, 0x000, 0x000),              /* RGB Display Interface Control 1, RIM=10 (3x6 Bit), 12 Jan 14: RIM=00  */
   //UCG_C22(0x000, 0x00d, 0x000, 0x000),              /* Frame Maker Position */
   //UCG_C22(0x000, 0x00f, 0x000, 0x000),               /* RGB Display Interface Control 2 */
   UCG_C22(0x000, 0x010, 0x000, 0x000),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB, actual setting is done below */
@@ -65,23 +66,38 @@ static const ucg_pgm_uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_C22(0x000, 0x013, 0x000, 0x000),              /* Power Control 4: VDV[4:0] for VCOM amplitude */
   UCG_C22(0x000, 0x007, 0x000, 0x001),              /* Display Control 1: Operate, but do not display */
   UCG_DLY_MS(100),         /* delay 100 ms */  /*  ITDB02 none D verion:  50ms */
-  //UCG_DLY_MS(100),         /* delay 100 ms */
-  UCG_C22(  0x000, 0x010, 0x016, 0x090),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB */
+  UCG_C22(  0x000, 0x010, 0x010, 0x090),              /* Power Control 1: SAP, BT[3:0], AP, DSTB, SLP, STB */
+										  /*  12. Jan 14. Prev value: 0x016, 0x090 */
 										  /*  ITDB02 none D verion:  0x010, 0x090 */
   //UCG_C22(  0x000, 0x010, 0x017, 0x0f0),              /* Power Control 1: Setting for max quality & power consumption: SAP(Bit 12)=1, BT[3:0]=7 (max), APE (Bit 8)=1, AP=7 (max), disable sleep: SLP=0, STB=0 */
   UCG_C22(  0x000, 0x011, 0x002, 0x027),              /* Power Control 2 VCI ration, step up circuits 1 & 2 */
   UCG_DLY_MS(50),         /* delay 50 ms */
   
-  UCG_C22(  0x000, 0x012, 0x000, 0x00d),              /* Power Control 3: VCI: External, VCI*1.80 */
-										  /*  ITDB02 none D verion:  0x000, 0x01f */
+  UCG_C22(  0x000, 0x012, 0x000, 0x01f),              /* Power Control 3: VCI: External, VCI*1.80 */
+										  /*  12. Jan 14. Prev value: 0x000, 0x00d */
   UCG_DLY_MS(50),         /* delay 50 ms */
-  UCG_C22(  0x000, 0x013, 0x012, 0x000),              /* Power Control 4: VDV[4:0] for VCOM amplitude */
-                   /*  ITDB02 none D verion:  0x015, 0x000 */
-  UCG_C22(  0x000, 0x029, 0x000, 0x00a),              /* Power Control 7 */
-                   /*  ITDB02 none D verion:  0x000, 0x027 */
+  UCG_C22(  0x000, 0x013, 0x015, 0x000),              /* Power Control 4: VDV[4:0] for VCOM amplitude */
+										  /*  12. Jan 14. Prev value: 0x012, 0x009 */
+  UCG_C22(  0x000, 0x029, 0x000, 0x027),              /* Power Control 7 */
+										  /*  12. Jan 14. Prev value: 0x000, 0x00a */
   UCG_C22(  0x000, 0x02b, 0x000, 0x00d),              /* Frame Rate: 93 */
   //UCG_C22(  0x000, 0x02b, 0x000, 0x00b),              /* Frame Rate: 70, too less, some flicker visible */
   UCG_DLY_MS(50),         /* delay 50 ms */
+
+  /* Gamma Control, values from iteadstudio.com reference software on google code */
+  /*
+  UCG_C22(0x00,0x30,0x00,0x00),
+  UCG_C22(0x00,0x31,0x07,0x07),
+  UCG_C22(0x00,0x32,0x03,0x07),
+  UCG_C22(0x00,0x35,0x02,0x00),
+  UCG_C22(0x00,0x36,0x00,0x08),
+  UCG_C22(0x00,0x37,0x00,0x04),
+  UCG_C22(0x00,0x38,0x00,0x00),
+  UCG_C22(0x00,0x39,0x07,0x07),
+  UCG_C22(0x00,0x3C,0x00,0x02),
+  UCG_C22(0x00,0x3D,0x1D,0x04),
+  */
+
   UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
   UCG_C22(  0x000, 0x021, 0x000, 0x000),              /* Vertical GRAM Address Set */
   
