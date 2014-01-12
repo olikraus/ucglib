@@ -8,6 +8,33 @@ void setup(void)
   ucg.begin();
 }
 
+/*
+  Linear Congruential Generator (LCG)
+  z = (a*z + c) % m;  
+  m = 256 (8 Bit)
+  
+  for period:
+  a-1: dividable by 2
+  a-1: multiple of 4
+  c: not dividable by 2
+  
+    c = 17
+    a-1 = 64 --> a = 65
+
+*/
+
+
+uint8_t z = 127;	// start value
+uint8_t lcg_rnd(void)
+{
+  z = (uint8_t)((uint16_t)65*(uint16_t)z + (uint16_t)17);
+  return z;
+}
+
+
+
+
+
 void draw_text(void) {
   ucg.setFont(ucg_font_ncenR14r);
   ucg.setColor(255, 255, 255);
