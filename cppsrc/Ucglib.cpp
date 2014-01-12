@@ -84,10 +84,12 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
       delayMicroseconds(arg);
       break;
     case UCG_COM_MSG_CHANGE_RESET_LINE:
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
       break;
     case UCG_COM_MSG_CHANGE_CS_LINE:
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
       digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
@@ -156,10 +158,12 @@ static int16_t ucg_com_arduino_4wire_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, 
       delayMicroseconds(arg);
       break;
     case UCG_COM_MSG_CHANGE_RESET_LINE:
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
       break;
     case UCG_COM_MSG_CHANGE_CS_LINE:
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
       digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
@@ -199,6 +203,8 @@ static int16_t ucg_com_arduino_4wire_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, 
 }
 
 void Ucglib::init(void) {
+  uint8_t i;
+  
   // do a dummy init so that something usefull is part of the ucg structure
   ucg_Init(&ucg, ucg_dev_default_cb, ucg_ext_none, (ucg_com_fnptr)0);
 
@@ -206,6 +212,10 @@ void Ucglib::init(void) {
   tx = 0;
   ty = 0;
   tdir = 0;	// default direction for Arduino print() 
+  
+  for( i = 0; i < UCG_PIN_COUNT; i++ )
+    ucg.pin_list[i] = UCG_PIN_VAL_NONE;
+  
 }
 
 size_t Ucglib::write(uint8_t c) { 
@@ -221,20 +231,13 @@ size_t Ucglib::write(uint8_t c) {
 }
 
 
-
-void Ucglib::beginSerial(uint8_t cd, uint8_t cs, uint8_t reset) {
-  ucg.pin_list[UCG_PIN_RST] = reset;
-  ucg.pin_list[UCG_PIN_CD] = cd;
-  ucg.pin_list[UCG_PIN_CS] = cs;
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_SPI);
-  //ucg.pin_list[UCG_PIN_SCL] = scl
-  //ucg.pin_list[UCG_PIN_SDA] = sda;
+void Ucglib4WireSPI::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_SPI); 
 }
 
-void Ucglib::beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset) {
-  ucg.pin_list[UCG_PIN_RST] = reset;
-  ucg.pin_list[UCG_PIN_CD] = cd;
-  ucg.pin_list[UCG_PIN_CS] = cs;
-  ucg.pin_list[UCG_PIN_WR] = wr;
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d);
+void Ucglib8Bit::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
 }
+

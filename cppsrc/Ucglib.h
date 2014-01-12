@@ -1,4 +1,3 @@
-
 /*
 
   Ucglib.h
@@ -48,15 +47,17 @@
 
 #include "ucg.h"
 
-
+// Do not use Ucglib class directly, use Ucglib8Bit or Ucglib4WireSPI instead
 class Ucglib : public Print
 {
-  private:
+  protected:
     ucg_t ucg;
-    ucg_int_t tx, ty;          // current position for the Print base class procedures
-    uint8_t tdir;
     ucg_dev_fnptr dev_cb;
     ucg_dev_fnptr ext_cb;
+  private:
+    ucg_int_t tx, ty;          // current position for the Print base class procedures
+    uint8_t tdir;
+  protected:
     void init(void);
   public:
     Ucglib(void) { init(); }
@@ -75,10 +76,6 @@ class Ucglib : public Print
     void setColor(uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, 0, r, g, b); }
 
-    
-    void beginSerial(uint8_t cd, uint8_t cs, uint8_t reset);
-    void beginParallel(uint8_t wr, uint8_t cd, uint8_t cs, uint8_t reset);
-
     // Procedures, which are always available as part of the BASIC drawing procedure set
       
     void setClipRange(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_SetClipRange(&ucg, x,y,w,h); }
@@ -93,7 +90,27 @@ class Ucglib : public Print
       
 };
 
+class Ucglib4WireSPI : public Ucglib
+{
+  public:
+    Ucglib4WireSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+	  ucg.pin_list[UCG_PIN_RST] = reset; 
+	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  ucg.pin_list[UCG_PIN_CS] = cs; }
+    void begin(void);
+};
 
-
+class Ucglib8Bit : public Ucglib
+{
+  public:
+    Ucglib8Bit(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+	  ucg.pin_list[UCG_PIN_RST] = reset;
+	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  ucg.pin_list[UCG_PIN_CS] = cs;
+	  ucg.pin_list[UCG_PIN_WR] = wr; }
+    void begin(void);
+};
 
 #endif /* _UCGLIB_HH */
