@@ -146,10 +146,13 @@ void ucg_com_DelayMilliseconds(ucg_t *ucg, uint16_t delay)
   }
 }
 
+
+#ifndef ucg_com_SendByte
 void ucg_com_SendByte(ucg_t *ucg, uint8_t byte)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_BYTE, byte, NULL);
 }
+#endif
 
 void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte)
 {
@@ -161,10 +164,13 @@ void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_2_BYTES, cnt, byte_ptr);
 }
 
+
+#ifndef ucg_com_SendRepeat3Bytes
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_3_BYTES, cnt, byte_ptr);
 }
+#endif
 
 void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
 {
@@ -184,6 +190,12 @@ void ucg_com_SendStringP(ucg_t *ucg, uint32_t cnt, const ucg_pgm_uint8_t *byte_p
   }
 }
 
+
+void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
+{
+  ucg->com_cb(ucg, UCG_COM_MSG_SEND_CD_DATA_SEQUENCE, cnt, (uint8_t *)byte_ptr);
+  ucg_com_SetCDLineStatus(ucg, 0);	// ensure that the status is set correctly for the CD line */
+}
 
 /*
 

@@ -90,6 +90,7 @@ class Ucglib : public Print
     // Procedures, which are only available with the EXTENDED option
     
     void drawGradientLine(ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir) {ucg_DrawGradientLine(&ucg, x, y, len, dir); }
+    void drawGradientBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawGradientBox(&ucg, x, y, w, h); }
       
 };
 
@@ -98,8 +99,15 @@ class Ucglib4WireSPI : public Ucglib
   public:
     Ucglib4WireSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
+	
+	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
+	  ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
 	  ucg.pin_list[UCG_PIN_RST] = reset; 
+	  ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
+	  ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
 	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
+	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
     void begin(void);
 };
@@ -109,9 +117,17 @@ class Ucglib8Bit : public Ucglib
   public:
     Ucglib8Bit(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
+	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
+	  ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
 	  ucg.pin_list[UCG_PIN_RST] = reset;
+	  ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
+	  ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
 	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
+	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 	  ucg.pin_list[UCG_PIN_CS] = cs;
+	  ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
+	  ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
 	  ucg.pin_list[UCG_PIN_WR] = wr; }
     void begin(void);
 };

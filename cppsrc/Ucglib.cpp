@@ -40,12 +40,26 @@
 
 #include "Ucglib.h"
 
+static void ucg_com_arduino_port_d_send(uint8_t data, volatile uint8_t *port, uint8_t and_mask, uint8_t or_mask)
+{
+    PORTD = data;
+    *port &= and_mask;
+    *port |= or_mask;
+}
+
+#ifdef SLOW
 static void ucg_com_arduino_port_d_send(ucg_t *ucg, uint8_t data)
 {
-  PORTD = data;
+    PORTD = data;
+    *ucg->data_port[UCG_PIN_WR] &= ~ucg->data_mask[UCG_PIN_WR];
+    *ucg->data_port[UCG_PIN_WR] |= ucg->data_mask[UCG_PIN_WR];
+
+    /*
   digitalWrite(ucg->pin_list[UCG_PIN_WR], 0);
   digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
+  */
 }
+#endif
 
 
 static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
@@ -92,35 +106,68 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
 	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
-      digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
+      if ( arg == 0 )
+	*ucg->data_port[UCG_PIN_CD] &= ~ucg->data_mask[UCG_PIN_CD];
+      else
+	*ucg->data_port[UCG_PIN_CD] |= ucg->data_mask[UCG_PIN_CD];
+      //digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      ucg_com_arduino_port_d_send(ucg, arg);
+      //ucg_com_arduino_port_d_send(ucg, arg);
+      ucg_com_arduino_port_d_send(arg, ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
+
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	ucg_com_arduino_port_d_send(ucg, data[0]);
+	//ucg_com_arduino_port_d_send(ucg, data[0]);
+	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_port_d_send(ucg, data[0]);
-	ucg_com_arduino_port_d_send(ucg, data[1]);
+	//ucg_com_arduino_port_d_send(ucg, data[0]);
+	//ucg_com_arduino_port_d_send(ucg, data[1]);
+	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
+	ucg_com_arduino_port_d_send(data[1], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_port_d_send(ucg, data[0]);
-	ucg_com_arduino_port_d_send(ucg, data[1]);
-	ucg_com_arduino_port_d_send(ucg, data[2]);
+	//ucg_com_arduino_port_d_send(ucg, data[0]);
+	//ucg_com_arduino_port_d_send(ucg, data[1]);
+	//ucg_com_arduino_port_d_send(ucg, data[2]);
+	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
+	ucg_com_arduino_port_d_send(data[1], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
+	ucg_com_arduino_port_d_send(data[2], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	ucg_com_arduino_port_d_send(ucg, *data++);
+	//ucg_com_arduino_port_d_send(ucg, *data++);
+	ucg_com_arduino_port_d_send(*data++, ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      while(arg > 0)
+      {
+	if ( *data != 0 )
+	{
+	  if ( *data == 1 )
+	  {
+	    *ucg->data_port[UCG_PIN_CD] &= ~ucg->data_mask[UCG_PIN_CD];
+	  }
+	  else
+	  {
+	    *ucg->data_port[UCG_PIN_CD] |= ucg->data_mask[UCG_PIN_CD];
+	  }
+	}
+	data++;
+	ucg_com_arduino_port_d_send(*data, ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);	
+	data++;
 	arg--;
       }
       break;

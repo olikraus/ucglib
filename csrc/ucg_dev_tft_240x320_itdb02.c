@@ -123,7 +123,7 @@ static const ucg_pgm_uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   /* write test pattern */  
   //UCG_C22(  0x000, 0x020, 0x000, 0x000),              /* Horizontal GRAM Address Set */
   //UCG_C22(  0x000, 0x021, 0x000, 0x011),              /* Vertical GRAM Address Set */
-  //UCG_C20(  0x000, 0x022),               /* Write Data to GRAM */
+  UCG_C20(  0x000, 0x022),               /* Write Data to GRAM */
 	
   UCG_CS(1),					/* disable chip */
   UCG_END(),					/* end of sequence */

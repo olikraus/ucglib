@@ -1,11 +1,14 @@
 #include "Ucglib.h"
 
-Ucglib8Bit ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_dev_ic_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
+Ucglib8Bit ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 
-void setup(void)
-{
+void setup(void) {
   delay(1000);
   ucg.begin();
+  ucg.setColor(0, 0,0,0);
+  ucg.setColor(1, 0,0,0);
+  ucg.setColor(2, 0,0,0);
+  ucg.setColor(3, 0,0,0);
 }
 
 /*
@@ -18,19 +21,14 @@ void setup(void)
   a-1: multiple of 4
   c: not dividable by 2
   
-    c = 17
-    a-1 = 64 --> a = 65
-
+  c = 17
+  a-1 = 64 --> a = 65
 */
-
-
 uint8_t z = 127;	// start value
-uint8_t lcg_rnd(void)
-{
+uint8_t lcg_rnd(void) {
   z = (uint8_t)((uint16_t)65*(uint16_t)z + (uint16_t)17);
   return z;
 }
-
 
 
 
@@ -45,6 +43,38 @@ void draw_text(void) {
   ucg.print("fox jumps over");
   ucg.setPrintPos(0,60);
   ucg.print("the lazy dog");
+}
+
+void draw_box(void) {
+  ucg_int_t x, y, w, h;
+  ucg.setColor(lcg_rnd(),lcg_rnd(),lcg_rnd());
+  x = lcg_rnd() & 31;
+  y = lcg_rnd() & 31;
+  w = 63;
+  w += lcg_rnd() & 31;
+  h = 63;
+  h += lcg_rnd() & 31;
+  ucg.drawBox(x,y,w, h);
+}
+
+void draw_gradient_box(void) {
+  ucg_int_t x, y, w, h;
+  static uint8_t idx = 0;
+  switch(idx & 3)
+  {
+    case 0: ucg.setColor(0, lcg_rnd(),lcg_rnd(),lcg_rnd()); break;
+    case 1: ucg.setColor(1, lcg_rnd(),lcg_rnd(),lcg_rnd()); break;
+    case 2: ucg.setColor(2, lcg_rnd(),lcg_rnd(),lcg_rnd()); break;
+    case 3: ucg.setColor(3, lcg_rnd(),lcg_rnd(),lcg_rnd()); break;
+  }
+  idx++;
+  x = lcg_rnd() & 31;
+  y = lcg_rnd() & 31;
+  w = 63;
+  w += lcg_rnd() & 31;
+  h = 63;
+  h += lcg_rnd() & 31;
+  ucg.drawGradientBox(x,y,w, h);
 }
 
 
@@ -117,6 +147,8 @@ void show_result(const char *s, uint16_t fps)  {
 void loop(void)
 {
   show_result("Text", measure(draw_text));
+  show_result("Box", measure(draw_box));
+  show_result("Gradient", measure(draw_gradient_box));
   delay(500);
   
 }

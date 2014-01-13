@@ -274,6 +274,16 @@ struct _ucg_t
   /* only for Arduino/C++ Interface */
 #ifdef USE_PIN_LIST
   uint8_t pin_list[UCG_PIN_COUNT];
+
+#	if defined(__PIC32MX)
+  /* CHIPKIT PIC32 */
+  volatile uint32_t *data_port[UCG_PIN_COUNT];
+  uint32_t data_mask[UCG_PIN_COUNT];
+#	else
+  volatile uint8_t *data_port[UCG_PIN_COUNT];
+  uint8_t data_mask[UCG_PIN_COUNT];
+#	endif
+
 #endif
 
   /* 
@@ -308,7 +318,8 @@ struct _ucg_t
 #define UCG_COM_STATUS_MASK_CD 1
 
 /*
-  arg:	clock speed in ns (0..4095)
+  arg:	0
+  data:	ucg_com_info_t *
   return:	0 for error
   note: 
     - power up is the first command, which is sent
@@ -364,6 +375,15 @@ struct _ucg_t
 */
 #define UCG_COM_MSG_SEND_STR 20
 
+/*
+  ucg->com_status	current status of Reset, CS and CD line (ucg->com_status)
+  arg:			number of cd_info and data pairs (half value of total byte cnt) 	
+  data:			uint8_t with CD and data information
+	cd_info data cd_info data cd_info data cd_info data ... cd_info data cd_info data
+	
+	
+*/
+#define UCG_COM_MSG_SEND_CD_DATA_SEQUENCE 21
 
 
 /*================================================*/
@@ -560,6 +580,16 @@ void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 /* Termination byte */
 #define UCG_END()					0x00
 
+// 13574
+
+/*
+#define ucg_com_SendByte(ucg, byte) \
+  (ucg)->com_cb((ucg), UCG_COM_MSG_SEND_BYTE, (byte), NULL)
+*/
+
+#define ucg_com_SendRepeat3Bytes(ucg, cnt, byte_ptr) \
+  (ucg)->com_cb((ucg), UCG_COM_MSG_REPEAT_3_BYTES, (cnt), (byte_ptr))
+
 void ucg_com_PowerDown(ucg_t *ucg);
 int16_t ucg_com_PowerUp(ucg_t *ucg, uint16_t serial_clk_speed, uint16_t parallel_clk_speed);
 void ucg_com_SetLineStatus(ucg_t *ucg, uint8_t level, uint8_t mask, uint8_t msg) UCG_NOINLINE;
@@ -568,11 +598,16 @@ void ucg_com_SetCSLineStatus(ucg_t *ucg, uint8_t level);
 void ucg_com_SetCDLineStatus(ucg_t *ucg, uint8_t level);
 void ucg_com_DelayMicroseconds(ucg_t *ucg, uint16_t delay) UCG_NOINLINE;
 void ucg_com_DelayMilliseconds(ucg_t *ucg, uint16_t delay) UCG_NOINLINE;
+#ifndef ucg_com_SendByte
 void ucg_com_SendByte(ucg_t *ucg, uint8_t byte);
+#endif
 void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte);
 void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+#ifndef ucg_com_SendRepeat3Bytes
 void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+#endif
 void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
+void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
 void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data);
 
 
