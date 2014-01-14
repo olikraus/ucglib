@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 
-extern const ucg_fntpgm_uint8_t ucg_font_ncenB18[] UCG_FONT_SECTION("ucg_font_ncenB18");
+//extern const ucg_fntpgm_uint8_t ucg_font_ncenB18[] UCG_FONT_SECTION("ucg_font_ncenB18");
 //extern const u8g_fntpgm_uint8_t u8g_font_ncenB18[] U8G_FONT_SECTION("u8g_font_ncenB18");
 
 ucg_t ucg;
@@ -19,10 +19,10 @@ int main(void)
   ucg_int_t i;
   
   tga_init(128,64);
-  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, &ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFont(&ucg, ucg_font_ncenB18);
   
-  ucg_SetColor(&ucg, 0, 0, 0, 0255);
+  ucg_SetColor(&ucg, 0, 0, 0, 255);
   ucg_DrawPixel(&ucg, 70,20);
   ucg_SetColor(&ucg, 0, 255, 0, 0);
  
