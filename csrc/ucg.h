@@ -245,6 +245,9 @@ struct _ucg_t
   /* if rotation is applied, than this cb is called after rotation */
   ucg_dev_fnptr rotate_chain_device_cb;
   ucg_wh_t rotate_dimension;
+
+  /* if rotation is applied, than this cb is called by the scale device */
+  ucg_dev_fnptr scale_chain_device_cb;
   
   /* communication interface */
   ucg_com_fnptr com_cb;
@@ -452,6 +455,11 @@ void ucg_UndoRotate(ucg_t *ucg);
 void ucg_SetRotate90(ucg_t *ucg);
 void ucg_SetRotate180(ucg_t *ucg);
 void ucg_SetRotate270(ucg_t *ucg);
+
+/*================================================*/
+/* ucg_scale.c */
+void ucg_UndoScale(ucg_t *ucg);
+void ucg_SetScale2x2(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_font.c */

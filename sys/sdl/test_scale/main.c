@@ -17,12 +17,15 @@ int main(void)
 {
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
-  ucg_SetFont(&ucg, ucg_font_ncenB24);  
-  ucg_SetRotate90(&ucg);
-
+  ucg_SetFont(&ucg, ucg_font_ncenB12);  
   ucg_SetColor(&ucg, 0, 255, 180, 40);
+  
+  ucg_DrawGlyph(&ucg, 20,20, 3, 'A');
+  ucg_SetScale2x2(&ucg);
+
   //ucg_DrawHLine(&ucg, 0,63,20);
-  ucg_DrawHLine(&ucg, 0,64,20);
+  //ucg_DrawHLine(&ucg, 0,64,20);
+  ucg_DrawGlyph(&ucg, 20,20, 3, 'A');
   
 
   while( ucg_sdl_get_key() < 0 )
