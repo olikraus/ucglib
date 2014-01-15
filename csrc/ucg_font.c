@@ -665,3 +665,30 @@ void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font)
     //ucg_SetFontPosBaseline(ucg);
   }
 }
+
+/*===============================================*/
+
+ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s)
+{
+  ucg_int_t  w;
+  uint8_t encoding;
+  
+  /* reset the total width to zero, this will be expanded during calculation */
+  w = 0;
+  
+  for(;;)
+  {
+    encoding = *s;
+    if ( encoding == 0 )
+      break;
+
+    /* load glyph information */
+    ucg_GetGlyph(ucg, encoding);
+    w += ucg->glyph_dx;    
+    
+    /* goto next char */
+    s++;
+  }
+  
+  return w;  
+}

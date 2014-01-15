@@ -507,6 +507,8 @@ void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
 
+ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s);
+
 
 /*================================================*/
 /* LOW LEVEL PROCEDRUES, ONLY CALLED BY DEV CB */
