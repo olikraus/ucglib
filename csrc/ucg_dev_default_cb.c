@@ -199,6 +199,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   llllll: number of bytes which follow, can be 0
 */
 
+#ifdef ON_HOLD
 void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb)
 {
   ucg_int_t dx, dy;
@@ -245,3 +246,4 @@ void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb)
     ucg->arg.bitmap++;
   }
 }
+#endif

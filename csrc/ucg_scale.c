@@ -84,6 +84,7 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->scale_chain_device_cb(ucg, msg, data); 
       ucg->arg.pixel.pos = xy;
       return 1;
+    case UCG_MSG_DRAW_L90SE:
     case UCG_MSG_DRAW_L90FX:
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;
@@ -92,6 +93,10 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->arg.pixel.pos.y *= 2;
       ucg->arg.len *= 2;
       ucg->scale_chain_device_cb(ucg, msg, data);  
+      ucg->arg.pixel.pos = xy;
+      ucg->arg.pixel.pos.x *= 2;
+      ucg->arg.pixel.pos.y *= 2;
+      ucg->arg.len = len*2;
       switch(ucg->arg.dir)
       {
 	case 0: ucg->arg.pixel.pos.y++; break;
@@ -99,7 +104,7 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
 	case 2: ucg->arg.pixel.pos.y++; break;
 	default: case 3: ucg->arg.pixel.pos.x++; break;
       }
-      ucg->scale_chain_device_cb(ucg, msg, data);  
+      ucg->scale_chain_device_cb(ucg, msg, data);
       ucg->arg.pixel.pos = xy;
       ucg->arg.len = len;
       ucg->arg.dir = dir;
@@ -183,7 +188,6 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->arg.len = len;
       ucg->arg.dir = dir;
       return 1;
-    case UCG_MSG_DRAW_L90SE:
     case UCG_MSG_DRAW_L90RL:
       break;
   }

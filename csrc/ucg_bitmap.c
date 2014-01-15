@@ -50,6 +50,7 @@ void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg
   ucg_DrawL90TCWithArg(ucg);
 }
 
+#ifdef ON_HOLD
 void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap)
 {
   ucg->arg.pixel.rgb.color[0] = ucg->arg.rgb[0].color[0];
@@ -62,4 +63,4 @@ void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const
   ucg->arg.bitmap = rl_bitmap;
   ucg_DrawL90RLWithArg(ucg);
 }
-
+#endif
