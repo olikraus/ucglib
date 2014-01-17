@@ -70,6 +70,10 @@ class Ucglib : public Print
     
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
+    ucg_int_t getFontAscent(void)
+      { ucg_GetFontAscent(&ucg); }
+    ucg_int_t getFontDescent(void)
+      { ucg_GetFontDescent(&ucg); }
     
     void setColor(uint8_t idx, uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, idx, r, g, b); }

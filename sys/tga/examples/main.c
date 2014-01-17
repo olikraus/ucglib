@@ -13,11 +13,11 @@ ucg_t ucg;
 unsigned char bitmap[2] = { 0x0f0, 0x0f0 };
 
 ucg_int_t rule_offset = 4;
-ucg_int_t ox = 64;
+ucg_int_t ox = 0;
 
 void prepare_picture(ucg_t *ucg)
 {
-  tga_init(128*2,64);
+  tga_init(128,64);
   ucg_Init(ucg, &ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetMaxClipRange(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 0);
@@ -30,7 +30,7 @@ void save_picture(ucg_t *ucg, const char *fname)
 
   {
     char cmd[256];
-    sprintf(cmd, "convert ucg_pic.tga %s.png", fname);
+    sprintf(cmd, "convert ucg_pic.tga -scale 200%% %s.png", fname);
     system(cmd);
   }
 }
@@ -160,12 +160,12 @@ void set_clip_range(ucg_t *ucg)
   ucg_SetFontPosBaseline(ucg);
   ucg_SetFont(ucg, ucg_font_ncenB18);
   ucg_SetColor(ucg, 0, 255, 255, 255);		/* draw white A */
-  ucg_DrawGlyph(ucg, 50+ox, 40, 0, 'A');
-  ucg_SetClipRange(ucg, 57+ox, 20, 30, 15);	/* restrict area */
+  ucg_DrawGlyph(ucg, 50, 40, 0, 'A');
+  ucg_SetClipRange(ucg, 57, 20, 30, 15);	/* restrict area */
   ucg_SetColor(ucg, 0, 0, 0, 127);
-  ucg_DrawBox(ucg, ox, 0, 128, 64);		/* fill the restricted area with dark blue */
+  ucg_DrawBox(ucg, 0, 0, 128, 64);		/* fill the restricted area with dark blue */
   ucg_SetColor(ucg, 0, 0, 0, 255);
-  ucg_DrawGlyph(ucg, 50+ox, 40, 0, 'A');	/* draw light blue A */
+  ucg_DrawGlyph(ucg, 50, 40, 0, 'A');	/* draw light blue A */
   
   hrule(ucg, ox+57, 20, 30, 0);
   vrule(ucg, ox+57+30, 20, 15, 1);
@@ -240,13 +240,33 @@ void draw_text_ascent_descent(ucg_t *ucg)
   ucg_SetFont(ucg, ucg_font_ncenB24);
   ucg_SetFontPosBaseline(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
-  ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
+  ucg_DrawHLine(ucg, 42+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
   ucg_SetColor(ucg, 0, 255, 255, 255);		/* draw white "Ucg" */
-  ucg_DrawString(ucg, 45+ox, 30, 0, "Ucg");
-  pos(ucg, 45+ox, 30, 0);
+  ucg_DrawString(ucg, 42+ox, 30, 0, "Ucg");
+  pos(ucg, 42+ox, 30, 0);
+  ucg_SetFont(ucg, ucg_font_ncenB24);
+  vrule(ucg, 42+ox+ucg_GetStrWidth(ucg, "Ucg"), 30-ucg_GetFontAscent(ucg), ucg_GetFontAscent(ucg), 1);
+  ucg_SetFont(ucg, ucg_font_ncenB24);
+  vrule(ucg, 42+ox+ucg_GetStrWidth(ucg, "Ucg"), 30, -ucg_GetFontDescent(ucg), 1);
   
   save_picture(ucg, "draw_text_ascent_descent");  
 }
+
+void draw_text_dir1(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  
+  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFontPosBaseline(ucg);
+  ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
+  //ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
+  ucg_SetColor(ucg, 0, 255, 255, 255);		/* draw white "Ucg" */
+  ucg_DrawString(ucg, 45+ox, 10, 1, "Ucg");
+  pos(ucg, 45+ox, 10, 0);
+  
+  save_picture(ucg, "draw_text_dir1");  
+}
+
 
 
 int main(void)
@@ -305,6 +325,7 @@ int main(void)
   draw_text_top(&ucg);
   draw_text_center(&ucg);
   draw_text_ascent_descent(&ucg);
+  draw_text_dir1(&ucg);
   return 0;
 }
 

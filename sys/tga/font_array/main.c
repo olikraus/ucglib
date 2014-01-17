@@ -17,7 +17,7 @@ void pic_gen_short_desc(const ucg_pgm_uint8_t *font, const char *fname)
   ucg_int_t dx;
 
   tga_init(1024,500);
-  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
 
   ucg_SetFont(&ucg, font);
   ucg_SetFontPosTop(&ucg);
@@ -57,7 +57,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   
   
   tga_init(1200,1200);
-  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   
   disp_font = ucg_font_7x13;
   
@@ -144,8 +144,8 @@ unsigned char bitmap[2] = { 0x0f0, 0x0f0 };
 
 int main(int argc, char **argv)
 {
-  int i;
-  
+  int i, a;
+  FILE *wiki;
   i = 0;
   for(;;)
   {
@@ -160,13 +160,54 @@ int main(int argc, char **argv)
     }
     
     printf("Processing Font '%s'\n", ucg_font_name[i]);
-    pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
+    //pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
     
     i++;
   }
   
+  wiki = fopen("font_array.wiki", "w");
+  for( a = 4;  a < 50; a++ )
+  {
+    ucg_t ucg;
+    int cnt;
+    tga_init(100, 100);
+    ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
     
-  
+    i = 0;
+    cnt = 0;
+    for(;;)
+    {
+      if ( ucg_font_array[i] == NULL )
+      {
+	break;
+      }
+      ucg_SetFont(&ucg, ucg_font_array[i]);
+      if ( ucg_GetFontCapitalAHeight(&ucg) == a )
+	cnt++;
+      i++;
+    }
+    printf("a=%d cnt=%d\n", a, cnt);
+
+    if ( cnt > 0 )
+    {
+      i = 0;
+      fprintf(wiki, "== %d Pixel Height ==\n",a); 
+      for(;;)
+      {
+	if ( ucg_font_array[i] == NULL )
+	{
+	  break;
+	}
+	ucg_SetFont(&ucg, ucg_font_array[i]);
+	if ( ucg_GetFontCapitalAHeight(&ucg) == a )
+	{
+	  fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s.png]\n",ucg_font_name[i]); 
+	}
+	i++;
+      }
+    }
+  }
+  fclose(wiki);
   return 0;
 }
 
