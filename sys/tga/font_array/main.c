@@ -21,6 +21,7 @@ void pic_gen_short_desc(const ucg_pgm_uint8_t *font, const char *fname)
 
   ucg_SetFont(&ucg, font);
   ucg_SetFontPosTop(&ucg);
+  ucg_SetColor(&ucg, 0, 0, 0, 0);
   
   if ( ucg_IsGlyph(&ucg, 'a') != 0 )
     sprintf(s, "123 ABC abcdefg");
@@ -68,6 +69,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   end = ucg_font_GetFontEndEncoding(font);
   
   ucg_SetFont(&ucg, font);
+  ucg_SetColor(&ucg, 0, 0, 0, 0);
   /*
   hcnt = ucg_GetWidth(&ucg);
   hcnt /= ucg_GetFontBBXWidth(&ucg);
@@ -160,7 +162,7 @@ int main(int argc, char **argv)
     }
     
     printf("Processing Font '%s'\n", ucg_font_name[i]);
-    //pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
+    pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
     
     i++;
   }
@@ -201,7 +203,7 @@ int main(int argc, char **argv)
 	ucg_SetFont(&ucg, ucg_font_array[i]);
 	if ( ucg_GetFontCapitalAHeight(&ucg) == a )
 	{
-	  fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s.png]\n",ucg_font_name[i]); 
+	  fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s_short.png]\n",ucg_font_name[i]); 
 	}
 	i++;
       }

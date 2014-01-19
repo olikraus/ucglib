@@ -84,7 +84,9 @@ class Ucglib : public Print
       
     void setClipRange(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_SetClipRange(&ucg, x,y,w,h); }
     void setMaxClipRange(void) { ucg_SetMaxClipRange(&ucg); }
-      
+    void undoClipRange(void) { ucg_SetMaxClipRange(&ucg); }
+
+    void drawPixel(ucg_int_t x, ucg_int_t y) { ucg_DrawPixel(&ucg, x, y); }    
     void drawHLine(ucg_int_t x, ucg_int_t y, ucg_int_t len) { ucg_DrawHLine(&ucg, x, y, len); }
     void drawVLine(ucg_int_t x, ucg_int_t y, ucg_int_t len) { ucg_DrawVLine(&ucg, x, y, len); }
 
