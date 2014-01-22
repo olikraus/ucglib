@@ -23,7 +23,7 @@ int main(void)
 {
   ucg_int_t i;
   
-  ucg_Init(&ucg, &ucg_sdl_dev_cb, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFont(&ucg, ucg_font_ncenB24);
   
   ucg_SetColor(&ucg, 0, 255, 0, 0);
@@ -102,7 +102,7 @@ int main(void)
   ucg_DrawGradientLine(&ucg, 10, 40, 100, 0);
   
   ucg_SetColor(&ucg, 0, 255, 255, 0);
-  ucg_DrawRLBitmap(&ucg, 10, 41, 0, rl_bitmap);
+  //ucg_DrawRLBitmap(&ucg, 10, 41, 0, rl_bitmap);
   
   ucg_DrawGradientBox(&ucg, 10, 43, 100, 20);
 
