@@ -129,14 +129,12 @@ ucg_int_t ucg_dev_ili9325_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *dat
   list of extensions for the controllers 
   
   each module can have the "none" extension (ucg_ext_none) or the specific
-  extensions, that matches the controller name.
+  extensions, that matches the controller name and color depth.
   
-  example: for the module ucg_dev_ssd1351_128x128_oled_ilsoft
+  example: for the module ucg_dev_ssd1351_18x128x128_ilsoft
   valid extensions are:
-  
-  extensions are only valid if the controller name matches, for example
     ucg_ext_none
-    ucg_ext_ssd1351_18bit
+    ucg_ext_ssd1351_18
 */
 
 ucg_int_t ucg_ext_none(ucg_t *ucg, ucg_int_t msg, void *data);
@@ -146,7 +144,7 @@ ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
 
 
 /*================================================*/
-/* list of supported display controllers */
+/* list of supported display controllers (internal use only) */
 
 ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
