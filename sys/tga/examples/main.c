@@ -267,6 +267,45 @@ void draw_text_dir1(ucg_t *ucg)
   save_picture(ucg, "draw_text_dir1");  
 }
 
+void draw_box(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 30, 45, 0);
+  vrule(ucg, ox+50+45-1, 30, 20, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawBox(ucg, ox+50, 30, 45, 20);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_box");  
+}
+
+void draw_gradient_box(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 30, 45, 0);
+  vrule(ucg, ox+50+45-1, 30, 20, 1);
+  ucg_SetColor(ucg, 0, 255, 0, 0);
+  ucg_SetColor(ucg, 1, 0, 255, 0);
+  ucg_SetColor(ucg, 2, 255, 0, 255);
+  ucg_SetColor(ucg, 3, 0, 255, 255);
+
+  ucg_DrawGradientBox(ucg, ox+50, 30, 45, 20);
+  
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_gradient_box");  
+}
+
+void draw_gradient_line(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 40, 45, 0);
+  ucg_SetColor(ucg, 0, 0, 255, 255);
+  ucg_SetColor(ucg, 1, 255, 255, 0);
+  
+  ucg_DrawGradientLine(ucg, ox+50, 40, 45, 0);
+  pos(ucg, ox+50, 40,0);
+  save_picture(ucg, "draw_gradient_line");  
+}
 
 
 int main(void)
@@ -326,6 +365,10 @@ int main(void)
   draw_text_center(&ucg);
   draw_text_ascent_descent(&ucg);
   draw_text_dir1(&ucg);
+  draw_box(&ucg);
+  draw_gradient_box(&ucg);
+  draw_gradient_line(&ucg);
+  
   return 0;
 }
 
