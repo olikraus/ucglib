@@ -58,6 +58,55 @@ void ucg_ClearScreen(ucg_t *ucg)
   ucg_SetColor(ucg, 0, 255, 255, 255);
 }
 
+
+
+void ucg_DrawRBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r)
+{
+  ucg_int_t xl, yu;
+  ucg_int_t yl, xr;
+
+  xl = x;
+  xl += r;
+  yu = y;
+  yu += r;
+ 
+  xr = x;
+  xr += w;
+  xr -= r;
+  xr -= 1;
+  
+  yl = y;
+  yl += h;
+  yl -= r; 
+  yl -= 1;
+
+  ucg_DrawDisc(ucg, xl, yu, r, UCG_DRAW_UPPER_LEFT);
+  ucg_DrawDisc(ucg, xr, yu, r, UCG_DRAW_UPPER_RIGHT);
+  ucg_DrawDisc(ucg, xl, yl, r, UCG_DRAW_LOWER_LEFT);
+  ucg_DrawDisc(ucg, xr, yl, r, UCG_DRAW_LOWER_RIGHT);
+
+  {
+    ucg_int_t ww, hh;
+
+    ww = w;
+    ww -= r;
+    ww -= r;
+    ww -= 2;
+    hh = h;
+    hh -= r;
+    hh -= r;
+    hh -= 2;
+    
+    xl++;
+    yu++;
+    h--;
+    ucg_DrawBox(ucg, xl, y, ww, r+1);
+    ucg_DrawBox(ucg, xl, yl, ww, r+1);
+    ucg_DrawBox(ucg, x, yu, w, hh);
+  }
+}
+
+
 ucg_ccs_t ucg_ccs_box[6];	/* color component sliders used by GradientBox */
 
 void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)
@@ -98,3 +147,69 @@ void ucg_DrawGradientBox(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_
   }
 }
 
+
+/* restrictions: w > 0 && h > 0 */
+void ucg_DrawFrame(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h)
+{
+  ucg_int_t xtmp = x;
+  
+  ucg_DrawHLine(ucg, x, y, w);
+  ucg_DrawVLine(ucg, x, y, h);
+  x+=w;
+  x--;
+  ucg_DrawVLine(ucg, x, y, h);
+  y+=h;
+  y--;
+  ucg_DrawHLine(ucg, xtmp, y, w);
+}
+
+void ucg_DrawRFrame(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r)
+{
+  ucg_int_t xl, yu;
+
+  xl = x;
+  xl += r;
+  yu = y;
+  yu += r;
+ 
+  {
+    ucg_int_t yl, xr;
+      
+    xr = x;
+    xr += w;
+    xr -= r;
+    xr -= 1;
+    
+    yl = y;
+    yl += h;
+    yl -= r; 
+    yl -= 1;
+
+    ucg_DrawCircle(ucg, xl, yu, r, UCG_DRAW_UPPER_LEFT);
+    ucg_DrawCircle(ucg, xr, yu, r, UCG_DRAW_UPPER_RIGHT);
+    ucg_DrawCircle(ucg, xl, yl, r, UCG_DRAW_LOWER_LEFT);
+    ucg_DrawCircle(ucg, xr, yl, r, UCG_DRAW_LOWER_RIGHT);
+  }
+
+  {
+    ucg_int_t ww, hh;
+
+    ww = w;
+    ww -= r;
+    ww -= r;
+    ww -= 2;
+    hh = h;
+    hh -= r;
+    hh -= r;
+    hh -= 2;
+    
+    xl++;
+    yu++;
+    h--;
+    w--;
+    ucg_DrawHLine(ucg, xl, y, ww);
+    ucg_DrawHLine(ucg, xl, y+h, ww);
+    ucg_DrawVLine(ucg, x,         yu, hh);
+    ucg_DrawVLine(ucg, x+w, yu, hh);
+  }
+}

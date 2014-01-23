@@ -267,6 +267,18 @@ void draw_text_dir1(ucg_t *ucg)
   save_picture(ucg, "draw_text_dir1");  
 }
 
+void draw_frame(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 30, 45, 0);
+  vrule(ucg, ox+50+45-1, 30, 20, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawFrame(ucg, ox+50, 30, 45, 20);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_frame");  
+}
+
 void draw_box(ucg_t *ucg)
 {
   prepare_picture(ucg);
@@ -277,6 +289,36 @@ void draw_box(ucg_t *ucg)
   ucg_DrawBox(ucg, ox+50, 30, 45, 20);
   pos(ucg, ox+50, 30,0);
   save_picture(ucg, "draw_box");  
+}
+
+void draw_rbox(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 30, 45, 0);
+  vrule(ucg, ox+50+45-1, 30, 20, 1);
+  
+  vrule(ucg, ox+50+1, 30+20-8, 8, 0);
+  hrule(ucg, ox+50, 30+20-1-1, 8, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawRBox(ucg, ox+50, 30, 45, 20, 8);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_rbox");  
+}
+
+void draw_rframe(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50, 30, 45, 0);
+  vrule(ucg, ox+50+45-1, 30, 20, 1);
+  
+  vrule(ucg, ox+50+1, 30+20-8, 8, 0);
+  hrule(ucg, ox+50, 30+20-1-1, 8, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawRFrame(ucg, ox+50, 30, 45, 20, 8);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_rframe");  
 }
 
 void draw_gradient_box(ucg_t *ucg)
@@ -305,6 +347,30 @@ void draw_gradient_line(ucg_t *ucg)
   ucg_DrawGradientLine(ucg, ox+50, 40, 45, 0);
   pos(ucg, ox+50, 40,0);
   save_picture(ucg, "draw_gradient_line");  
+}
+
+void draw_disc(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50+1, 30, 20, 0);
+  vrule(ucg, ox+50+20-1, 30+1, 20, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawDisc(ucg, ox+50, 30, 20, UCG_DRAW_LOWER_RIGHT);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_disc");  
+}
+
+void draw_circle(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+  hrule(ucg, ox+50+1, 30, 20, 0);
+  vrule(ucg, ox+50+20-1, 30+1, 20, 1);
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+  
+  ucg_DrawCircle(ucg, ox+50, 30, 20, UCG_DRAW_LOWER_RIGHT);
+  pos(ucg, ox+50, 30,0);
+  save_picture(ucg, "draw_circle");  
 }
 
 
@@ -366,8 +432,13 @@ int main(void)
   draw_text_ascent_descent(&ucg);
   draw_text_dir1(&ucg);
   draw_box(&ucg);
+  draw_frame(&ucg);
+  draw_rbox(&ucg);
+  draw_rframe(&ucg);
   draw_gradient_box(&ucg);
   draw_gradient_line(&ucg);
+  draw_disc(&ucg);
+  draw_circle(&ucg);
   
   return 0;
 }

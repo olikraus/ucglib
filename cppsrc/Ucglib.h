@@ -71,9 +71,9 @@ class Ucglib : public Print
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
     ucg_int_t getFontAscent(void)
-      { ucg_GetFontAscent(&ucg); }
+      { return ucg_GetFontAscent(&ucg); }
     ucg_int_t getFontDescent(void)
-      { ucg_GetFontDescent(&ucg); }
+      { return ucg_GetFontDescent(&ucg); }
     
     void setColor(uint8_t idx, uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, idx, r, g, b); }
@@ -92,7 +92,14 @@ class Ucglib : public Print
 
     void drawBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawBox(&ucg, x, y, w, h); }
     void clearScreen(void) { ucg_ClearScreen(&ucg); }
-
+    void drawRBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r) { ucg_DrawRBox(&ucg, x, y, w, h, r); }
+    
+    void drawFrame(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawFrame(&ucg, x, y, w, h); }
+    void drawRFrame(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r) { ucg_DrawRFrame(&ucg, x, y, w, h, r); }
+ 
+    void drawDisc(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawDisc(&ucg, x0, y0, rad, option); }
+    void drawCircle(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawCircle(&ucg, x0, y0, rad, option); }    
+    
     // Procedures, which are only available with the EXTENDED option
     
     void drawGradientLine(ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir) {ucg_DrawGradientLine(&ucg, x, y, len, dir); }
