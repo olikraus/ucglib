@@ -98,7 +98,9 @@ class Ucglib : public Print
     void drawRFrame(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r) { ucg_DrawRFrame(&ucg, x, y, w, h, r); }
  
     void drawDisc(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawDisc(&ucg, x0, y0, rad, option); }
-    void drawCircle(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawCircle(&ucg, x0, y0, rad, option); }    
+    void drawCircle(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawCircle(&ucg, x0, y0, rad, option); }
+
+    void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2) { ucg_DrawTriangle(&ucg, x0, y0, x1, y1, x2, y2); }
     
     // Procedures, which are only available with the EXTENDED option
     
