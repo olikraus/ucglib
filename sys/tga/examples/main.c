@@ -373,6 +373,24 @@ void draw_circle(ucg_t *ucg)
   save_picture(ucg, "draw_circle");  
 }
 
+void draw_triangle(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+
+  ucg_SetColor(ucg, 0, 255, 255, 255);
+ 
+  ucg_DrawTriangle(ucg, 52, 9,   83,32,      47,42);
+  
+  ucg_DrawTriangle(ucg, 52,55,  83,32+1,  47,42+1);
+  pos(ucg, 52, 9, 0);
+  pos(ucg, 83,32, 1);
+  pos(ucg, 47,42+1, 0);
+  
+  
+  
+  save_picture(ucg, "draw_triangle");  
+}
+
 
 int main(void)
 {
@@ -439,6 +457,7 @@ int main(void)
   draw_gradient_line(&ucg);
   draw_disc(&ucg);
   draw_circle(&ucg);
+  draw_triangle(&ucg);
   
   return 0;
 }
