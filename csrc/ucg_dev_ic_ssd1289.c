@@ -1,8 +1,8 @@
 /*
 
-  ucg_dev_ic_ili9325.c
+  ucg_dev_ic_ssd1289.c
   
-  Specific code for the ili9325 controller (TFT displays)
+  Specific code for the ssd1289 controller (TFT displays)
 
   Universal uC Color Graphics Library
   
@@ -38,35 +38,18 @@
 #include "ucg.h"
 
 
-const ucg_pgm_uint8_t ucg_ili9325_set_pos_seq[] = 
+static const ucg_pgm_uint8_t ucg_ssd1289_set_pos_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
-  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C10(0x04e),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x04f),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
   UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
 
 
-const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir0_seq[] = 
-{
-  UCG_CS(0),					/* enable chip */
-  
-  /* last byte: 0x030 horizontal increment (dir = 0) */
-  /* last byte: 0x038 vertical increment (dir = 1) */
-  /* last byte: 0x000 horizontal deccrement (dir = 2) */
-  /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x030),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
-  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
-
-  UCG_C10(0x022),							/* write to RAM */
-  UCG_DATA(),								/* change to data mode */
-  UCG_END()
-};
-
-const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir1_seq[] = 
+static const ucg_pgm_uint8_t ucg_ssd1289_set_pos_dir0_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -74,16 +57,16 @@ const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir1_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x038),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
-  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C22(0x000, 0x011, 0x048, 0x030),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x04e),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x04f),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
   UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir2_seq[] = 
+static const ucg_pgm_uint8_t ucg_ssd1289_set_pos_dir1_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -91,16 +74,16 @@ const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir2_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x000),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
-  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+  UCG_C22(0x000, 0x011, 0x048, 0x038),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x04e),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x04f),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
   UCG_C10(0x022),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir3_seq[] = 
+const ucg_pgm_uint8_t ucg_ssd1289_set_pos_dir2_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   
@@ -108,7 +91,7 @@ const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir3_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x008),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C22(0x000, 0x011, 0x048, 0x000),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
@@ -117,7 +100,24 @@ const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir3_seq[] =
   UCG_END()
 };
 
-ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
+const ucg_pgm_uint8_t ucg_ssd1289_set_pos_dir3_seq[] = 
+{
+  UCG_CS(0),					/* enable chip */
+  
+  /* last byte: 0x030 horizontal increment (dir = 0) */
+  /* last byte: 0x038 vertical increment (dir = 1) */
+  /* last byte: 0x000 horizontal deccrement (dir = 2) */
+  /* last byte: 0x008 vertical deccrement (dir = 3) */
+  UCG_C22(0x000, 0x011, 0x048, 0x008),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
+  UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
+
+  UCG_C10(0x022),							/* write to RAM */
+  UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
+
+ucg_int_t ucg_handle_ssd1289_l90fx(ucg_t *ucg)
 {
   uint8_t c[3];
   if ( ucg_clip_l90fx(ucg) != 0 )
@@ -125,17 +125,17 @@ ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
     switch(ucg->arg.dir)
     {
       case 0: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir0_seq);	
 	break;
       case 1: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir1_seq);	
 	break;
       case 2: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir2_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir2_seq);	
 	break;
       case 3: 
       default: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir3_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir3_seq);	
 	break;
     }
     c[0] = ucg->arg.pixel.rgb.color[0];
@@ -151,11 +151,11 @@ ucg_int_t ucg_handle_ili9325_l90fx(ucg_t *ucg)
 /*
   L2TC (Glyph Output)
   Because of this for vertical lines the x min and max values in
-  "ucg_ili9325_set_pos_for_y_seq" are identical to avoid changes of the x position
+  "ucg_ssd1289_set_pos_for_y_seq" are identical to avoid changes of the x position
   
 */
 
-const ucg_pgm_uint8_t ucg_ili9325_set_x_pos_seq[] = 
+const ucg_pgm_uint8_t ucg_ssd1289_set_x_pos_seq[] = 
 {
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x022),							/* write to RAM */
@@ -163,7 +163,7 @@ const ucg_pgm_uint8_t ucg_ili9325_set_x_pos_seq[] =
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_ili9325_set_y_pos_seq[] = 
+const ucg_pgm_uint8_t ucg_ssd1289_set_y_pos_seq[] = 
 {
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
   UCG_C10(0x022),							/* write to RAM */
@@ -172,7 +172,7 @@ const ucg_pgm_uint8_t ucg_ili9325_set_y_pos_seq[] =
 };
 
 /* without CmdDataSequence */ 
-ucg_int_t xxxxxx_ucg_handle_ili9325_l90tc(ucg_t *ucg)
+ucg_int_t xxxxxx_ucg_handle_ssd1289_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -183,25 +183,25 @@ ucg_int_t xxxxxx_ucg_handle_ili9325_l90tc(ucg_t *ucg)
     unsigned char pixmap;
     uint8_t bitcnt;
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
-    ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
+    ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_seq);	
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
-	seq = ucg_ili9325_set_x_pos_seq;
+	seq = ucg_ssd1289_set_x_pos_seq;
 	break;
       case 1: 
 	dx = 0; dy = 1; 
-	seq = ucg_ili9325_set_y_pos_seq;
+	seq = ucg_ssd1289_set_y_pos_seq;
 	break;
       case 2: 
 	dx = -1; dy = 0; 
-	seq = ucg_ili9325_set_x_pos_seq;
+	seq = ucg_ssd1289_set_x_pos_seq;
 	break;
       case 3: 
       default:
 	dx = 0; dy = -1; 
-	seq = ucg_ili9325_set_y_pos_seq;
+	seq = ucg_ssd1289_set_y_pos_seq;
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
@@ -238,7 +238,7 @@ ucg_int_t xxxxxx_ucg_handle_ili9325_l90tc(ucg_t *ucg)
 
 
 /* with CmdDataSequence */ 
-ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
+ucg_int_t ucg_handle_ssd1289_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -248,7 +248,7 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
     unsigned char pixmap;
     uint8_t bitcnt;
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
-    ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
+    ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_seq);	
     switch(ucg->arg.dir)
     {
       case 0: 
@@ -362,7 +362,7 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
+ucg_int_t ucg_handle_ssd1289_l90se(ucg_t *ucg)
 {
   uint8_t i;
   uint8_t c[3];
@@ -382,17 +382,17 @@ ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
     switch(ucg->arg.dir)
     {
       case 0: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir0_seq);	
 	break;
       case 1: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir1_seq);	
 	break;
       case 2: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir2_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir2_seq);	
 	break;
       case 3: 
       default: 
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_dir3_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_dir3_seq);	
 	break;
     }
     
@@ -413,7 +413,7 @@ ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ic_ssd1289_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -432,7 +432,7 @@ ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
 	uint8_t c[3];
-	ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_seq);	
 	c[0] = ucg->arg.pixel.rgb.color[0];
 	c[1] = ucg->arg.pixel.rgb.color[1];
 	c[2] = ucg->arg.pixel.rgb.color[2];
@@ -441,12 +441,12 @@ ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      //ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325_18);
-      ucg_handle_ili9325_l90fx(ucg);
+      ucg_handle_l90fx(ucg, ucg_dev_ic_ssd1289_18);
+      //ucg_handle_ssd1289_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      //ucg_handle_l90tc(ucg, ucg_dev_ic_ili9325);
-      ucg_handle_ili9325_l90tc(ucg);
+      ucg_handle_l90tc(ucg, ucg_dev_ic_ssd1289);
+      //ucg_handle_ssd1289_l90tc(ucg);
       return 1;
     /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
     /*
@@ -457,13 +457,13 @@ ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
   return ucg_dev_default_cb(ucg, msg, data);  
 }
 
-ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_ext_ssd1289_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      //ucg_handle_l90se(ucg, ucg_dev_ic_ili9325);
-      ucg_handle_ili9325_l90se(ucg);
+      ucg_handle_l90se(ucg, ucg_dev_ic_ssd1289);
+      //ucg_handle_ssd1289_l90se(ucg);
       break;
   }
   return 1;
