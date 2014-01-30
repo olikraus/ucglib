@@ -108,10 +108,10 @@ class Ucglib : public Print
     void drawGradientBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawGradientBox(&ucg, x, y, w, h); }
 };
 
-class Ucglib4WireSPI : public Ucglib
+class Ucglib4WireHWSPI : public Ucglib
 {
   public:
-    Ucglib4WireSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+    Ucglib4WireHWSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
 	
 	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
@@ -126,10 +126,10 @@ class Ucglib4WireSPI : public Ucglib
     void begin(void);
 };
 
-class Ucglib8Bit : public Ucglib
+class Ucglib8BitPortD : public Ucglib
 {
   public:
-    Ucglib8Bit(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+    Ucglib8BitPortD(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
 	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
 	  ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
@@ -143,6 +143,34 @@ class Ucglib8Bit : public Ucglib
 	  ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
 	  ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
 	  ucg.pin_list[UCG_PIN_WR] = wr; }
+    void begin(void);
+};
+
+class Ucglib8Bit : public Ucglib
+{
+  public:
+    Ucglib8Bit(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+	  //ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
+	  //ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
+	  ucg.pin_list[UCG_PIN_RST] = reset;
+	  //ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
+	  //ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
+	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  //ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
+	  //ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
+	  ucg.pin_list[UCG_PIN_CS] = cs;
+	  //ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
+	  //ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
+	  ucg.pin_list[UCG_PIN_WR] = wr; 
+	  ucg.pin_list[UCG_PIN_D0] = d0;
+	  ucg.pin_list[UCG_PIN_D1] = d1;
+	  ucg.pin_list[UCG_PIN_D2] = d2;
+	  ucg.pin_list[UCG_PIN_D3] = d3;
+	  ucg.pin_list[UCG_PIN_D4] = d4;
+	  ucg.pin_list[UCG_PIN_D5] = d5;
+	  ucg.pin_list[UCG_PIN_D6] = d6;
+	  ucg.pin_list[UCG_PIN_D7] = d7; }
     void begin(void);
 };
 

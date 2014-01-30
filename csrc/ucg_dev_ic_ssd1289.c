@@ -37,6 +37,7 @@
 
 #include "ucg.h"
 
+#ifdef NOT_YET_IMPLEMENTED
 
 static const ucg_pgm_uint8_t ucg_ssd1289_set_pos_seq[] = 
 {
@@ -468,3 +469,5 @@ ucg_int_t ucg_ext_ssd1289_18(ucg_t *ucg, ucg_int_t msg, void *data)
   }
   return 1;
 }
+
+#endif

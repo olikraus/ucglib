@@ -40,26 +40,127 @@
 
 #include "Ucglib.h"
 
+
+static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
+{
+    digitalWrite(ucg->pin_list[UCG_PIN_D0], (data & 1) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D1], (data & 2) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D2], (data & 4) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D3], (data & 8) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D4], (data & 16) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D5], (data & 32) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D6], (data & 64) == 0 ? 0 : 1 );
+    digitalWrite(ucg->pin_list[UCG_PIN_D7], (data & 128) == 0 ? 0 : 1 );  
+    digitalWrite(ucg->pin_list[UCG_PIN_WR], 0);
+    digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
+}
+
+static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+{
+  switch(msg)
+  {
+    case UCG_COM_MSG_POWER_UP:
+      /* "data" is a pointer to ucg_com_info_t structure with the following information: */
+      /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
+      /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
+      
+      /* setup pins */
+      pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_WR], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+
+      pinMode(ucg->pin_list[UCG_PIN_D0], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D1], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D2], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D3], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D4], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D5], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D6], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_D7], OUTPUT);
+
+      digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+
+      break;
+    case UCG_COM_MSG_POWER_DOWN:
+      break;
+    case UCG_COM_MSG_DELAY:
+      delayMicroseconds(arg);
+      break;
+    case UCG_COM_MSG_CHANGE_RESET_LINE:
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CS_LINE:
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CD_LINE:
+      digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
+      break;
+    case UCG_COM_MSG_SEND_BYTE:
+      ucg_com_arduino_send_generic_8bit(ucg, arg);
+      break;
+    case UCG_COM_MSG_REPEAT_1_BYTE:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_2_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
+	ucg_com_arduino_send_generic_8bit(ucg, data[1]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_3_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
+	ucg_com_arduino_send_generic_8bit(ucg, data[1]);
+	ucg_com_arduino_send_generic_8bit(ucg, data[2]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_STR:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_8bit(ucg, *data++);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      while(arg > 0)
+      {
+	if ( *data != 0 )
+	{
+	  if ( *data == 1 )
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 0);
+	  }
+	  else
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+	  }
+	}
+	data++;
+	ucg_com_arduino_send_generic_8bit(ucg, *data);
+	data++;
+	arg--;
+      }
+      break;
+  }
+  return 1;
+}
+
 static void ucg_com_arduino_port_d_send(uint8_t data, volatile uint8_t *port, uint8_t and_mask, uint8_t or_mask)
 {
     PORTD = data;
     *port &= and_mask;
     *port |= or_mask;
 }
-
-#ifdef SLOW
-static void ucg_com_arduino_port_d_send(ucg_t *ucg, uint8_t data)
-{
-    PORTD = data;
-    *ucg->data_port[UCG_PIN_WR] &= ~ucg->data_mask[UCG_PIN_WR];
-    *ucg->data_port[UCG_PIN_WR] |= ucg->data_mask[UCG_PIN_WR];
-
-    /*
-  digitalWrite(ucg->pin_list[UCG_PIN_WR], 0);
-  digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
-  */
-}
-#endif
 
 
 static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
@@ -113,21 +214,17 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
       //digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      //ucg_com_arduino_port_d_send(ucg, arg);
       ucg_com_arduino_port_d_send(arg, ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	//ucg_com_arduino_port_d_send(ucg, data[0]);
 	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	//ucg_com_arduino_port_d_send(ucg, data[0]);
-	//ucg_com_arduino_port_d_send(ucg, data[1]);
 	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	ucg_com_arduino_port_d_send(data[1], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
@@ -135,9 +232,6 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	//ucg_com_arduino_port_d_send(ucg, data[0]);
-	//ucg_com_arduino_port_d_send(ucg, data[1]);
-	//ucg_com_arduino_port_d_send(ucg, data[2]);
 	ucg_com_arduino_port_d_send(data[0], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	ucg_com_arduino_port_d_send(data[1], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	ucg_com_arduino_port_d_send(data[2], ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
@@ -146,7 +240,6 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	//ucg_com_arduino_port_d_send(ucg, *data++);
 	ucg_com_arduino_port_d_send(*data++, ucg->data_port[UCG_PIN_WR], ~ucg->data_mask[UCG_PIN_WR], ucg->data_mask[UCG_PIN_WR]);
 	arg--;
       }
@@ -175,7 +268,7 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
   return 1;
 }
 
-static int16_t ucg_com_arduino_4wire_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
   switch(msg)
   {
@@ -277,14 +370,18 @@ size_t Ucglib::write(uint8_t c) {
   return 1;
 }
 
-
-void Ucglib4WireSPI::begin(void)
-{ 
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_SPI); 
-}
-
 void Ucglib8Bit::begin(void)
 { 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_8bit); 
+}
+
+void Ucglib8BitPortD::begin(void)
+{ 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
+}
+
+void Ucglib4WireHWSPI::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_HW_SPI); 
 }
 

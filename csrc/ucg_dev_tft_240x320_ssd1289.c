@@ -35,6 +35,8 @@
 
 #include "ucg.h"
 
+#ifdef NOT_YET_IMPLEMENTED
+
 static const ucg_pgm_uint8_t ucg_tft_240x320_ssd1289_init_seq[] = {
   UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
   UCG_RST(1),					
@@ -152,3 +154,5 @@ ucg_int_t ucg_dev_ssd1289_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *dat
   /* all other messages are handled by the controller procedures */
   return ucg_dev_ic_ssd1289_18(ucg, msg, data);  
 }
+
+#endif

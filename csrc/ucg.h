@@ -224,7 +224,17 @@ struct _ucg_com_info_t
 #define UCG_PIN_SCL 3
 #define UCG_PIN_WR 3
 #define UCG_PIN_SDA 4
-#define UCG_PIN_COUNT 5
+
+#define UCG_PIN_D0 5
+#define UCG_PIN_D1 6
+#define UCG_PIN_D2 7
+#define UCG_PIN_D3 8
+#define UCG_PIN_D4 9
+#define UCG_PIN_D5 10
+#define UCG_PIN_D6 11
+#define UCG_PIN_D7 12
+
+#define UCG_PIN_COUNT 13
 
 #define UCG_PIN_VAL_NONE 255
 #endif

@@ -37,6 +37,12 @@
 #include "ucg.h"
 #include <string.h> 	/* memset */
 
+
+#define _sizeof_ucg_t(x) #x
+#define sizeof_ucg_t _sizeof_ucg_t(sizeof(uct_t))
+#define msg_sizeof_ucg_t(a,b)
+#message msg_sizeof_ucg_t("sizeof(ucg_t) = ",sizeof_ucg_t)
+
 void ucg_init_struct(ucg_t *ucg)
 {
   //memset(ucg, 0, sizeof(ucg_t));
