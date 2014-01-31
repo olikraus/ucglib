@@ -34,6 +34,18 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
   
+  Ucglib8BitPortD 
+      Arduino AVR boards only
+      
+  Ucglib8Bit
+      All Arduino boards
+      
+  Ucglib4WireSWSPI
+      All Arduino boards
+  
+  Ucglib4WireHWSPI
+      All Arduino boards with SPI library
+  
 */
 
 #ifndef _UCGLIB_HH
@@ -108,43 +120,71 @@ class Ucglib : public Print
     void drawGradientBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawGradientBox(&ucg, x, y, w, h); }
 };
 
+class Ucglib4WireSWSPI : public Ucglib
+{
+  public:
+    Ucglib4WireSWSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t scl, uint8_t sda, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+
+	  ucg.pin_list[UCG_PIN_SCL] = scl; 	
+	  ucg.pin_list[UCG_PIN_SDA] = sda; 
+	  //ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
+	  //ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
+	  ucg.pin_list[UCG_PIN_RST] = reset; 
+	  //ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
+	  //ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
+	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  //ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
+	  //ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
+	  ucg.pin_list[UCG_PIN_CS] = cs; }
+    void begin(void);
+};
+
 class Ucglib4WireHWSPI : public Ucglib
 {
   public:
     Ucglib4WireHWSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
-	
+
+	ucg.pin_list[UCG_PIN_RST] = reset; 
+	ucg.pin_list[UCG_PIN_CD] = cd;
+	ucg.pin_list[UCG_PIN_CS] = cs; 
+
+#ifdef __AVR__	
 	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
 	  ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
-	  ucg.pin_list[UCG_PIN_RST] = reset; 
 	  ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
 	  ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
-	  ucg.pin_list[UCG_PIN_CD] = cd;
 	  ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
 	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
-	  ucg.pin_list[UCG_PIN_CS] = cs; }
+#endif
+    }
     void begin(void);
 };
 
+
+#ifdef __AVR__	
 class Ucglib8BitPortD : public Ucglib
 {
   public:
     Ucglib8BitPortD(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
       { init(); dev_cb = dev; ext_cb = ext; 
+	  ucg.pin_list[UCG_PIN_RST] = reset;
+	  ucg.pin_list[UCG_PIN_CD] = cd;
+	  ucg.pin_list[UCG_PIN_CS] = cs;
+	  ucg.pin_list[UCG_PIN_WR] = wr; 
 	  ucg.data_port[UCG_PIN_RST] =  portOutputRegister(digitalPinToPort(reset));
 	  ucg.data_mask[UCG_PIN_RST] =  digitalPinToBitMask(reset);
-	  ucg.pin_list[UCG_PIN_RST] = reset;
 	  ucg.data_port[UCG_PIN_CD] =  portOutputRegister(digitalPinToPort(cd));
 	  ucg.data_mask[UCG_PIN_CD] =  digitalPinToBitMask(cd);
-	  ucg.pin_list[UCG_PIN_CD] = cd;
 	  ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
 	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
-	  ucg.pin_list[UCG_PIN_CS] = cs;
 	  ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
 	  ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
-	  ucg.pin_list[UCG_PIN_WR] = wr; }
+    }
     void begin(void);
 };
+#endif
 
 class Ucglib8Bit : public Ucglib
 {

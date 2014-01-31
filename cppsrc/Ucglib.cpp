@@ -40,6 +40,134 @@
 
 #include "Ucglib.h"
 
+/*=========================================================================*/
+
+static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
+{
+  uint8_t i = 8;
+  
+  do
+  {
+    if ( data & 128 )
+    {
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1 );
+    }
+    else
+    {
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 0 );
+    }
+    // no delay required, also Arduino Due is slow enough
+    //delayMicroseconds(1);
+    digitalWrite(ucg->pin_list[UCG_PIN_SCL], 1 );
+    //delayMicroseconds(1);
+    i--;
+    digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0 );
+    //delayMicroseconds(1);
+    data <<= 1;
+  } while( i > 0 );
+  
+}
+
+static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+{
+  switch(msg)
+  {
+    case UCG_COM_MSG_POWER_UP:
+      /* "data" is a pointer to ucg_com_info_t structure with the following information: */
+      /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
+      /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
+      
+      /* setup pins */
+      pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+
+      digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
+      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+
+      break;
+    case UCG_COM_MSG_POWER_DOWN:
+      break;
+    case UCG_COM_MSG_DELAY:
+      delayMicroseconds(arg);
+      break;
+    case UCG_COM_MSG_CHANGE_RESET_LINE:
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CS_LINE:
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CD_LINE:
+      digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
+      break;
+    case UCG_COM_MSG_SEND_BYTE:
+      ucg_com_arduino_send_generic_SW_SPI(ucg, arg);
+      break;
+    case UCG_COM_MSG_REPEAT_1_BYTE:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_2_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[1]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_3_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[1]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[2]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_STR:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, *data++);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      while(arg > 0)
+      {
+	if ( *data != 0 )
+	{
+	  if ( *data == 1 )
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 0);
+	  }
+	  else
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+	  }
+	}
+	data++;
+	ucg_com_arduino_send_generic_SW_SPI(ucg, *data);
+	data++;
+	arg--;
+      }
+      break;
+  }
+  return 1;
+}
+
+void Ucglib4WireSWSPI::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_SW_SPI); 
+}
+
+
+/*=========================================================================*/
 
 static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
 {
@@ -51,7 +179,9 @@ static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
     digitalWrite(ucg->pin_list[UCG_PIN_D5], (data & 32) == 0 ? 0 : 1 );
     digitalWrite(ucg->pin_list[UCG_PIN_D6], (data & 64) == 0 ? 0 : 1 );
     digitalWrite(ucg->pin_list[UCG_PIN_D7], (data & 128) == 0 ? 0 : 1 );  
+    delayMicroseconds(1);
     digitalWrite(ucg->pin_list[UCG_PIN_WR], 0);
+    delayMicroseconds(1);
     digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
 }
 
@@ -155,13 +285,22 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint32_t ar
   return 1;
 }
 
+void Ucglib8Bit::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_8bit); 
+}
+
+
+/*=========================================================================*/
+
+#ifdef __AVR__
+
 static void ucg_com_arduino_port_d_send(uint8_t data, volatile uint8_t *port, uint8_t and_mask, uint8_t or_mask)
 {
     PORTD = data;
     *port &= and_mask;
     *port |= or_mask;
 }
-
 
 static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
@@ -268,6 +407,15 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uin
   return 1;
 }
 
+void Ucglib8BitPortD::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
+}
+
+#endif /* __AVR__ */
+
+/*=========================================================================*/
+
 static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
   switch(msg)
@@ -278,8 +426,6 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t ar
       /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
       
       /* setup pins */
-      //pinMode(13, OUTPUT);
-      //pinMode(11, OUTPUT);
     
       pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
@@ -288,6 +434,7 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t ar
       /* setup Arduino SPI */
       SPI.begin();
       //SPI.setClockDivider( SPI_CLOCK_DIV2 );
+      SPI.setClockDivider( 4 );
       SPI.setDataMode(SPI_MODE0);
       SPI.setBitOrder(MSBFIRST);
       break;
@@ -338,9 +485,37 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t ar
 	arg--;
       }
       break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      while(arg > 0)
+      {
+	if ( *data != 0 )
+	{
+	  if ( *data == 1 )
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 0);
+	  }
+	  else
+	  {
+	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+	  }
+	}
+	data++;
+	SPI.transfer(*data);
+	data++;
+	arg--;
+      }
+      break;
   }
   return 1;
 }
+
+void Ucglib4WireHWSPI::begin(void)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_HW_SPI); 
+}
+
+
+/*=========================================================================*/
 
 void Ucglib::init(void) {
   uint8_t i;
@@ -368,20 +543,5 @@ size_t Ucglib::write(uint8_t c) {
     default: case 3: ty -= delta; break;
   }
   return 1;
-}
-
-void Ucglib8Bit::begin(void)
-{ 
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_8bit); 
-}
-
-void Ucglib8BitPortD::begin(void)
-{ 
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
-}
-
-void Ucglib4WireHWSPI::begin(void)
-{ 
-  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_HW_SPI); 
 }
 

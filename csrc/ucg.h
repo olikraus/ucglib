@@ -59,7 +59,7 @@ extern "C"
 {
 #endif
 
-#ifdef ARDUINO
+#if defined(ARDUINO)
 #ifndef USE_PIN_LIST
 #define USE_PIN_LIST
 #endif
@@ -286,14 +286,10 @@ struct _ucg_t
 #ifdef USE_PIN_LIST
   uint8_t pin_list[UCG_PIN_COUNT];
 
-#	if defined(__PIC32MX)
-  /* CHIPKIT PIC32 */
-  volatile uint32_t *data_port[UCG_PIN_COUNT];
-  uint32_t data_mask[UCG_PIN_COUNT];
-#	else
+#ifdef __AVR__
   volatile uint8_t *data_port[UCG_PIN_COUNT];
   uint8_t data_mask[UCG_PIN_COUNT];
-#	endif
+#endif
 
 #endif
 
