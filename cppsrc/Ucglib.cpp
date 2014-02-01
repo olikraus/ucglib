@@ -45,29 +45,51 @@
 #if  defined(__SAM3X8E__)
 //#elif defined(__SAM3X8E__)
 
+//#define setbit(pio, mask) PIO_Set( (pio), (mask) )
+//#define clrbit(pio, mask) PIO_Clear( (pio), (mask) )
+
+#define setbit(pio, mask) ((pio)->PIO_SODR = (mask))
+#define clrbit(pio, mask) ((pio)->PIO_CODR = (mask))
+
+/*
+extern void PIO_Set( Pio* pPio, const uint32_t dwMask )
+{
+    pPio->PIO_SODR = dwMask ;
+}
+
+extern void PIO_Clear( Pio* pPio, const uint32_t dwMask )
+{
+    pPio->PIO_CODR = dwMask ;
+}
+*/
+
 
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 {
-  int sda_pin = ucg->pin_list[UCG_PIN_SDA];
-  int scl_pin = ucg->pin_list[UCG_PIN_SCL];
+  uint32_t sda_pin = ucg->pin_list[UCG_PIN_SDA];
+  uint32_t scl_pin = ucg->pin_list[UCG_PIN_SCL];
+  Pio *sda_port = g_APinDescription[sda_pin].pPort;
+  Pio *scl_port = g_APinDescription[scl_pin].pPort;
   uint8_t i = 8;
-  
+  sda_pin = g_APinDescription[sda_pin].ulPin;
+  scl_pin = g_APinDescription[scl_pin].ulPin;
+
   do
   {
     if ( data & 128 )
     {
-      PIO_Set( g_APinDescription[sda_pin].pPort, g_APinDescription[sda_pin].ulPin) ;
+      setbit( sda_port, sda_pin) ;
     }
     else
     {
-      PIO_Clear( g_APinDescription[sda_pin].pPort, g_APinDescription[sda_pin].ulPin) ;
+      clrbit( sda_port, sda_pin) ;
     }
     // no delay required, also Arduino Due is slow enough
     //delayMicroseconds(1);
-    PIO_Set( g_APinDescription[scl_pin].pPort, g_APinDescription[scl_pin].ulPin) ;
+    setbit( scl_port, scl_pin);
     //delayMicroseconds(1);
     i--;
-    PIO_Clear( g_APinDescription[scl_pin].pPort, g_APinDescription[scl_pin].ulPin) ;
+    clrbit( scl_port, scl_pin) ;
     //delayMicroseconds(1);
     data <<= 1;
   } while( i > 0 );
