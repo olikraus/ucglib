@@ -433,8 +433,12 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t ar
       
       /* setup Arduino SPI */
       SPI.begin();
-      //SPI.setClockDivider( SPI_CLOCK_DIV2 );
-      SPI.setClockDivider( 4 );
+#if defined(__AVR__)
+      SPI.setClockDivider( SPI_CLOCK_DIV2 );
+#endif
+#if defined(__SAM3X8E__)
+      SPI.setClockDivider( (((ucg_com_info_t *)data)->serial_clk_speed * 84L + 999)/1000L );
+#endif
       SPI.setDataMode(SPI_MODE0);
       SPI.setBitOrder(MSBFIRST);
       break;
