@@ -662,8 +662,6 @@ void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 /* Termination byte */
 #define UCG_END()					0x00
 
-// 13574
-
 /*
 #define ucg_com_SendByte(ucg, byte) \
   (ucg)->com_cb((ucg), UCG_COM_MSG_SEND_BYTE, (byte), NULL)

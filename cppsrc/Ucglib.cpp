@@ -42,6 +42,40 @@
 
 /*=========================================================================*/
 
+#if  defined(__SAM3X8E__)
+//#elif defined(__SAM3X8E__)
+
+
+static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
+{
+  int sda_pin = ucg->pin_list[UCG_PIN_SDA];
+  int scl_pin = ucg->pin_list[UCG_PIN_SCL];
+  uint8_t i = 8;
+  
+  do
+  {
+    if ( data & 128 )
+    {
+      PIO_Set( g_APinDescription[sda_pin].pPort, g_APinDescription[sda_pin].ulPin) ;
+    }
+    else
+    {
+      PIO_Clear( g_APinDescription[sda_pin].pPort, g_APinDescription[sda_pin].ulPin) ;
+    }
+    // no delay required, also Arduino Due is slow enough
+    //delayMicroseconds(1);
+    PIO_Set( g_APinDescription[scl_pin].pPort, g_APinDescription[scl_pin].ulPin) ;
+    //delayMicroseconds(1);
+    i--;
+    PIO_Clear( g_APinDescription[scl_pin].pPort, g_APinDescription[scl_pin].ulPin) ;
+    //delayMicroseconds(1);
+    data <<= 1;
+  } while( i > 0 );
+  
+}
+
+#else
+
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 {
   uint8_t i = 8;
@@ -67,6 +101,8 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
   } while( i > 0 );
   
 }
+
+#endif
 
 static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {

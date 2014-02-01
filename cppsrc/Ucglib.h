@@ -92,6 +92,11 @@ class Ucglib : public Print
     void setColor(uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, 0, r, g, b); }
 
+    void undoRotate(void) { ucg_UndoRotate(&ucg); }
+    void setRotate90(void) { ucg_SetRotate90(&ucg); }
+    void setRotate180(void) { ucg_SetRotate180(&ucg); }
+    void setRotate270(void) { ucg_SetRotate270(&ucg); }
+      
     // Procedures, which are always available as part of the BASIC drawing procedure set
       
     void setClipRange(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_SetClipRange(&ucg, x,y,w,h); }
