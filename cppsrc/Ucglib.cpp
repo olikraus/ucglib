@@ -51,19 +51,6 @@
 #define setbit(pio, mask) ((pio)->PIO_SODR = (mask))
 #define clrbit(pio, mask) ((pio)->PIO_CODR = (mask))
 
-/*
-extern void PIO_Set( Pio* pPio, const uint32_t dwMask )
-{
-    pPio->PIO_SODR = dwMask ;
-}
-
-extern void PIO_Clear( Pio* pPio, const uint32_t dwMask )
-{
-    pPio->PIO_CODR = dwMask ;
-}
-*/
-
-
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 {
   uint32_t sda_pin = ucg->pin_list[UCG_PIN_SDA];
@@ -84,7 +71,7 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
     {
       clrbit( sda_port, sda_pin) ;
     }
-    // no delay required, also Arduino Due is slow enough
+    // no delay required, Arduino Due is slow enough
     //delayMicroseconds(1);
     setbit( scl_port, scl_pin);
     //delayMicroseconds(1);
@@ -93,6 +80,56 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
     //delayMicroseconds(1);
     data <<= 1;
   } while( i > 0 );
+  
+}
+
+#elif defined(__AVR__)
+
+uint8_t u8g_bitData, u8g_bitNotData;
+uint8_t u8g_bitClock, u8g_bitNotClock;
+volatile uint8_t *u8g_outData;
+volatile uint8_t *u8g_outClock;
+
+static void ucg_com_arduino_init_shift_out(uint8_t dataPin, uint8_t clockPin)
+{
+  u8g_outData = portOutputRegister(digitalPinToPort(dataPin));
+  u8g_outClock = portOutputRegister(digitalPinToPort(clockPin));
+  u8g_bitData = digitalPinToBitMask(dataPin);
+  u8g_bitClock = digitalPinToBitMask(clockPin);
+
+  u8g_bitNotClock = u8g_bitClock;
+  u8g_bitNotClock ^= 0x0ff;
+
+  u8g_bitNotData = u8g_bitData;
+  u8g_bitNotData ^= 0x0ff;
+}
+
+
+static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t val) UCG_NOINLINE;
+static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t val)
+{
+  uint8_t cnt = 8;
+  uint8_t bitData = u8g_bitData;
+  uint8_t bitNotData = u8g_bitNotData;
+  uint8_t bitClock = u8g_bitClock;
+  uint8_t bitNotClock = u8g_bitNotClock;
+  volatile uint8_t *outData = u8g_outData;
+  volatile uint8_t *outClock = u8g_outClock;
+  
+  UCG_ATOMIC_START();
+  do
+  {
+    if ( val & 128 )
+      *outData |= bitData;
+    else
+      *outData &= bitNotData;
+   
+    *outClock |= bitClock;
+    val <<= 1;
+    cnt--;
+    *outClock &= bitNotClock;
+  } while( cnt != 0 );
+  UCG_ATOMIC_END();
   
 }
 
@@ -128,6 +165,11 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 
 static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
+#ifdef __AVR__
+  ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
+#endif
+  
+
   switch(msg)
   {
     case UCG_COM_MSG_POWER_UP:

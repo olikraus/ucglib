@@ -397,6 +397,29 @@ struct _ucg_t
 
 
 /*================================================*/
+/* interrupt safe code */
+#define UCG_INTERRUPT_SAFE
+#if defined(UCG_INTERRUPT_SAFE)
+#  if defined(__AVR__)
+extern uint8_t global_SREG_backup;	/* ucg_init.c */
+#    define UCG_ATOMIC_START()		do { global_SREG_backup = SREG; cli(); } while(0)
+#    define UCG_ATOMIC_END()			SREG = global_SREG_backup
+#    define UCG_ATOMIC_OR(ptr, val) 	do { uint8_t tmpSREG = SREG; cli(); (*(ptr) |= (val)); SREG = tmpSREG; } while(0)
+#    define UCG_ATOMIC_AND(ptr, val) 	do { uint8_t tmpSREG = SREG; cli(); (*(ptr) &= (val)); SREG = tmpSREG; } while(0)
+#  else
+#    define UCG_ATOMIC_OR(ptr, val) (*(ptr) |= (val))
+#    define UCG_ATOMIC_AND(ptr, val) (*(ptr) &= (val))
+#    define UCG_ATOMIC_START()
+#    define UCG_ATOMIC_END()
+#  endif /* __AVR__ */
+#else
+#  define UCG_ATOMIC_OR(ptr, val) (*(ptr) |= (val))
+#  define UCG_ATOMIC_AND(ptr, val) (*(ptr) &= (val))
+#  define UCG_ATOMIC_START()
+#  define UCG_ATOMIC_END()
+#endif /* UCG_INTERRUPT_SAFE */
+
+/*================================================*/
 /* ucg_dev_msg_api.c */
 void ucg_PowerDown(ucg_t *ucg);
 ucg_int_t ucg_PowerUp(ucg_t *ucg);
@@ -530,6 +553,8 @@ void ucg_ClearPolygonXY(void);
 void ucg_AddPolygonXY(ucg_t *ucg, int16_t x, int16_t y);
 void ucg_DrawPolygon(ucg_t *ucg);
 void ucg_DrawTriangle(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2);
+/* the polygon procedure only works for convex tetragons (http://en.wikipedia.org/wiki/Convex_polygon) */
+void ucg_DrawTetragon(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3);
 
 
 /*================================================*/

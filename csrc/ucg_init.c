@@ -37,6 +37,9 @@
 #include "ucg.h"
 #include <string.h> 	/* memset */
 
+#ifdef __AVR__
+uint8_t global_SREG_backup;
+#endif
 
 
 void ucg_init_struct(ucg_t *ucg)

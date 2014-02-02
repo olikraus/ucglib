@@ -317,3 +317,12 @@ void ucg_DrawTriangle(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1
   ucg_DrawPolygon(ucg);
 }
 
+void ucg_DrawTetragon(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3)
+{
+  ucg_ClearPolygonXY();
+  ucg_AddPolygonXY(ucg, x0, y0);
+  ucg_AddPolygonXY(ucg, x1, y1);
+  ucg_AddPolygonXY(ucg, x2, y2);
+  ucg_AddPolygonXY(ucg, x3, y3);
+  ucg_DrawPolygon(ucg);
+}

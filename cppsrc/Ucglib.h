@@ -80,6 +80,9 @@ class Ucglib : public Print
     size_t write(uint8_t c);
     ucg_t *getUcg(void) { return &ucg; }
     
+    ucg_int_t getWidth(void) { return ucg_GetWidth(&ucg); }
+    ucg_int_t getHeight(void) { return ucg_GetHeight(&ucg); }
+    
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
     ucg_int_t getFontAscent(void)
@@ -92,6 +95,7 @@ class Ucglib : public Print
     void setColor(uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, 0, r, g, b); }
 
+      
     void undoRotate(void) { ucg_UndoRotate(&ucg); }
     void setRotate90(void) { ucg_SetRotate90(&ucg); }
     void setRotate180(void) { ucg_SetRotate180(&ucg); }
@@ -118,6 +122,8 @@ class Ucglib : public Print
     void drawCircle(ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option) { ucg_DrawCircle(&ucg, x0, y0, rad, option); }
 
     void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2) { ucg_DrawTriangle(&ucg, x0, y0, x1, y1, x2, y2); }
+    /* the polygon procedure only works for convex tetragons (http://en.wikipedia.org/wiki/Convex_polygon) */
+    void drawTetragon(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3) { ucg_DrawTetragon(&ucg, x0, y0, x1, y1, x2, y2, x3, y3); }
     
     // Procedures, which are only available with the EXTENDED option
     
