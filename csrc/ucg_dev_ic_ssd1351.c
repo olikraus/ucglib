@@ -211,10 +211,22 @@ ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
   uint8_t c[3];
   
   /* Setup ccs for l90se. This will be updated by ucg_clip_l90se if required */
-  
-  for ( i = 0; i < 3; i++ )
+
+  switch(ucg->arg.dir)
   {
-    ucg_ccs_init(ucg->arg.ccs_line+i, ucg->arg.rgb[0].color[i], ucg->arg.rgb[1].color[i], ucg->arg.len);
+    case 0:
+    case 1:
+      for ( i = 0; i < 3; i++ )
+      {
+	ucg_ccs_init(ucg->arg.ccs_line+i, ucg->arg.rgb[0].color[i], ucg->arg.rgb[1].color[i], ucg->arg.len);
+      }
+      break;
+    default:
+      for ( i = 0; i < 3; i++ )
+      {
+	ucg_ccs_init(ucg->arg.ccs_line+i, ucg->arg.rgb[1].color[i], ucg->arg.rgb[0].color[i], ucg->arg.len);
+      }
+      break;
   }
   
   /* check if the line is visible */
@@ -225,13 +237,24 @@ ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
     ucg_int_t i, j;
     switch(ucg->arg.dir)
     {
-      case 0: dx = 1; dy = 0; break;
-      case 1: dx = 0; dy = 1; break;
-      case 2: dx = -1; dy = 0; break;
-      case 3: dx = 0; dy = -1; break;
+      case 0: dx = 1; dy = 0; 
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_dir0_seq);	
+	break;
+      case 1: dx = 0; dy = 1; 
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_dir1_seq);	
+	break;
+      case 2: dx = 1; dy = 0; 
+	ucg->arg.pixel.pos.x -= ucg->arg.len;
+	ucg->arg.pixel.pos.x++;
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_dir0_seq);	
+	break;
+      case 3: dx = 0; dy = 1; 
+	ucg->arg.pixel.pos.y -= ucg->arg.len;
+	ucg->arg.pixel.pos.y++;
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_dir1_seq);	
+	break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
-    ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_dir0_seq);	
     for( i = 0; i < ucg->arg.len; i++ )
     {
       c[0] = ucg->arg.ccs_line[0].current >> 2;
@@ -280,7 +303,7 @@ ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      //ucg_handle_l90fx(ucg, ucg_dev_ic_ssd1351);
+      //ucg_handle_l90fx(ucg, ucg_dev_ic_ssd1351_18);
       ucg_handle_ssd1351_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
@@ -301,7 +324,7 @@ ucg_int_t ucg_ext_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      //ucg_handle_l90se(ucg, ucg_dev_ic_ssd1351);
+      //ucg_handle_l90se(ucg, ucg_dev_ic_ssd1351_18);
       ucg_handle_ssd1351_l90se(ucg);
       break;
   }

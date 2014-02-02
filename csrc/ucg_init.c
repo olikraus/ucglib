@@ -38,7 +38,7 @@
 #include <string.h> 	/* memset */
 
 #ifdef __AVR__
-uint8_t global_SREG_backup;
+uint8_t global_SREG_backup;		// used by the atomic macros
 #endif
 
 
