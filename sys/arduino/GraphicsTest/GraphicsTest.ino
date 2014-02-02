@@ -2,7 +2,7 @@
 
   GraphicsTest.ino
   
-  A very simple example for Ucglib
+  Generate some example graphics
 
   Universal uC Color Graphics Library
   
@@ -35,6 +35,7 @@
 
 */
 
+#include <SPI.h>
 #include "Ucglib.h"
 
 /*
@@ -231,6 +232,7 @@ void text(void)
 
 void fonts(void)
 {
+  ucg_int_t d = 5;
   ucg.setColor(0, 0, 40, 80);
   ucg.setColor(1, 150, 0, 200);
   ucg.setColor(2, 60, 0, 40);
@@ -240,23 +242,24 @@ void fonts(void)
 
   ucg.setColor(255, 255, 255);
   ucg.setPrintPos(2,18);
-  ucg.print(">300 Fonts");
+  ucg.print("Fonts");
   
+  ucg.setColor(255, 200, 170);
   ucg.setFont(ucg_font_helvB08r);
-  ucg.setPrintPos(2,30);
-  ucg.print("ABC abc 012");
+  ucg.setPrintPos(2,30+d);
+  ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB10r);
-  ucg.setPrintPos(2,45);
-  ucg.print("ABC abc 012");
+  ucg.setPrintPos(2,45+d);
+  ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB12r);
-  ucg.setPrintPos(2,62);
-  ucg.print("ABC abc 012");
+  ucg.setPrintPos(2,62+d);
+  ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB14r);
-  ucg.setPrintPos(2,79);
-  ucg.print("ABC abc 012");
+  ucg.setPrintPos(2,79+d);
+  ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB18r);
-  ucg.setPrintPos(2,79+22);
-  ucg.print("ABC abc 012");
+  ucg.setPrintPos(2,79+22+d);
+  ucg.print("ABC abc 123");
   
   
 
@@ -273,7 +276,7 @@ void setup(void)
   ucg.clearScreen();
 }
 
-uint8_t r = 0;
+uint8_t r = 1;
 void loop(void)
 {
   switch(r)
@@ -286,10 +289,11 @@ void loop(void)
   r++;
   r &=3;
   ucglib_graphics_test();
-  fonts();
   triangle();
-  
+  fonts();  
   text();
-  gradient();
   box();
+  gradient();
+  //ucg.clearScreen();
+  DLY();
 }

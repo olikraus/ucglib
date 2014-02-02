@@ -40,6 +40,8 @@
   SSD1351, Arduino Uno, SW SPI	Text:  1.6  	Box:  3.4		Gradient:  2.2
 
 */
+
+#include <SPI.h>
 #include "Ucglib.h"
 
 /*

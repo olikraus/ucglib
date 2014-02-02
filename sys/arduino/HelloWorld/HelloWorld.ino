@@ -35,6 +35,7 @@
 
 */
 
+#include <SPI.h>
 #include "Ucglib.h"
 
 /*

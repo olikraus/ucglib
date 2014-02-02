@@ -35,6 +35,7 @@
   
 */
 
+#include <SPI.h>
 #include "Ucglib.h"
 
 /*
@@ -337,11 +338,13 @@ void setup(void)
 {
   delay(1000);
   ucg.begin();
+  ucg.setRotate90();
   ucg.clearScreen();
   ucg.setFont(ucg_font_ncenR10r);
   ucg.setPrintPos(0,25);
   ucg.setColor(255, 255, 255);
   ucg.print("Ucglib Box3D");
+  
 }
 
 uint16_t w = 0;

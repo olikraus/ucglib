@@ -51,6 +51,7 @@
 #ifndef _UCGLIB_HH
 #define _UCGLIB_HH
 
+#include <Arduino.h>
 #include <Print.h>
 
 #ifndef USE_PIN_LIST
