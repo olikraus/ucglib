@@ -6,4 +6,6 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
 2014-xx-xx	v0.02   Oliver Kraus <olikraus@gmail.com>
   * Speedup for SSD1351
   * Fixed text output problems with ILI9325
+  * Fixed controller timing problem with the ILI9341 (rot180/rot270)
+  * Fixed GraphicsDemo for larger screen sizes
   
