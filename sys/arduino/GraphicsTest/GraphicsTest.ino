@@ -54,9 +54,9 @@
   >>> Please uncomment (and update) one of the following constructors. <<<
   
 */
-//Ucglib8BitPortD ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
+Ucglib8BitPortD ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 //Ucglib8Bit ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, 0, 1, 2, 3, 4, 5, 6, 7, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
-Ucglib4WireHWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);			/* Display connected to HW SPI, use SPI Library */
+//Ucglib4WireHWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);			/* Display connected to HW SPI, use SPI Library */
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 76, /*sda=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Due, SW SPI via HW SPI Pins */
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 52, /*sda=*/ 51, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Mega, SW SPI via HW SPI Pins */
@@ -155,8 +155,8 @@ void box(void)
     h = lcg_rnd() & 31;
     w += 10;
     h += 10;
-    x = (lcg_rnd()*(ucg.getWidth()-w))>>8;
-    y = (lcg_rnd()*(ucg.getHeight()-h-20))>>8;
+    x = ((uint32_t)lcg_rnd()*(ucg.getWidth()-w))>>8;
+    y = ((uint32_t)lcg_rnd()*(ucg.getHeight()-h-20))>>8;
     
     ucg.drawBox(x, y+20, w, h);
   }
@@ -184,12 +184,14 @@ void triangle(void)
     ucg.setColor((lcg_rnd()&127)+127, lcg_rnd() & 31, (lcg_rnd()&127)+64);
     
     ucg.drawTriangle(
-      (lcg_rnd()*(ucg.getWidth()))>>8,
-      ((lcg_rnd()*(ucg.getHeight()-20))>>8)+20,
-      (lcg_rnd()*(ucg.getWidth()))>>8,
-      ((lcg_rnd()*(ucg.getHeight()-20))>>8)+20,
-      (lcg_rnd()*(ucg.getWidth()))>>8,
-      ((lcg_rnd()*(ucg.getHeight()-20))>>8)+20
+      ((uint32_t)lcg_rnd()*(ucg.getWidth()))>>8,
+      (((uint32_t)lcg_rnd()*(ucg.getHeight()-20))>>8)+20,
+      
+      ((uint32_t)lcg_rnd()*(ucg.getWidth()))>>8,
+      (((uint32_t)lcg_rnd()*(ucg.getHeight()-20))>>8)+20,
+      
+      ((uint32_t)lcg_rnd()*(ucg.getWidth()))>>8,
+      (((uint32_t)lcg_rnd()*(ucg.getHeight()-20))>>8)+20
     );
     
   }
@@ -218,8 +220,8 @@ void text(void)
     ucg.setColor(lcg_rnd() & 31, (lcg_rnd()&127)+127, (lcg_rnd()&127)+64);
     w = 40;
     h = 22;
-    x = (lcg_rnd()*(ucg.getWidth()-w))>>8;
-    y = (lcg_rnd()*(ucg.getHeight()-h))>>8;
+    x = ((uint32_t)lcg_rnd()*(ucg.getWidth()-w))>>8;
+    y = ((uint32_t)lcg_rnd()*(ucg.getHeight()-h))>>8;
     
     ucg.setPrintPos(x,y+h);
     ucg.setPrintDir((i>>2)&3);
@@ -283,14 +285,14 @@ void set_clip_range(void)
   h = lcg_rnd() & 31;
   w += 25;
   h += 25;
-  x = (lcg_rnd()*(ucg.getWidth()-w))>>8;
-  y = (lcg_rnd()*(ucg.getHeight()-h))>>8;
+  x = ((uint32_t)lcg_rnd()*(ucg.getWidth()-w-1))>>8;
+  y = ((uint32_t)lcg_rnd()*(ucg.getHeight()-h-1))>>8;
   
   ucg.setClipRange(x, y, w, h);
 }
 
 
-uint8_t r = 1;
+uint8_t r = 4;
 void loop(void)
 {
   switch(r&3)

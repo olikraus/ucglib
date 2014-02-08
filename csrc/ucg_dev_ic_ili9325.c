@@ -242,23 +242,23 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
-    uint8_t buf[16];
+    uint8_t buf[20];
     ucg_int_t dx, dy;
     ucg_int_t i;
     unsigned char pixmap;
     uint8_t bitcnt;
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
     ucg_com_SendCmdSeq(ucg, ucg_ili9325_set_pos_seq);	
+    buf[0] = 0x001;	// change to 0 (cmd mode)
+    buf[1] = 0x020;	// set x
+    buf[2] = 0x002;	// change to 1 (arg mode)
+    buf[3] = 0x000;	// upper part x
+    buf[4] = 0x000;	// no change
+    buf[5] = 0x000;	// will be overwritten by x value
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
-        buf[0] = 0x001;	// change to 0 (cmd mode)
-        buf[1] = 0x020;	// set x
-        buf[2] = 0x002;	// change to 1 (arg mode)
-	buf[3] = 0x000;	// upper part x
-	buf[4] = 0x000;	// no change
-	buf[5] = 0x000;	// will be overwritten by x value
         buf[6] = 0x001;	// change to 0 (cmd mode)
         buf[7] = 0x022;	// write data
         buf[8] = 0x002;	// change to 1 (data mode)
@@ -270,29 +270,24 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
 	break;
       case 1: 
 	dx = 0; dy = 1; 
-        buf[0] = 0x001;	// change to 0 (cmd mode)
-        buf[1] = 0x020;	// set y
-        buf[2] = 0x002;	// change to 1 (arg mode)
-	buf[3] = 0x000;	// upper part y
-	buf[4] = 0x000;	// no change
-	buf[5] = 0x000;	// will be overwritten by y value
+      
         buf[6] = 0x001;	// change to 0 (cmd mode)
-        buf[7] = 0x022;	// write data
-        buf[8] = 0x002;	// change to 1 (data mode)
-        buf[9] = 0x000;	// red value
-        buf[10] = 0x000;	// no change
-        buf[11] = 0x000;	// green value
-        buf[12] = 0x000;	// no change
-        buf[13] = 0x000;	// blue value      
+        buf[7] = 0x021;	// set y
+        buf[8] = 0x002;	// change to 1 (arg mode)
+	buf[9] = 0x000;	// upper part y
+	buf[10] = 0x000;	// no change
+	buf[11] = 0x000;	// will be overwritten by y value
+        buf[12] = 0x001;	// change to 0 (cmd mode)
+        buf[13] = 0x022;	// write data
+        buf[14] = 0x002;	// change to 1 (data mode)
+        buf[15] = 0x000;	// red value
+        buf[16] = 0x000;	// no change
+        buf[17] = 0x000;	// green value
+        buf[18] = 0x000;	// no change
+        buf[19] = 0x000;	// blue value      
 	break;
       case 2: 
 	dx = -1; dy = 0; 
-        buf[0] = 0x001;	// change to 0 (cmd mode)
-        buf[1] = 0x020;	// set x
-        buf[2] = 0x002;	// change to 1 (arg mode)
-	buf[3] = 0x000;	// upper part x
-	buf[4] = 0x000;	// no change
-	buf[5] = 0x000;	// will be overwritten by x value
         buf[6] = 0x001;	// change to 0 (cmd mode)
         buf[7] = 0x022;	// write data
         buf[8] = 0x002;	// change to 1 (data mode)
@@ -305,28 +300,38 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
       case 3: 
       default:
 	dx = 0; dy = -1; 
-        buf[0] = 0x001;	// change to 0 (cmd mode)
-        buf[1] = 0x020;	// set y
-        buf[2] = 0x002;	// change to 1 (arg mode)
-	buf[3] = 0x000;	// upper part y
-	buf[4] = 0x000;	// no change
-	buf[5] = 0x000;	// will be overwritten by y value
+	dx = 0; dy = 1; 
         buf[6] = 0x001;	// change to 0 (cmd mode)
-        buf[7] = 0x022;	// write data
-        buf[8] = 0x002;	// change to 1 (data mode)
-        buf[9] = 0x000;	// red value
-        buf[10] = 0x000;	// no change
-        buf[11] = 0x000;	// green value
-        buf[12] = 0x000;	// no change
-        buf[13] = 0x000;	// blue value      
+        buf[7] = 0x021;	// set y
+        buf[8] = 0x002;	// change to 1 (arg mode)
+	buf[9] = 0x000;	// upper part y
+	buf[10] = 0x000;	// no change
+	buf[11] = 0x000;	// will be overwritten by y value
+        buf[12] = 0x001;	// change to 0 (cmd mode)
+        buf[13] = 0x022;	// write data
+        buf[14] = 0x002;	// change to 1 (data mode)
+        buf[15] = 0x000;	// red value
+        buf[16] = 0x000;	// no change
+        buf[17] = 0x000;	// green value
+        buf[18] = 0x000;	// no change
+        buf[19] = 0x000;	// blue value      
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
-    buf[9] = ucg->arg.pixel.rgb.color[0];
-    buf[11] = ucg->arg.pixel.rgb.color[1];
-    buf[13] = ucg->arg.pixel.rgb.color[2];
+    if ( (ucg->arg.dir&1) == 0 )
+    {
+      buf[9] = ucg->arg.pixel.rgb.color[0];
+      buf[11] = ucg->arg.pixel.rgb.color[1];
+      buf[13] = ucg->arg.pixel.rgb.color[2];
+    }
+    else
+    {
+      buf[15] = ucg->arg.pixel.rgb.color[0];
+      buf[17] = ucg->arg.pixel.rgb.color[1];
+      buf[19] = ucg->arg.pixel.rgb.color[2];
+    }
     //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
     
     for( i = 0; i < ucg->arg.len; i++ )
@@ -336,13 +341,15 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
 	if ( (ucg->arg.dir&1) == 0 )
 	{
 	  buf[5] = ucg->arg.pixel.pos.x;
+	  ucg_com_SendCmdDataSequence(ucg, 7, buf, 1);
 	}
 	else
 	{
-	  buf[3] = ucg->arg.pixel.pos.y>>8;
-	  buf[5] = ucg->arg.pixel.pos.y&255;
+	  buf[5] = ucg->arg.pixel.pos.x;
+	  buf[9] = (ucg->arg.pixel.pos.y>>8)&1;
+	  buf[11] = ucg->arg.pixel.pos.y&255;
+	  ucg_com_SendCmdDataSequence(ucg, 10, buf, 1);
 	}
-	ucg_com_SendCmdDataSequence(ucg, 7, buf, 0);
       }
       pixmap<<=1;
       ucg->arg.pixel.pos.x+=dx;
