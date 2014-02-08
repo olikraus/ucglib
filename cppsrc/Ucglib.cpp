@@ -41,6 +41,7 @@
 #include "Ucglib.h"
 
 /*=========================================================================*/
+/* SW SPI */
 
 #if  defined(__SAM3X8E__)
 //#elif defined(__SAM3X8E__)
@@ -168,7 +169,6 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
 #ifdef __AVR__
   ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
 #endif
-  
 
   switch(msg)
   {
@@ -268,6 +268,7 @@ void Ucglib4WireSWSPI::begin(void)
 
 
 /*=========================================================================*/
+/* 8 Bit Parallel */
 
 static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
 {
@@ -392,6 +393,7 @@ void Ucglib8Bit::begin(void)
 
 
 /*=========================================================================*/
+/* 8 Bit Parallel on Port D of AVR controller */
 
 #ifdef __AVR__
 

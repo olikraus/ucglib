@@ -119,73 +119,97 @@ const ucg_pgm_uint8_t ucg_ssd1351_set_pos_for_y_seq[] =
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_ssd1351_set_x_pos_seq[] = 
-{
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
-  UCG_C10(0x05c),							/* write to RAM */
-  UCG_DATA(),								/* change to data mode */
-  UCG_END()
-};
-
-const ucg_pgm_uint8_t ucg_ssd1351_set_y_pos_seq[] = 
-{
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
-  UCG_C10(0x05c),							/* write to RAM */
-  UCG_DATA(),								/* change to data mode */
-  UCG_END()
-};
-
 
 ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
-    uint8_t buf[3];
+    
+    uint8_t buf[16];
+    
     ucg_int_t dx, dy;
     ucg_int_t i;
-    const uint8_t *seq;
     unsigned char pixmap;
     uint8_t bitcnt;
+    
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
+
+    buf[0] = 0x001;	// change to 0 (cmd mode)
+    buf[1] = 0x015;	// set x
+    
+    buf[2] = 0x002;	// change to 1 (arg mode)
+    buf[3] = 0x000;	// will be overwritten by x/y value
+    
+    buf[4] = 0x000;	// no change
+    buf[5] = 0x07f;	// max value
+    
+    buf[6] = 0x001;	// change to 0 (cmd mode)
+    buf[7] = 0x05c;	// write data
+    
+    buf[8] = 0x002;	// change to 1 (data mode)
+    buf[9] = 0x000;	// red value
+    
+    buf[10] = 0x000;	// no change
+    buf[11] = 0x000;	// green value
+    
+    buf[12] = 0x000;	// no change
+    buf[13] = 0x000;	// blue value      
+
+    buf[14] = 0x001;	// change to 0 (cmd mode)
+    buf[15] = 0x05c;	// change to 0 (cmd mode)
+
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
-	seq = ucg_ssd1351_set_x_pos_seq;
-	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_for_x_seq);	
+	buf[1] = 0x015;
+	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_for_x_seq);
 	break;
       case 1: 
 	dx = 0; dy = 1; 
-	seq = ucg_ssd1351_set_y_pos_seq;
+	buf[1] = 0x075;
 	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_for_y_seq);	
 	break;
       case 2: 
 	dx = -1; dy = 0; 
-	seq = ucg_ssd1351_set_x_pos_seq;
+	buf[1] = 0x015;
 	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_for_x_seq);	
 	break;
       case 3: 
       default:
 	dx = 0; dy = -1; 
-	seq = ucg_ssd1351_set_y_pos_seq;
+	buf[1] = 0x075;
 	ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_pos_for_y_seq);
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
-    buf[0] = ucg->arg.pixel.rgb.color[0]>>2;
-    buf[1] = ucg->arg.pixel.rgb.color[1]>>2;
-    buf[2] = ucg->arg.pixel.rgb.color[2]>>2;
+    
+    buf[9] = ucg->arg.pixel.rgb.color[0]>>2;
+    buf[11] = ucg->arg.pixel.rgb.color[1]>>2;
+    buf[13] = ucg->arg.pixel.rgb.color[2]>>2;
     //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
     
     for( i = 0; i < ucg->arg.len; i++ )
     {
       if ( (pixmap & 128) != 0 )
       {
-	ucg_com_SendCmdSeq(ucg, seq);	
-	//ucg_com_SendString(ucg, 3, buf);
-	ucg_com_SendRepeat3Bytes(ucg, 1, buf);
+	if ( (ucg->arg.dir&1) == 0 )
+	{
+	  buf[3] = ucg->arg.pixel.pos.x;
+	}
+	else
+	{
+	  buf[3] = ucg->arg.pixel.pos.y;
+	}
+	//ucg_com_SendCmdSeq(ucg, seq);	
+	//buf[0] = ucg->arg.pixel.rgb.color[0]>>2;
+	//buf[1] = ucg->arg.pixel.rgb.color[1]>>2;
+	//buf[2] = ucg->arg.pixel.rgb.color[2]>>2;
+	//ucg_com_SendRepeat3Bytes(ucg, 1, buf);
+	ucg_com_SendCmdDataSequence(ucg, 7, buf, 1);
+	//ucg_com_SetCDLineStatus(ucg, 1);
       }
       pixmap<<=1;
       ucg->arg.pixel.pos.x+=dx;

@@ -230,7 +230,7 @@ ucg_int_t ucg_handle_ili9341_l90tc(ucg_t *ucg)
 	  buf[3] = ucg->arg.pixel.pos.y>>8;
 	  buf[5] = ucg->arg.pixel.pos.y&255;
 	}
-	ucg_com_SendCmdDataSequence(ucg, 7, buf);
+	ucg_com_SendCmdDataSequence(ucg, 7, buf, 0);
       }
       pixmap<<=1;
       ucg->arg.pixel.pos.x+=dx;

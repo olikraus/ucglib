@@ -193,10 +193,10 @@ void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_p
 }
 
 
-void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr)
+void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr, uint8_t cd_line_status_at_end)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_CD_DATA_SEQUENCE, cnt, (uint8_t *)byte_ptr);
-  ucg_com_SetCDLineStatus(ucg, 0);	// ensure that the status is set correctly for the CD line */
+  ucg_com_SetCDLineStatus(ucg, cd_line_status_at_end);	// ensure that the status is set correctly for the CD line */
 }
 
 /*
