@@ -61,6 +61,8 @@ int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data
       break;
     case UCG_COM_MSG_SEND_STR:
       break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      break;
   }
   return 1;
 }
@@ -154,30 +156,30 @@ void ucg_com_SendByte(ucg_t *ucg, uint8_t byte)
 }
 #endif
 
-void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte)
+void ucg_com_SendRepeatByte(ucg_t *ucg, uint16_t cnt, uint8_t byte)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_1_BYTE, cnt, &byte);
 }
 
-void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
+void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint16_t cnt, uint8_t *byte_ptr)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_2_BYTES, cnt, byte_ptr);
 }
 
 
 #ifndef ucg_com_SendRepeat3Bytes
-void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr)
+void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint16_t cnt, uint8_t *byte_ptr)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_3_BYTES, cnt, byte_ptr);
 }
 #endif
 
-void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
+void ucg_com_SendString(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, cnt, (uint8_t *)byte_ptr);
 }
 
-void ucg_com_SendStringP(ucg_t *ucg, uint32_t cnt, const ucg_pgm_uint8_t *byte_ptr)
+void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_ptr)
 {
   uint8_t b;
   while( cnt > 0 )
@@ -191,7 +193,7 @@ void ucg_com_SendStringP(ucg_t *ucg, uint32_t cnt, const ucg_pgm_uint8_t *byte_p
 }
 
 
-void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr)
+void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr)
 {
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_CD_DATA_SEQUENCE, cnt, (uint8_t *)byte_ptr);
   ucg_com_SetCDLineStatus(ucg, 0);	// ensure that the status is set correctly for the CD line */

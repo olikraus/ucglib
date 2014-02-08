@@ -163,7 +163,7 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 
 #endif
 
-static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
 #ifdef __AVR__
   ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
@@ -285,7 +285,7 @@ static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
     digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
 }
 
-static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
   switch(msg)
   {
@@ -402,7 +402,7 @@ static void ucg_com_arduino_port_d_send(uint8_t data, volatile uint8_t *port, ui
     *port |= or_mask;
 }
 
-static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
   switch(msg)
   {
@@ -516,7 +516,7 @@ void Ucglib8BitPortD::begin(void)
 
 /*=========================================================================*/
 
-static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
   switch(msg)
   {

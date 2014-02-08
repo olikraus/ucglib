@@ -276,18 +276,38 @@ void setup(void)
   ucg.clearScreen();
 }
 
+void set_clip_range(void)
+{
+  ucg_int_t x, y, w, h;
+  w = lcg_rnd() & 31;
+  h = lcg_rnd() & 31;
+  w += 25;
+  h += 25;
+  x = (lcg_rnd()*(ucg.getWidth()-w))>>8;
+  y = (lcg_rnd()*(ucg.getHeight()-h))>>8;
+  
+  ucg.setClipRange(x, y, w, h);
+}
+
+
 uint8_t r = 1;
 void loop(void)
 {
-  switch(r)
+  switch(r&3)
   {
     case 0: ucg.undoRotate(); break;
     case 1: ucg.setRotate90(); break;
     case 2: ucg.setRotate180(); break;
     default: ucg.setRotate270(); break;
   }
+  
+  if ( r > 3 )
+  {
+    ucg.clearScreen();
+    set_clip_range();
+  }
+  
   r++;
-  r &=3;
   ucglib_graphics_test();
   triangle();
   fonts();  
@@ -296,4 +316,5 @@ void loop(void)
   gradient();
   //ucg.clearScreen();
   DLY();
+  ucg.setMaxClipRange();
 }

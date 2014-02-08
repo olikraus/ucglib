@@ -114,7 +114,7 @@ typedef struct _ucg_arg_t ucg_arg_t;
 typedef struct _ucg_com_info_t ucg_com_info_t;
 
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
-typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data); 
+typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 
 /*================================================*/
@@ -706,13 +706,13 @@ void ucg_com_DelayMilliseconds(ucg_t *ucg, uint16_t delay) UCG_NOINLINE;
 #ifndef ucg_com_SendByte
 void ucg_com_SendByte(ucg_t *ucg, uint8_t byte);
 #endif
-void ucg_com_SendRepeatByte(ucg_t *ucg, uint32_t cnt, uint8_t byte);
-void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+void ucg_com_SendRepeatByte(ucg_t *ucg, uint16_t cnt, uint8_t byte);
+void ucg_com_SendRepeat2Bytes(ucg_t *ucg, uint16_t cnt, uint8_t *byte_ptr);
 #ifndef ucg_com_SendRepeat3Bytes
-void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint32_t cnt, uint8_t *byte_ptr);
+void ucg_com_SendRepeat3Bytes(ucg_t *ucg, uint16_t cnt, uint8_t *byte_ptr);
 #endif
-void ucg_com_SendString(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
-void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint32_t cnt, const uint8_t *byte_ptr);
+void ucg_com_SendString(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr);
+void ucg_com_SendCmdDataSequence(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr);
 void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data);
 
 
