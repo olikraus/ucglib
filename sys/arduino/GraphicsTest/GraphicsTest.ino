@@ -95,6 +95,7 @@ void ucglib_graphics_test(void)
   ucg.drawGradientBox(0, 0, ucg.getWidth(), ucg.getHeight());
 
   ucg.setColor(255, 168, 0);
+  ucg.setPrintDir(0);
   ucg.setPrintPos(2,18);
   ucg.print("Ucglib");
   ucg.setPrintPos(2,18+20);
@@ -114,6 +115,7 @@ void gradient(void)
   
   ucg.setColor(255, 255, 255);
   ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
   ucg.print("GradientBox");
 
   ucg.setColor(0, 0, 255, 0);
@@ -144,6 +146,7 @@ void box(void)
 
   ucg.setColor(255, 255, 255);
   ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
   ucg.print("Box");
 
   m = millis() + T;
@@ -209,6 +212,7 @@ void text(void)
 
   ucg.setColor(255, 255, 255);
   ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
   ucg.print("Text");
 
   m = millis() + T;
@@ -241,6 +245,7 @@ void fonts(void)
   ucg.drawGradientBox(0, 0, ucg.getWidth(), ucg.getHeight());
 
   ucg.setColor(255, 255, 255);
+  ucg.setPrintDir(0);
   ucg.setPrintPos(2,18);
   ucg.print("Fonts");
   
@@ -261,12 +266,94 @@ void fonts(void)
   ucg.setPrintPos(2,79+22+d);
   ucg.print("ABC abc 123");
   
-  
-
   ucg.setFont(ucg_font_ncenR14r);
   DLY();
 }
 
+void clip(void)
+{
+  // f485c2
+  // ff1495
+  // d10073 dark red
+  // ff61b8 light red
+  ucg.setColor(0, 0x00, 0xd1, 0x5e);		// dark green
+  ucg.setColor(1, 0xff, 0xf7, 0x61);		// yellow
+  ucg.setColor(2, 0xd1, 0xc7, 0x00);			// dark yellow
+  ucg.setColor(3, 0x61, 0xff, 0xa8);		// green
+  
+  ucg.drawGradientBox(0, 0, ucg.getWidth(), ucg.getHeight());
+
+  ucg.setColor(255, 255, 255);
+  ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
+  ucg.print("ClipRange");
+  
+  ucg.setColor(0xd1, 0x00, 0x073);
+  
+  ucg.setFont(ucg_font_helvB18r);
+  
+  ucg.setPrintPos(25,45);
+  ucg.setPrintDir(0);
+  ucg.print("Ucg");
+  ucg.setPrintDir(1);
+  ucg.print("Ucg");
+  ucg.setPrintDir(2);
+  ucg.print("Ucg");
+  ucg.setPrintDir(3);
+  ucg.print("Ucg");
+  
+  
+  ucg.setMaxClipRange();
+  ucg.setColor(0xff, 0xff, 0xff);
+  ucg.drawFrame(20-1,30-1,15+2,20+2);  
+  ucg.setClipRange(20, 30, 15, 20);
+  ucg.setColor(0xff, 0x61, 0x0b8);
+  ucg.setPrintPos(25,45);
+  ucg.setPrintDir(0);
+  ucg.print("Ucg");
+  ucg.setPrintDir(1);
+  ucg.print("Ucg");
+  ucg.setPrintDir(2);
+  ucg.print("Ucg");
+  ucg.setPrintDir(3);
+  ucg.print("Ucg");
+  
+
+  ucg.setMaxClipRange();
+  ucg.setColor(0xff, 0xff, 0xff);
+  ucg.drawFrame(60-1,35-1,25+2,18+2);  
+  ucg.setClipRange(60, 35, 25, 18);
+  ucg.setColor(0xff, 0x61, 0x0b8);
+  ucg.setPrintPos(25,45);
+  ucg.setPrintDir(0);
+  ucg.print("Ucg");
+  ucg.setPrintDir(1);
+  ucg.print("Ucg");
+  ucg.setPrintDir(2);
+  ucg.print("Ucg");
+  ucg.setPrintDir(3);
+  ucg.print("Ucg");
+
+  ucg.setMaxClipRange();
+  ucg.setColor(0xff, 0xff, 0xff);
+  ucg.drawFrame(7-1,58-1,90+2,4+2);  
+  ucg.setClipRange(7, 58, 90, 4);
+  ucg.setColor(0xff, 0x61, 0x0b8);
+  ucg.setPrintPos(25,45);
+  ucg.setPrintDir(0);
+  ucg.print("Ucg");
+  ucg.setPrintDir(1);
+  ucg.print("Ucg");
+  ucg.setPrintDir(2);
+  ucg.print("Ucg");
+  ucg.setPrintDir(3);
+  ucg.print("Ucg");
+
+  ucg.setFont(ucg_font_ncenR14r);
+  ucg.setMaxClipRange();
+  DLY();
+  
+}
 
 void setup(void)
 {
@@ -312,6 +399,8 @@ void loop(void)
   triangle();
   fonts();  
   text();
+  if ( r <= 3 )
+    clip();
   box();
   gradient();
   //ucg.clearScreen();
