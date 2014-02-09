@@ -272,10 +272,6 @@ void fonts(void)
 
 void clip(void)
 {
-  // f485c2
-  // ff1495
-  // d10073 dark red
-  // ff61b8 light red
   ucg.setColor(0, 0x00, 0xd1, 0x5e);		// dark green
   ucg.setColor(1, 0xff, 0xf7, 0x61);		// yellow
   ucg.setColor(2, 0xd1, 0xc7, 0x00);			// dark yellow

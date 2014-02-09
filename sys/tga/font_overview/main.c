@@ -52,7 +52,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
   
   
   tga_init(1024,800);
-  ucg_Init(&ucg, &ucg_dev_tga, (ucg_com_fnptr)0);
+  ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   
   disp_font = ucg_font_7x13;
   
