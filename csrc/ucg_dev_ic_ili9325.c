@@ -300,7 +300,6 @@ ucg_int_t ucg_handle_ili9325_l90tc(ucg_t *ucg)
       case 3: 
       default:
 	dx = 0; dy = -1; 
-	dx = 0; dy = 1; 
         buf[6] = 0x001;	// change to 0 (cmd mode)
         buf[7] = 0x021;	// set y
         buf[8] = 0x002;	// change to 1 (arg mode)
