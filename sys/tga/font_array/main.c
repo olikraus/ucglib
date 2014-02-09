@@ -168,7 +168,7 @@ int main(int argc, char **argv)
   }
   
   wiki = fopen("font_array.wiki", "w");
-  for( a = 4;  a < 50; a++ )
+  for( a = 4;  a < 65; a++ )
   {
     ucg_t ucg;
     int cnt;

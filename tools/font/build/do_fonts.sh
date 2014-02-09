@@ -97,6 +97,25 @@ echo "10x20"
 ../bdf2ucg/bdf2ucg -l 67 -u 75 ../bdf/10x20.bdf ucg_font_10x20_67_75 ./pixel/ucg_font_10x20_67_75.c > /dev/null
 ../bdf2ucg/bdf2ucg -l 75  -b 32 -e 79 ../bdf/10x20.bdf ucg_font_10x20_75r ./pixel/ucg_font_10x20_75r.c > /dev/null
 ../bdf2ucg/bdf2ucg -l 78 -u 79 ../bdf/10x20.bdf ucg_font_10x20_78_79 ./pixel/ucg_font_10x20_78_79.c > /dev/null
+echo "profont"
+../bdf2ucg/bdf2ucg ../bdf/profont10.bdf ucg_font_profont10 ./pixel/ucg_font_profont10.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont11.bdf ucg_font_profont11 ./pixel/ucg_font_profont11.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont12.bdf ucg_font_profont12 ./pixel/ucg_font_profont12.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont15.bdf ucg_font_profont15 ./pixel/ucg_font_profont15.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont17.bdf ucg_font_profont17 ./pixel/ucg_font_profont17.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont22.bdf ucg_font_profont22 ./pixel/ucg_font_profont22.c > /dev/null
+../bdf2ucg/bdf2ucg ../bdf/profont29.bdf ucg_font_profont29 ./pixel/ucg_font_profont29.c > /dev/null
+
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont10.bdf ucg_font_profont10r ./pixel/ucg_font_profont10r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont11.bdf ucg_font_profont11r ./pixel/ucg_font_profont11r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont12.bdf ucg_font_profont12r ./pixel/ucg_font_profont12r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont15.bdf ucg_font_profont15r ./pixel/ucg_font_profont15r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont17.bdf ucg_font_profont17r ./pixel/ucg_font_profont17r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont22.bdf ucg_font_profont22r ./pixel/ucg_font_profont22r.c > /dev/null
+../bdf2ucg/bdf2ucg -b 32 -e 127 ../bdf/profont29.bdf ucg_font_profont29r ./pixel/ucg_font_profont29r.c > /dev/null
+
+../bdf2ucg/bdf2ucg -b 42 -e 58 ../bdf/profont22.bdf ucg_font_profont22n ./pixel/ucg_font_profont22n.c > /dev/null
+../bdf2ucg/bdf2ucg -b 42 -e 58 ../bdf/profont29.bdf ucg_font_profont29n ./pixel/ucg_font_profont29n.c > /dev/null
 
 echo "unifont"
 ../bdf2ucg/bdf2ucg -l 0 -u 1 -b 0 -e 255  ../bdf/unifont.bdf ucg_font_unifont ./pixel/ucg_font_unifont.c > /dev/null
@@ -284,6 +303,7 @@ echo "orgdot"
 
 
 
+echo "various ttf"
 
 #./do_fontsize.sh 15 ../ttf/GenBasR.ttf gdr9
 #./do_fontsize.sh 17 ../ttf/GenBasR.ttf gdr10
@@ -337,6 +357,24 @@ echo "orgdot"
 ./do_fontsize_a.sh 49 ../ttf/os/OldStandard-Regular.ttf osr35
 #./do_fontsize_a.sh 57 ../ttf/os/OldStandard-Reglar.ttf osr41
 
+echo "logisoso"
 
+./do_fontsize_a.sh 23 ../ttf/log/Logisoso.ttf logisoso16
+./do_fontsize_a.sh 27 ../ttf/log/Logisoso.ttf logisoso18
+./do_fontsize_a.sh 30 ../ttf/log/Logisoso.ttf logisoso20
+./do_fontsize_a.sh 32 ../ttf/log/Logisoso.ttf logisoso22
+./do_fontsize_a.sh 34 ../ttf/log/Logisoso.ttf logisoso24
+./do_fontsize_a.sh 38 ../ttf/log/Logisoso.ttf logisoso26
+./do_fontsize_a.sh 40 ../ttf/log/Logisoso.ttf logisoso28
+./do_fontsize_a_no_64.sh 43 ../ttf/log/Logisoso.ttf logisoso30
+./do_fontsize_a_no_64.sh 45 ../ttf/log/Logisoso.ttf logisoso32
+./do_fontsize_a_no_64.sh 49 ../ttf/log/Logisoso.ttf logisoso34
+./do_fontsize_a_no_64.sh 54 ../ttf/log/Logisoso.ttf logisoso38
+./do_fontsize_a_no_64.sh 60 ../ttf/log/Logisoso.ttf logisoso42
+./do_fontsize_a_no_64.sh 66 ../ttf/log/Logisoso.ttf logisoso46
+./do_fontsize_a_no_64.sh 71 ../ttf/log/Logisoso.ttf logisoso50
+./do_fontsize_a_n.sh  77 ../ttf/log/Logisoso.ttf logisoso54n
+./do_fontsize_a_n.sh  83 ../ttf/log/Logisoso.ttf logisoso58n
+./do_fontsize_a_n.sh  89 ../ttf/log/Logisoso.ttf logisoso62n
 
 echo "execute do_combine.sh after executing this script"

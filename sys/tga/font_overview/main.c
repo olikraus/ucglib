@@ -71,8 +71,9 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
   
   //w = ucg_GetFontBBXWidth(&ucg)+2;
   w = ucg_GetGlyphWidth(&ucg, 'W') + 3;
-
-  //w = width;
+  if ( w < ucg_GetGlyphWidth(&ucg, '3') + 3 )
+    w = ucg_GetGlyphWidth(&ucg, '3') + 3;
+    //w = width;
   h = ucg_GetFontBBXHeight(&ucg);
   if ( h < disp_line_height )
     h = disp_line_height ;

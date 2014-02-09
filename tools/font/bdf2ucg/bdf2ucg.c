@@ -1213,7 +1213,7 @@ void bdf_GenerateGlyph(const char *filename, int encoding)
   bdf_ReadFile(filename, encoding);
 }
 
-void bdf_Generate(const char *filename, int begin, int end)
+void bdf_Generate(const char *filename, int begin, int end, int ignore)
 {
   int i;
   int last_valid_encoding;
@@ -1237,8 +1237,9 @@ void bdf_Generate(const char *filename, int begin, int end)
       bdf_encoding_97_pos = data_pos;
     
     bdf_is_encoding_successfully_done = 0;
-    if ( bdf_IsEncodingAvailable(i) )
-      bdf_GenerateGlyph(filename, i);
+    if ( i != ignore )
+      if ( bdf_IsEncodingAvailable(i) )
+	bdf_GenerateGlyph(filename, i);
     if ( bdf_is_encoding_successfully_done == 0 )
       data_Put(255);          /* no char encoding */
     if ( bdf_is_encoding_successfully_done != 0 )
@@ -1345,11 +1346,12 @@ int main(int argc, char **argv)
   int upper_mapping_shift = 0;
   int begin = 32;
   int end = 255;
+  int ignore_char = -1;
   
   if ( argc < 4 )
   {
     printf("bdf to ucglib font format converter v" BDF2UCG_VERSION "\n");
-    printf("%s [-l page] [-u page] [-s shift] [-S upper-shift] [-b begin] [-e end] [-f format] fontfile fontname outputfile\n", argv[0]);
+    printf("%s [-l page] [-u page] [-s shift] [-S upper-shift] [-b begin] [-e end] [-f format] [-@] fontfile fontname outputfile\n", argv[0]);
     return 1;
   }
   
@@ -1363,6 +1365,10 @@ int main(int argc, char **argv)
     {
       lower_page = atoi(ga_argv[0]);
       ga_remove_arg();      
+    }
+    else if ( ga_is_arg('@') )
+    {
+      ignore_char = 64;
     }
     else if ( ga_is_arg('u') )
     {
@@ -1414,7 +1420,7 @@ int main(int argc, char **argv)
   }  
   */
   
-  bdf_Generate(ga_argv[0], begin, end);
+  bdf_Generate(ga_argv[0], begin, end, ignore_char);
   bdf_WriteC(ga_argv[2], ga_argv[1]);
 
   printf("input file '%s'\n", ga_argv[0]);
