@@ -8,4 +8,5 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Fixed text output problems with ILI9325
   * Fixed controller timing problem with the ILI9341 (rot180/rot270)
   * Fixed GraphicsDemo for larger screen sizes
+  * Added Profont and Logisoso fonts
   
