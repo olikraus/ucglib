@@ -62,8 +62,8 @@
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 52, /*sda=*/ 51, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Mega, SW SPI via HW SPI Pins */
 //Ucglib4WireSWSPI ucg(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5, /*cs=*/ 3, /*reset=*/ 4);
 
-//Ucglib4WireSWSPI ucg(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
-Ucglib4WireSWSPI ucg(ucg_dev_st7735_18x128x160, ucg_ext_st7735_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
+//Ucglib4WireSWSPI ucg(ucg_dev_st7735_18x128x160, ucg_ext_st7735_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
+Ucglib4WireHWSPI ucg(ucg_dev_st7735_18x128x160, ucg_ext_st7735_18, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, HW SPI Pins */
 
 #define T 4000
 #define DLY() delay(2000)
@@ -376,7 +376,7 @@ void set_clip_range(void)
 }
 
 
-uint8_t r = 1;
+uint8_t r = 0;
 void loop(void)
 {
   switch(r&3)
