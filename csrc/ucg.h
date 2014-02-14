@@ -393,10 +393,9 @@ struct _ucg_t
   arg:			number of cd_info and data pairs (half value of total byte cnt) 	
   data:			uint8_t with CD and data information
 	cd_info data cd_info data cd_info data cd_info data ... cd_info data cd_info data
-	
-	
 */
 #define UCG_COM_MSG_SEND_CD_DATA_SEQUENCE 21
+
 
 
 /*================================================*/
