@@ -207,10 +207,11 @@ struct _ucg_arg_t
   ucg_int_t len;
   ucg_int_t dir;
   ucg_int_t offset;			/* calculated offset from the inital point to the start of the clip window (ucg_clip_l90fx) */
+  ucg_int_t scale;			/* upscale factor, used by UCG_MSG_DRAW_L90BF */
   const unsigned char *bitmap;
   ucg_int_t pixel_skip;		/* within the "bitmap" skip the specified number of pixel with the bit. pixel_skip is always <= 7 */
-  ucg_color_t rgb[4];		/* start and end color for L90SE , two more colors for the gradient box */
-  ucg_ccs_t ccs_line[3];	/* color component sliders used by L90SE */
+  ucg_color_t rgb[4];			/* start and end color for L90SE , two more colors for the gradient box */
+  ucg_ccs_t ccs_line[3];		/* color component sliders used by L90SE */
 };
 
 #define UCG_FONT_HEIGHT_MODE_TEXT 0
@@ -277,6 +278,7 @@ struct _ucg_t
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
   ucg_font_calc_vref_fnptr font_calc_vref;
+  uint8_t is_font_transparent;	/* either use L90TC (transparent) or L90BF (background and foreground color) */
   
   int8_t glyph_dx;
   int8_t glyph_x;
@@ -319,11 +321,15 @@ struct _ucg_t
 #define UCG_MSG_SET_CLIP_BOX 12
 #define UCG_MSG_GET_DIMENSION 15
 
+/* draw pixel with color from idx 0 */
 #define UCG_MSG_DRAW_PIXEL 20
 #define UCG_MSG_DRAW_L90FX 21
+/* draw  bit pattern, transparent and draw color (idx 0) color */
 #define UCG_MSG_DRAW_L90TC 22	
 #define UCG_MSG_DRAW_L90SE 23
 #define UCG_MSG_DRAW_L90RL 24
+/* draw  bit pattern with foreground (idx 1) and background (idx 0) color */
+#define UCG_MSG_DRAW_L90BF 25	
 
 #define UCG_COM_STATUS_MASK_POWER 8
 #define UCG_COM_STATUS_MASK_RESET 4
@@ -432,8 +438,9 @@ void ucg_GetDimension(ucg_t *ucg);
 void ucg_DrawPixelWithArg(ucg_t *ucg);
 void ucg_DrawL90FXWithArg(ucg_t *ucg);
 void ucg_DrawL90TCWithArg(ucg_t *ucg);
+void ucg_DrawL90BFWithArg(ucg_t *ucg);
 void ucg_DrawL90SEWithArg(ucg_t *ucg);
-void ucg_DrawL90RLWithArg(ucg_t *ucg);
+/* void ucg_DrawL90RLWithArg(ucg_t *ucg); */
 
 /*================================================*/
 /* ucg_init.c */
@@ -451,6 +458,7 @@ void ucg_DrawPixel(ucg_t *ucg, ucg_int_t x, ucg_int_t y);
 
 /*================================================*/
 /* ucg_line.c */
+void ucg_Draw90Line(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len, ucg_int_t dir, ucg_int_t col_idx);
 void ucg_DrawHLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawVLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
 void ucg_DrawHRLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t len);
@@ -480,8 +488,9 @@ void ucg_DrawCircle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8
 
 /*================================================*/
 /* ucg_bitmap.c */
+void ucg_DrawTransparentBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap);
 void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap);
-void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap);
+/* void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap); */
 
 
 /*================================================*/
@@ -604,6 +613,7 @@ void ucg_SetFontPosTop(ucg_t *ucg);
 void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
+void ucg_SetFontTransparentMode(ucg_t *ucg, uint8_t is_transparent);
 
 ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s);
 
@@ -632,6 +642,7 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_handle_l90fx(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb);
+ucg_int_t ucg_handle_l90bf(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 

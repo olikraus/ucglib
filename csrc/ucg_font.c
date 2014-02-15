@@ -452,12 +452,28 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
   uint8_t j;
   ucg_int_t dx, dy;
   uint8_t bytes_per_line;
+  ucg_int_t above = 0;
+  ucg_int_t below = 0;
 
   {
     ucg_glyph_t g = ucg_GetGlyph(ucg, encoding);
     if ( g == NULL  )
       return 0;
     data = ucg_font_GetGlyphDataStart(ucg->font, g);
+  }
+  
+  if ( ucg->is_font_transparent == 0 )
+  {
+    above = ucg->font_ref_ascent;
+    above -= ucg->glyph_height;
+    above -= ucg->glyph_y;
+    if ( above < 0 )
+      above = 0;
+    
+    below = ucg->font_ref_descent; 
+    below -= ucg->glyph_y;
+    if ( below > 0 )
+      below = 0;
   }
   
   bytes_per_line = ucg->glyph_width;
@@ -472,37 +488,71 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
       x += ucg->glyph_x;
       y -= ucg->glyph_y;
       y -= ucg->glyph_height;
+      y -= above;		/* solid */
       dy = 1;
       break;
     case 1:
       x += ucg->glyph_y;
       y += ucg->glyph_x;
       x += ucg->glyph_height;
+      x += above;		/* solid */
       dx = -1;
       break;
     case 2:
       x -= ucg->glyph_x;
-      //x++;
       y += ucg->glyph_y;
       y += ucg->glyph_height;
+      y += above;		/* solid */
       dy = -1;
       break;
     case 3:
       x -= ucg->glyph_y;
       y -= ucg->glyph_x;
-      //y++;
       x -= ucg->glyph_height;
+      x -= above;		/* solid */
       dx = 1;
       break;
   }
 
-  for( j = 0; j < ucg->glyph_height; j++ )
+  if ( ucg->is_font_transparent != 0 )
   {
-    //ucg_DrawPixel(ucg, x,y);
-    ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
-    data += bytes_per_line;
-    y+=dy;
-    x+=dx;
+    for( j = 0; j < ucg->glyph_height; j++ )
+    {
+      //ucg_DrawPixel(ucg, x,y);
+      ucg_DrawTransparentBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
+      data += bytes_per_line;
+      y+=dy;
+      x+=dx;
+    }
+  }
+  else
+  {
+    //ucg->font_ref_ascent;
+    //ucg->font_ref_descent;
+    while( above > 0 )
+    {
+      ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
+      y+=dy;
+      x+=dx;
+      above--;
+    }
+    
+    for( j = 0; j < ucg->glyph_height; j++ )
+    {
+      //ucg_DrawPixel(ucg, x,y);
+      ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
+      data += bytes_per_line;
+      y+=dy;
+      x+=dx;
+    }
+    
+    while( below < 0 )
+    {
+      ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 0);
+      y+=dy;
+      x+=dx;
+      below++;
+    }
   }
   
   return ucg->glyph_dx;
@@ -664,6 +714,11 @@ void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font)
     ucg_UpdateRefHeight(ucg);
     //ucg_SetFontPosBaseline(ucg);
   }
+}
+
+void ucg_SetFontTransparentMode(ucg_t *ucg, uint8_t is_transparent)
+{
+  ucg->is_font_transparent = is_transparent;
 }
 
 /*===============================================*/

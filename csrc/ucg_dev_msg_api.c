@@ -108,6 +108,11 @@ void ucg_DrawL90TCWithArg(ucg_t *ucg)
   ucg->device_cb(ucg, UCG_MSG_DRAW_L90TC, &(ucg->arg));
 }
 
+void ucg_DrawL90BFWithArg(ucg_t *ucg)
+{
+  ucg->device_cb(ucg, UCG_MSG_DRAW_L90BF, &(ucg->arg));
+}
+
 void ucg_DrawL90SEWithArg(ucg_t *ucg)
 {
   ucg->device_cb(ucg, UCG_MSG_DRAW_L90SE, &(ucg->arg));
@@ -119,3 +124,4 @@ void ucg_DrawL90RLWithArg(ucg_t *ucg)
   ucg->device_cb(ucg, UCG_MSG_DRAW_L90RL, &(ucg->arg));
 }
 */
+

@@ -140,7 +140,62 @@ ucg_int_t ucg_handle_l90tc(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   }
   return 0;
 }
- 
+
+
+/*
+  handle UCG_MSG_DRAW_L90FB message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL
+  return 1 if something has been drawn
+*/
+ucg_int_t ucg_handle_l90bf(ucg_t *ucg, ucg_dev_fnptr dev_cb)
+{
+  if ( ucg_clip_l90tc(ucg) != 0 )
+  {
+    ucg_int_t dx, dy;
+    ucg_int_t i, y;
+    unsigned char pixmap;
+    uint8_t bitcnt;
+    switch(ucg->arg.dir)
+    {
+      case 0: dx = 1; dy = 0; break;
+      case 1: dx = 0; dy = 1; break;
+      case 2: dx = -1; dy = 0; break;
+      case 3: dx = 0; dy = -1; break;
+      default: dx = 1; dy = 0; break;	/* avoid compiler warning */
+    }
+    pixmap = ucg_pgm_read(ucg->arg.bitmap);
+    bitcnt = ucg->arg.pixel_skip;
+    pixmap <<= bitcnt;
+    for( i = 0; i < ucg->arg.len; i++ )
+    {
+      for( y = 0; y < ucg->arg.scale; y++ )
+      {
+	if ( (pixmap & 128) == 0 )
+	{
+	  ucg->arg.pixel.rgb = ucg->arg.rgb[1];
+	  dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+	}
+	else
+	{
+	  ucg->arg.pixel.rgb = ucg->arg.rgb[0];
+	  dev_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+	}
+	ucg->arg.pixel.pos.x+=dx;
+	ucg->arg.pixel.pos.y+=dy;
+      }
+      pixmap<<=1;
+      bitcnt++;
+      if ( bitcnt >= 8 )
+      {
+	ucg->arg.bitmap++;
+	pixmap = ucg_pgm_read(ucg->arg.bitmap);
+	bitcnt = 0;
+      }
+    }
+    return 1;
+  }
+  return 0;
+}
+
 /*
   handle UCG_MSG_DRAW_L90SE message and make calls to "dev_cb" with UCG_MSG_DRAW_PIXEL
   return 1 if something has been drawn

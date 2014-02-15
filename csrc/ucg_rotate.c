@@ -99,8 +99,9 @@ ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
     case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90BF:
     case UCG_MSG_DRAW_L90SE:
-    case UCG_MSG_DRAW_L90RL:
+    //case UCG_MSG_DRAW_L90RL:
       ucg->arg.dir+=1;
       ucg->arg.dir&=3;
       //ucg_rotate_90_xy(&(ucg->arg.pixel.pos), ucg->rotate_dimension.w); 
