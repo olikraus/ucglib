@@ -110,8 +110,8 @@ const ucg_pgm_uint8_t ucg_st7735_set_pos_dir3_seq[] =
   /* 0x000 vertical increment (dir = 1) */
   /* 0x0c0 horizontal deccrement (dir = 2) */
   /* 0x0c0 vertical deccrement (dir = 3) */
-  UCG_C11( 0x036, 0x088),
-  UCG_C11( 0x036, 0x088),		/* it seems that this command needs to be sent twice */
+  UCG_C11( 0x036, 0x080),
+  UCG_C11( 0x036, 0x080),		/* it seems that this command needs to be sent twice */
   UCG_C10(0x02a),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x02b),	UCG_VARY(0,0x00, 0), UCG_VARY(0,0x0ff, 0), UCG_D2(0x000, 0x09f),		/* set y position */
 

@@ -60,17 +60,52 @@
 
 #include "ucg.h"
 
+/* 
+  do some multi inheritance with the Print class here
+  goal is to be able to have two instances of the print class,
+  one that will print transparent glyph and the other none
+  transparent glyphs. Transparent strings are available with
+    T::print
+  none transparent with
+    S::print
+*/
+
+class UcglibPrint : public Print
+{
+  public:
+    virtual uint8_t& get_tdir(void);
+    virtual ucg_int_t& get_tx(void);
+    virtual ucg_int_t& get_ty(void);
+    virtual ucg_t *get_ucg(void);  
+};
+
+class T : public UcglibPrint
+{
+  public:
+    size_t write(uint8_t c);
+};
+
+class S : public UcglibPrint
+{
+  public:
+    size_t write(uint8_t c);
+};
+
 // Do not use Ucglib class directly, use Ucglib8Bit or Ucglib4WireSPI instead
-class Ucglib : public Print
+class Ucglib : public T, public S
 {
   protected:
     ucg_t ucg;
     ucg_dev_fnptr dev_cb;
-    ucg_dev_fnptr ext_cb;
+    ucg_dev_fnptr ext_cb;  
   private:
     ucg_int_t tx, ty;          // current position for the Print base class procedures
     uint8_t tdir;
   protected:
+    uint8_t& get_tdir(void) { return tdir; };
+    ucg_int_t& get_tx(void) { return tx; };
+    ucg_int_t& get_ty(void) { return ty; };
+    ucg_t *get_ucg(void) { return &ucg; };
     void init(void);
   public:
     Ucglib(void) { init(); }
@@ -78,7 +113,6 @@ class Ucglib : public Print
 
     void setPrintPos(ucg_int_t x, ucg_int_t y) { tx = x; ty = y; }
     void setPrintDir(uint8_t dir) { tdir = dir; }
-    size_t write(uint8_t c);
     ucg_t *getUcg(void) { return &ucg; }
     
     ucg_int_t getWidth(void) { return ucg_GetWidth(&ucg); }

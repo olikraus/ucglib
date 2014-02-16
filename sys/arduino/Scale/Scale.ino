@@ -81,14 +81,17 @@ void setup(void)
 int n = 0;
 void loop(void)
 {
-  ucg.setFont(ucg_font_logisoso50n);
-  ucg.setPrintPos(0,62);
+  ucg.setFont(ucg_font_logisoso46n);
+  ucg.setPrintPos(0,50);
   ucg.setColor(255, 255, 255);
-  ucg.print(n);
+  ucg.setColor(1, 255, 0, 0);
+  ucg.S::print(n);
   delay(1000);
-  ucg.setPrintPos(0,62);
+  /*
+  ucg.setPrintPos(0,50);
   ucg.setColor(0,0,0);
-  ucg.print(n);
+  ucg.S::print(n);
+  */
   n++;
 }
 

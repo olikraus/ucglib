@@ -49,20 +49,46 @@ void ucg_UndoScale(ucg_t *ucg)
 const ucg_fntpgm_uint8_t ucg_scale_2x2[16] UCG_FONT_SECTION("ucg_scale_2x2") =  
 { 0x00, 0x03, 0x0c, 0x0f, 0x30, 0x33, 0x3c, 0x3f, 0xc0, 0xc3, 0xcc, 0xcf, 0xf0, 0xf3, 0xfc, 0xff };
 
-static void ucg_scale_2x2_send_next_half_byte(ucg_t *ucg, ucg_xy_t *xy, ucg_int_t msg, ucg_int_t len, uint8_t b)
+ static void ucg_scale_2x2_send_next_half_byte(ucg_t *ucg, ucg_xy_t *xy, ucg_int_t msg, ucg_int_t len, ucg_int_t dir, uint8_t b)
 {
   b &= 15;
-  ucg->arg.pixel.pos = *xy;
-  ucg->arg.bitmap = ucg_scale_2x2+b;
   len *=2;
-  len = ucg->arg.len = len;
+
+
+  
+  ucg->arg.pixel.pos = *xy;
+  switch(dir)
+  {
+    case 0: break;
+    case 1: break;
+    case 2: ucg->arg.pixel.pos.x++; break;
+    default: case 3: ucg->arg.pixel.pos.y++; break;
+  }
+  
+  ucg->arg.bitmap = ucg_scale_2x2+b;
+  ucg->arg.len = len;
+  ucg->arg.dir = dir;
   ucg->scale_chain_device_cb(ucg, msg, &(ucg->arg));  
-  switch(ucg->arg.dir)
+
+  ucg->arg.pixel.pos = *xy;
+  switch(dir)
+  {
+    case 0: ucg->arg.pixel.pos.y++; break;
+    case 1: ucg->arg.pixel.pos.x++; break;
+    case 2: ucg->arg.pixel.pos.y++; ucg->arg.pixel.pos.x++; break;
+    default: case 3: ucg->arg.pixel.pos.x++; ucg->arg.pixel.pos.y++;  break;
+  }
+  ucg->arg.bitmap = ucg_scale_2x2+b;
+  ucg->arg.len = len;
+  ucg->arg.dir = dir;
+  ucg->scale_chain_device_cb(ucg, msg, &(ucg->arg));  
+  
+  switch(dir)
   {
     case 0: xy->x+=len; break;
     case 1: xy->y+=len; break;
-    case 2: xy->x+=len; break;
-    default: case 3: xy->y+=len; break;
+    case 2: xy->x-=len; break;
+    default: case 3: xy->y-=len; break;
   }
   
 }
@@ -110,27 +136,42 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;
       dir = ucg->arg.dir;
+    
+    
       ucg->arg.pixel.pos.x *= 2;
       ucg->arg.pixel.pos.y *= 2;
+
+      switch(dir)
+      {
+	case 0: break;
+	case 1: break;
+	case 2: ucg->arg.pixel.pos.x++; break;
+	default: case 3: ucg->arg.pixel.pos.y++; break;
+      }
+    
       ucg->arg.len *= 2;
       ucg->scale_chain_device_cb(ucg, msg, data);  
+    
       ucg->arg.pixel.pos = xy;
       ucg->arg.pixel.pos.x *= 2;
       ucg->arg.pixel.pos.y *= 2;
       ucg->arg.len = len*2;
-      switch(ucg->arg.dir)
+      ucg->arg.dir = dir;
+      switch(dir)
       {
 	case 0: ucg->arg.pixel.pos.y++; break;
 	case 1: ucg->arg.pixel.pos.x++; break;
-	case 2: ucg->arg.pixel.pos.y++; break;
-	default: case 3: ucg->arg.pixel.pos.x++; break;
+	case 2: ucg->arg.pixel.pos.y++; ucg->arg.pixel.pos.x++; break;
+	default: case 3: ucg->arg.pixel.pos.x++; ucg->arg.pixel.pos.y++;  break;
       }
       ucg->scale_chain_device_cb(ucg, msg, data);
+      
       ucg->arg.pixel.pos = xy;
       ucg->arg.len = len;
       ucg->arg.dir = dir;
       return 1;
     case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90BF:
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;
       dir = ucg->arg.dir;
@@ -144,29 +185,25 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
 	ucg_int_t i;
 	for( i = 8; i < len; i+=8 )
 	{
-	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b)>>4);
-	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b));
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, dir, ucg_pgm_read(b)>>4);
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, dir, ucg_pgm_read(b));
 	  b+=1;
 	}
 	i = len+8-i;
 	if ( i > 4 )
 	{
-	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b)>>4);
-	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i-4, ucg_pgm_read(b));
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, dir, ucg_pgm_read(b)>>4);
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i-4, dir, ucg_pgm_read(b));
 	}
 	else
 	{
-	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i, ucg_pgm_read(b)>>4);
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i, dir, ucg_pgm_read(b)>>4);
 	}
-	
-	
       }
       ucg->arg.pixel.pos = xy;
       ucg->arg.len = len;
       ucg->arg.dir = dir;
       return 1;
-    case UCG_MSG_DRAW_L90RL:
-      break;
   }
   return ucg->scale_chain_device_cb(ucg, msg, data);  
 }

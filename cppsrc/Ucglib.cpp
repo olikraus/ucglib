@@ -639,15 +639,26 @@ void Ucglib::init(void) {
   
 }
 
-size_t Ucglib::write(uint8_t c) { 
+size_t T::write(uint8_t c) { 
   ucg_int_t delta;
-  delta = ucg_DrawTransparentGlyph(&ucg, tx, ty, tdir, c); 
-  switch(tdir) {
-    case 0: tx += delta; break;
-    case 1: ty += delta; break;
-    case 2: tx -= delta; break;
-    default: case 3: ty -= delta; break;
+  delta = ucg_DrawTransparentGlyph(get_ucg(), get_tx(), get_ty(), get_tdir(), c); 
+  switch(get_tdir()) {
+    case 0: get_tx() += delta; break;
+    case 1: get_ty() += delta; break;
+    case 2: get_tx() -= delta; break;
+    default: case 3: get_ty() -= delta; break;
   }
   return 1;
 }
 
+size_t S::write(uint8_t c) { 
+  ucg_int_t delta;
+  delta = ucg_DrawSolidGlyph(get_ucg(), get_tx(), get_ty(), get_tdir(), c); 
+  switch(get_tdir()) {
+    case 0: get_tx() += delta; break;
+    case 1: get_ty() += delta; break;
+    case 2: get_tx() -= delta; break;
+    default: case 3: get_ty() -= delta; break;
+  }
+  return 1;
+}
