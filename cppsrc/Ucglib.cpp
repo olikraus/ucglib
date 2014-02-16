@@ -641,7 +641,7 @@ void Ucglib::init(void) {
 
 size_t Ucglib::write(uint8_t c) { 
   ucg_int_t delta;
-  delta = ucg_DrawGlyph(&ucg, tx, ty, tdir, c); 
+  delta = ucg_DrawTransparentGlyph(&ucg, tx, ty, tdir, c); 
   switch(tdir) {
     case 0: tx += delta; break;
     case 1: ty += delta; break;

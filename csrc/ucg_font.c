@@ -446,14 +446,12 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
   return ucg->glyph_width;
 }
 
-ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+ucg_int_t ucg_draw_transparent_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
   const ucg_pgm_uint8_t *data;
   uint8_t j;
   ucg_int_t dx, dy;
   uint8_t bytes_per_line;
-  ucg_int_t above = 0;
-  ucg_int_t below = 0;
 
   {
     ucg_glyph_t g = ucg_GetGlyph(ucg, encoding);
@@ -462,19 +460,90 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
     data = ucg_font_GetGlyphDataStart(ucg->font, g);
   }
   
-  if ( ucg->is_font_transparent == 0 )
-  {
-    above = ucg->font_ref_ascent;
-    above -= ucg->glyph_height;
-    above -= ucg->glyph_y;
-    if ( above < 0 )
-      above = 0;
+  bytes_per_line = ucg->glyph_width;
+  bytes_per_line += 7;
+  bytes_per_line /= 8;
     
-    below = ucg->font_ref_descent; 
-    below -= ucg->glyph_y;
-    if ( below > 0 )
-      below = 0;
+  dx = 0;
+  dy = 0;
+  switch(dir)
+  {
+    case 0:
+      x += ucg->glyph_x;
+      y -= ucg->glyph_y;
+      y -= ucg->glyph_height;
+      dy = 1;
+      break;
+    case 1:
+      x += ucg->glyph_y;
+      y += ucg->glyph_x;
+      x += ucg->glyph_height;
+      dx = -1;
+      break;
+    case 2:
+      x -= ucg->glyph_x;
+      y += ucg->glyph_y;
+      y += ucg->glyph_height;
+      dy = -1;
+      break;
+    case 3:
+      x -= ucg->glyph_y;
+      y -= ucg->glyph_x;
+      x -= ucg->glyph_height;
+      dx = 1;
+      break;
   }
+
+  for( j = 0; j < ucg->glyph_height; j++ )
+  {
+    //ucg_DrawPixel(ucg, x,y);
+    ucg_DrawTransparentBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
+    data += bytes_per_line;
+    y+=dy;
+    x+=dx;
+  }
+  
+  return ucg->glyph_dx;
+}
+
+ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+{
+  const ucg_pgm_uint8_t *data;
+  uint8_t j;
+  ucg_int_t dx, dy;
+  uint8_t bytes_per_line;
+  ucg_int_t above;
+  ucg_int_t below;
+  ucg_int_t right;
+  ucg_int_t left;
+
+  {
+    ucg_glyph_t g = ucg_GetGlyph(ucg, encoding);
+    if ( g == NULL  )
+      return 0;
+    data = ucg_font_GetGlyphDataStart(ucg->font, g);
+  }
+  
+  above = ucg->font_ref_ascent;
+  above -= ucg->glyph_height;
+  above -= ucg->glyph_y;
+  if ( above < 0 )
+    above = 0;
+  
+  below = ucg->font_ref_descent; 
+  below -= ucg->glyph_y;
+  if ( below > 0 )
+    below = 0;
+  
+  right = ucg->glyph_dx;
+  right -= ucg->glyph_width;
+  right -= ucg->glyph_x;
+  if ( right < 0 )
+    right = 0;
+  
+  left = ucg->glyph_x;
+  if ( left < 0 )
+    left = 0;
   
   bytes_per_line = ucg->glyph_width;
   bytes_per_line += 7;
@@ -514,51 +583,50 @@ ucg_int_t ucg_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint
       break;
   }
 
-  if ( ucg->is_font_transparent != 0 )
+  while( above > 0 )
   {
-    for( j = 0; j < ucg->glyph_height; j++ )
-    {
-      //ucg_DrawPixel(ucg, x,y);
-      ucg_DrawTransparentBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
-      data += bytes_per_line;
-      y+=dy;
-      x+=dx;
-    }
+    ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
+    y+=dy;
+    x+=dx;
+    above--;
   }
-  else
+  for( j = 0; j < ucg->glyph_height; j++ )
   {
-    //ucg->font_ref_ascent;
-    //ucg->font_ref_descent;
-    while( above > 0 )
-    {
-      ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
-      y+=dy;
-      x+=dx;
-      above--;
-    }
-    
-    for( j = 0; j < ucg->glyph_height; j++ )
-    {
-      //ucg_DrawPixel(ucg, x,y);
-      ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
-      data += bytes_per_line;
-      y+=dy;
-      x+=dx;
-    }
-    
-    while( below < 0 )
-    {
-      ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 0);
-      y+=dy;
-      x+=dx;
-      below++;
-    }
+    ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
+    data += bytes_per_line;
+    y+=dy;
+    x+=dx;
+  }
+  while( below < 0 )
+  {
+    ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
+    y+=dy;
+    x+=dx;
+    below++;
+  }
+  y-=dy;
+  x-=dx;
+  
+  for( j = 0; j < left; j++ )
+  {
+    x-=dy;
+    y-=dx;
+    ucg_Draw90Line(ucg, x, y, ucg->font_ref_ascent-ucg->font_ref_descent, (dir+3)&3, 1);
+  }
+  x+=dy*(ucg->glyph_width+left);
+  y+=dx*(ucg->glyph_width+left);      
+  while( right > 0 )
+  {
+    ucg_Draw90Line(ucg, x, y, ucg->font_ref_ascent-ucg->font_ref_descent, (dir+3)&3, 1);
+    x+=dy;
+    y+=dx;
+    right--;
   }
   
   return ucg->glyph_dx;
 }
 
-ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+ucg_int_t ucg_DrawTransparentGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
   switch(dir)
   {
@@ -575,16 +643,16 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
-  return ucg_draw_glyph(ucg, x, y, dir, encoding);
+  return ucg_draw_transparent_glyph(ucg, x, y, dir, encoding);
 }
 
-ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
+ucg_int_t ucg_DrawTransparentString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
 {
   ucg_int_t delta, sum;
   sum = 0;
   while( *str != '\0' )
   {
-    delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
+    delta = ucg_DrawTransparentGlyph(ucg, x, y, dir, (uint8_t)*str);
     
     switch(dir)
     {
@@ -607,6 +675,54 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
   return sum;
 }
 
+ucg_int_t ucg_DrawSolidGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+{
+  switch(dir)
+  {
+    case 0:
+      y += ucg->font_calc_vref(ucg);
+      break;
+    case 1:
+      x -= ucg->font_calc_vref(ucg);
+      break;
+    case 2:
+      y -= ucg->font_calc_vref(ucg);
+      break;
+    case 3:
+      x += ucg->font_calc_vref(ucg);
+      break;
+  }
+  return ucg_draw_solid_glyph(ucg, x, y, dir, encoding);
+}
+
+ucg_int_t ucg_DrawSolidString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
+{
+  ucg_int_t delta, sum;
+  sum = 0;
+  while( *str != '\0' )
+  {
+    delta = ucg_DrawSolidGlyph(ucg, x, y, dir, (uint8_t)*str);
+    
+    switch(dir)
+    {
+      case 0:
+	x += delta;
+	break;
+      case 1:
+	y += delta;
+	break;
+      case 2:
+	x -= delta;
+	break;
+      case 3:
+	y -= delta;
+	break;
+    }
+    sum += delta;    
+    str++;
+  }
+  return sum;
+}
 
 /*===============================================*/
 
@@ -714,11 +830,6 @@ void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font)
     ucg_UpdateRefHeight(ucg);
     //ucg_SetFontPosBaseline(ucg);
   }
-}
-
-void ucg_SetFontTransparentMode(ucg_t *ucg, uint8_t is_transparent)
-{
-  ucg->is_font_transparent = is_transparent;
 }
 
 /*===============================================*/

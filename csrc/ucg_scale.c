@@ -49,6 +49,24 @@ void ucg_UndoScale(ucg_t *ucg)
 const ucg_fntpgm_uint8_t ucg_scale_2x2[16] UCG_FONT_SECTION("ucg_scale_2x2") =  
 { 0x00, 0x03, 0x0c, 0x0f, 0x30, 0x33, 0x3c, 0x3f, 0xc0, 0xc3, 0xcc, 0xcf, 0xf0, 0xf3, 0xfc, 0xff };
 
+static void ucg_scale_2x2_send_next_half_byte(ucg_t *ucg, ucg_xy_t *xy, ucg_int_t msg, ucg_int_t len, uint8_t b)
+{
+  b &= 15;
+  ucg->arg.pixel.pos = *xy;
+  ucg->arg.bitmap = ucg_scale_2x2+b;
+  len *=2;
+  len = ucg->arg.len = len;
+  ucg->scale_chain_device_cb(ucg, msg, &(ucg->arg));  
+  switch(ucg->arg.dir)
+  {
+    case 0: xy->x+=len; break;
+    case 1: xy->y+=len; break;
+    case 2: xy->x+=len; break;
+    default: case 3: xy->y+=len; break;
+  }
+  
+}
+
 ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   ucg_xy_t xy;
@@ -116,76 +134,32 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;
       dir = ucg->arg.dir;
-      {
-	const uint8_t *b = ucg->arg.bitmap;
-	uint8_t buf[2];
-	ucg_int_t i;
-	//ucg->arg.bitmap = buf;
-	for( i = 0; i < len; i+=8 )
-	{
-	  ucg->arg.bitmap = buf;
-	  buf[0] = 0;
-	  buf[1] = 0;
-	  if ( b[i/8] & 16 ) buf[0] |= 3<<0;
-	  if ( b[i/8] & 32 ) buf[0] |= 3<<2;
-	  if ( b[i/8] & 64 ) buf[0] |= 3<<4;
-	  if ( b[i/8] & 128 ) buf[0] |= 3<<6;
-	  if ( b[i/8] & 1 ) buf[1] |= 3<<0;
-	  if ( b[i/8] & 2 ) buf[1] |= 3<<2;
-	  if ( b[i/8] & 4 ) buf[1] |= 3<<4;
-	  if ( b[i/8] & 8 ) buf[1] |= 3<<6;
 
-	  switch(ucg->arg.dir)
-	  {
-	    case 0: 
-	      ucg->arg.pixel.pos.x = (xy.x+i)*2;
-	      ucg->arg.pixel.pos.y = (xy.y)*2;
-	      break;
-	    case 1:
-	      ucg->arg.pixel.pos.x = (xy.x)*2;
-	      ucg->arg.pixel.pos.y = (xy.y+i)*2;
-	      break;
-	    case 2: 
-	      ucg->arg.pixel.pos.x = (xy.x-i)*2;
-	      ucg->arg.pixel.pos.y = (xy.y)*2;
-	      break;
-	    default: case 3: 
-	      ucg->arg.pixel.pos.x = (xy.x)*2;
-	      ucg->arg.pixel.pos.y = (xy.y-i)*2;
-	      break;
-	  }
-	  if ( len - i >= 8 )
-	    ucg->arg.len = 16;
-	  else
-	    ucg->arg.len = (len-i)*2;
-	  ucg->scale_chain_device_cb(ucg, msg, data);  
-	  ucg->arg.bitmap = buf;
-	  switch(ucg->arg.dir)
-	  {
-	    case 0: 
-	      ucg->arg.pixel.pos.x = (xy.x+i)*2;
-	      ucg->arg.pixel.pos.y = (xy.y)*2+1;
-	      break;
-	    case 1:
-	      ucg->arg.pixel.pos.x = (xy.x)*2+1;
-	      ucg->arg.pixel.pos.y = (xy.y+i)*2;
-	      break;
-	    case 2: 
-	      ucg->arg.pixel.pos.x = (xy.x-i)*2;
-	      ucg->arg.pixel.pos.y = (xy.y)*2+1;
-	      break;
-	    default: case 3: 
-	      ucg->arg.pixel.pos.x = (xy.x)*2+1;
-	      ucg->arg.pixel.pos.y = (xy.y-i)*2;
-	      break;
-	  }
-	  if ( len - i >= 8 )
-	    ucg->arg.len = 16;
-	  else
-	    ucg->arg.len = (len-i)*2;
-	  ucg->scale_chain_device_cb(ucg, msg, data);  
-	  
-	}	
+      ucg->arg.pixel.pos.x *= 2;
+      ucg->arg.pixel.pos.y *= 2;
+    
+      {
+	const unsigned char *b = ucg->arg.bitmap;
+	ucg_xy_t my_xy = ucg->arg.pixel.pos;
+	ucg_int_t i;
+	for( i = 8; i < len; i+=8 )
+	{
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b)>>4);
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b));
+	  b+=1;
+	}
+	i = len+8-i;
+	if ( i > 4 )
+	{
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, 4, ucg_pgm_read(b)>>4);
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i-4, ucg_pgm_read(b));
+	}
+	else
+	{
+	  ucg_scale_2x2_send_next_half_byte(ucg, &my_xy, msg, i, ucg_pgm_read(b)>>4);
+	}
+	
+	
       }
       ucg->arg.pixel.pos = xy;
       ucg->arg.len = len;

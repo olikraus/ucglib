@@ -47,7 +47,6 @@ void ucg_init_struct(ucg_t *ucg)
   //memset(ucg, 0, sizeof(ucg_t));
   ucg->is_power_up = 0;
   ucg->rotate_chain_device_cb = 0;
-  ucg->is_font_transparent = 1;
   ucg->arg.scale = 1;
   ucg->font = 0;
   ucg->com_initial_change_sent = 0;

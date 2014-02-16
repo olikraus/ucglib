@@ -278,7 +278,6 @@ struct _ucg_t
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
   ucg_font_calc_vref_fnptr font_calc_vref;
-  uint8_t is_font_transparent;	/* either use L90TC (transparent) or L90BF (background and foreground color) */
   
   int8_t glyph_dx;
   int8_t glyph_x;
@@ -598,8 +597,10 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding);
 
 /* Drawing procedures */
 
-ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
-ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
+ucg_int_t ucg_DrawTransparentGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+ucg_int_t ucg_DrawTransparentString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
+ucg_int_t ucg_DrawSolidGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+ucg_int_t ucg_DrawSolidString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
 
 /* Mode selection/Font assignment */
 
@@ -613,7 +614,6 @@ void ucg_SetFontPosTop(ucg_t *ucg);
 void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
-void ucg_SetFontTransparentMode(ucg_t *ucg, uint8_t is_transparent);
 
 ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s);
 
