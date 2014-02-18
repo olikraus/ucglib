@@ -33,6 +33,14 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
 
+  18 Feb 2014:
+    ROM Size	Font Mode
+    9928		NONE
+    10942		TRANSPARENT	(1014 Bytes)
+    11650		SOLID  (1712 Bytes)
+    12214		TRANSPARENT+SOLID
+  
+  
 */
 
 #include <SPI.h>
@@ -73,7 +81,8 @@ Ucglib_ST7735_18x128x160_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/
 void setup(void)
 {
   delay(1000);
-  ucg.begin();
+  ucg.begin(UCG_FONT_MODE_TRANSPARENT);
+  //ucg.begin(UCG_FONT_MODE_SOLID);
   ucg.clearScreen();
 }
 
@@ -83,6 +92,7 @@ void loop(void)
   ucg.setFont(ucg_font_ncenR14r);
   ucg.setPrintPos(0,25);
   ucg.setColor(255, 255, 255);
+  ucg.setColor(1, 255, 0,0);
   ucg.print("Hello World!");
 
   delay(500);  

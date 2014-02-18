@@ -92,7 +92,7 @@ class S : public UcglibPrint
 };
 
 // Do not use Ucglib class directly, use Ucglib8Bit or Ucglib4WireSPI instead
-class Ucglib : public T, public S
+class Ucglib : public Print
 {
   protected:
     ucg_t ucg;
@@ -113,6 +113,7 @@ class Ucglib : public T, public S
 
     void setPrintPos(ucg_int_t x, ucg_int_t y) { tx = x; ty = y; }
     void setPrintDir(uint8_t dir) { tdir = dir; }
+    size_t write(uint8_t c);
     ucg_t *getUcg(void) { return &ucg; }
     
     ucg_int_t getWidth(void) { return ucg_GetWidth(&ucg); }
@@ -120,6 +121,8 @@ class Ucglib : public T, public S
     
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
+    void setFontMode(ucg_font_mode_fnptr font_mode) 
+      { ucg_SetFontMode(&ucg, font_mode); }
     ucg_int_t getFontAscent(void)
       { return ucg_GetFontAscent(&ucg); }
     ucg_int_t getFontDescent(void)
@@ -186,7 +189,7 @@ class Ucglib4WireSWSPI : public Ucglib
 	  //ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
 	  //ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
-    void begin(void);
+    void begin(ucg_font_mode_fnptr font_mode);
 };
 
 class Ucglib4WireHWSPI : public Ucglib
@@ -208,7 +211,7 @@ class Ucglib4WireHWSPI : public Ucglib
 	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 #endif
     }
-    void begin(void);
+    void begin(ucg_font_mode_fnptr font_mode);
 };
 
 
@@ -231,7 +234,7 @@ class Ucglib8BitPortD : public Ucglib
 	  ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
 	  ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
     }
-    void begin(void);
+    void begin(ucg_font_mode_fnptr font_mode);
 };
 #endif
 
@@ -260,7 +263,7 @@ class Ucglib8Bit : public Ucglib
 	  ucg.pin_list[UCG_PIN_D5] = d5;
 	  ucg.pin_list[UCG_PIN_D6] = d6;
 	  ucg.pin_list[UCG_PIN_D7] = d7; }
-    void begin(void);
+    void begin(ucg_font_mode_fnptr font_mode);
 };
 
 class Ucglib_ST7735_18x128x160_HWSPI : public Ucglib4WireHWSPI

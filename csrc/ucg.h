@@ -116,7 +116,7 @@ typedef struct _ucg_com_info_t ucg_com_info_t;
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
 typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
-typedef ucg_int_t (ucg_font_mode_fnptr)(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+typedef ucg_int_t (*ucg_font_mode_fnptr)(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
 
 
 /*================================================*/
@@ -608,10 +608,8 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding);
 
 /* Drawing procedures */
 
-ucg_int_t ucg_DrawTransparentGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
-ucg_int_t ucg_DrawTransparentString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
-ucg_int_t ucg_DrawSolidGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
-ucg_int_t ucg_DrawSolidString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
+ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str);
 
 /* Mode selection/Font assignment */
 
@@ -625,6 +623,8 @@ void ucg_SetFontPosTop(ucg_t *ucg);
 void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
+void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode);
+
 
 ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s);
 

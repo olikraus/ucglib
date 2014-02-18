@@ -261,9 +261,10 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
   return 1;
 }
 
-void Ucglib4WireSWSPI::begin(void)
+void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_SW_SPI); 
+  ucg_SetFontMode(&ucg, font_mode);
 }
 
 
@@ -386,9 +387,10 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
   return 1;
 }
 
-void Ucglib8Bit::begin(void)
+void Ucglib8Bit::begin(ucg_font_mode_fnptr font_mode)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_8bit); 
+  ucg_SetFontMode(&ucg, font_mode);
 }
 
 
@@ -509,9 +511,10 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint16_t arg, uin
   return 1;
 }
 
-void Ucglib8BitPortD::begin(void)
+void Ucglib8BitPortD::begin(ucg_font_mode_fnptr font_mode)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
+  ucg_SetFontMode(&ucg, font_mode);
 }
 
 #endif /* __AVR__ */
@@ -615,9 +618,10 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t ar
   return 1;
 }
 
-void Ucglib4WireHWSPI::begin(void)
+void Ucglib4WireHWSPI::begin(ucg_font_mode_fnptr font_mode)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_HW_SPI); 
+  ucg_SetFontMode(&ucg, font_mode);
 }
 
 
@@ -639,9 +643,9 @@ void Ucglib::init(void) {
   
 }
 
-size_t T::write(uint8_t c) { 
+size_t Ucglib::write(uint8_t c) { 
   ucg_int_t delta;
-  delta = ucg_DrawTransparentGlyph(get_ucg(), get_tx(), get_ty(), get_tdir(), c); 
+  delta = ucg_DrawGlyph(get_ucg(), get_tx(), get_ty(), get_tdir(), c); 
   switch(get_tdir()) {
     case 0: get_tx() += delta; break;
     case 1: get_ty() += delta; break;
@@ -651,14 +655,3 @@ size_t T::write(uint8_t c) {
   return 1;
 }
 
-size_t S::write(uint8_t c) { 
-  ucg_int_t delta;
-  delta = ucg_DrawSolidGlyph(get_ucg(), get_tx(), get_ty(), get_tdir(), c); 
-  switch(get_tdir()) {
-    case 0: get_tx() += delta; break;
-    case 1: get_ty() += delta; break;
-    case 2: get_tx() -= delta; break;
-    default: case 3: get_ty() -= delta; break;
-  }
-  return 1;
-}

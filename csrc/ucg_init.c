@@ -49,6 +49,7 @@ void ucg_init_struct(ucg_t *ucg)
   ucg->rotate_chain_device_cb = 0;
   ucg->arg.scale = 1;
   ucg->font = 0;
+  ucg->font_mode = UCG_FONT_MODE_NONE;
   ucg->com_initial_change_sent = 0;
   ucg->com_status = 0;
   ucg->com_cfg_cd = 0;

@@ -626,8 +626,21 @@ ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir
   return ucg->glyph_dx;
 }
 
-ucg_int_t ucg_DrawTransparentGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+/*
+  set one of:
+    UCG_FONT_MODE_TRANSPARENT
+    UCG_FONT_MODE_SOLID
+    UCG_FONT_MODE_NONE
+*/
+void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode)
 {
+  ucg->font_mode = font_mode;
+}
+
+ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+{
+  if ( ucg->font_mode == UCG_FONT_MODE_NONE )
+    return 0;
   switch(dir)
   {
     case 0:
@@ -643,16 +656,16 @@ ucg_int_t ucg_DrawTransparentGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t
       x += ucg->font_calc_vref(ucg);
       break;
   }
-  return ucg_draw_transparent_glyph(ucg, x, y, dir, encoding);
+  return ucg->font_mode(ucg, x, y, dir, encoding);
 }
 
-ucg_int_t ucg_DrawTransparentString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
+ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
 {
   ucg_int_t delta, sum;
   sum = 0;
   while( *str != '\0' )
   {
-    delta = ucg_DrawTransparentGlyph(ucg, x, y, dir, (uint8_t)*str);
+    delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
     
     switch(dir)
     {
@@ -675,54 +688,6 @@ ucg_int_t ucg_DrawTransparentString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_
   return sum;
 }
 
-ucg_int_t ucg_DrawSolidGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
-{
-  switch(dir)
-  {
-    case 0:
-      y += ucg->font_calc_vref(ucg);
-      break;
-    case 1:
-      x -= ucg->font_calc_vref(ucg);
-      break;
-    case 2:
-      y -= ucg->font_calc_vref(ucg);
-      break;
-    case 3:
-      x += ucg->font_calc_vref(ucg);
-      break;
-  }
-  return ucg_draw_solid_glyph(ucg, x, y, dir, encoding);
-}
-
-ucg_int_t ucg_DrawSolidString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
-{
-  ucg_int_t delta, sum;
-  sum = 0;
-  while( *str != '\0' )
-  {
-    delta = ucg_DrawSolidGlyph(ucg, x, y, dir, (uint8_t)*str);
-    
-    switch(dir)
-    {
-      case 0:
-	x += delta;
-	break;
-      case 1:
-	y += delta;
-	break;
-      case 2:
-	x -= delta;
-	break;
-      case 3:
-	y -= delta;
-	break;
-    }
-    sum += delta;    
-    str++;
-  }
-  return sum;
-}
 
 /*===============================================*/
 
