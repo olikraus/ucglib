@@ -362,7 +362,7 @@ void clip(void)
 void setup(void)
 {
   delay(1000);
-  ucg.begin();
+  ucg.begin(UCG_FONT_MODE_TRANSPARENT);
   ucg.setFont(ucg_font_ncenR14r);
   ucg.clearScreen();
 }

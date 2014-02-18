@@ -72,7 +72,7 @@ Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 void setup(void)
 {
   delay(1000);
-  ucg.begin();
+  ucg.begin(UCG_FONT_MODE_SOLID);
   ucg.clearScreen();
   ucg.setRotate90();
   ucg.setScale2x2();
@@ -81,18 +81,12 @@ void setup(void)
 int n = 0;
 void loop(void)
 {
-  ucg.setFont(ucg_font_logisoso16r);
-  //ucg.setFont(ucg_font_6x10r);
-  ucg.setPrintPos(0,50);
+  ucg.setFont(ucg_font_logisoso22r);
+  ucg.setPrintPos(0,30);
   ucg.setColor(255, 255, 255);
   ucg.setColor(1, 255, 0, 0);
-  ucg.S::print(n);
+  ucg.print(n);
   delay(1000);
-  /*
-  ucg.setPrintPos(0,50);
-  ucg.setColor(0,0,0);
-  ucg.S::print(n);
-  */
   n++;
 }
 
