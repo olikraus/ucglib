@@ -116,6 +116,8 @@ typedef struct _ucg_com_info_t ucg_com_info_t;
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
 typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
+typedef ucg_int_t (ucg_font_mode_fnptr)(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+
 
 /*================================================*/
 /* list of supported display modules */
@@ -278,6 +280,7 @@ struct _ucg_t
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
   ucg_font_calc_vref_fnptr font_calc_vref;
+  ucg_font_mode_fnptr font_mode;		/* UCG_FONT_MODE_TRANSPARENT, UCG_FONT_MODE_SOLID, UCG_FONT_MODE_NONE */
   
   int8_t glyph_dx;
   int8_t glyph_x;
@@ -569,6 +572,14 @@ void ucg_DrawTetragon(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1
 
 /*================================================*/
 /* ucg_font.c */
+
+ucg_int_t ucg_draw_transparent_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+
+#define UCG_FONT_MODE_TRANSPARENT ucg_draw_transparent_glyph
+#define UCG_FONT_MODE_SOLID ucg_draw_solid_glyph
+#define UCG_FONT_MODE_NONE ((ucg_font_mode_fnptr)0)
+
 
 /* Information on a specific given font */
 uint8_t ucg_font_GetFontStartEncoding(const void *font);

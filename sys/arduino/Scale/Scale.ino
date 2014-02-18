@@ -74,14 +74,15 @@ void setup(void)
   delay(1000);
   ucg.begin();
   ucg.clearScreen();
-  //ucg.setRotate90();
+  ucg.setRotate90();
   ucg.setScale2x2();
 }
 
 int n = 0;
 void loop(void)
 {
-  ucg.setFont(ucg_font_logisoso46n);
+  ucg.setFont(ucg_font_logisoso16r);
+  //ucg.setFont(ucg_font_6x10r);
   ucg.setPrintPos(0,50);
   ucg.setColor(255, 255, 255);
   ucg.setColor(1, 255, 0, 0);
