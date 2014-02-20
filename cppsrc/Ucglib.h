@@ -252,5 +252,37 @@ class Ucglib_ST7735_18x128x160_SWSPI : public Ucglib4WireSWSPI
     { }
 };
 
+class Ucglib_ILI9341_18x240x320_HWSPI : public Ucglib4WireHWSPI
+{
+  public:
+  Ucglib__ILI9341_18x240x320_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+class Ucglib_ILI9341_18x240x320_SWSPI : public Ucglib4WireSWSPI
+{
+  public:
+  Ucglib__ILI9341_18x240x320_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+class Ucglib_SSD1351_18x128x128_HWSPI : public Ucglib4WireHWSPI
+{
+  public:
+  Ucglib_SSD1351_18x128x128_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+class Ucglib_SSD1351_18x128x128_SWSPI : public Ucglib4WireHWSPI
+{
+  public:
+  Ucglib_SSD1351_18x128x128_SWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
 
 #endif /* _UCGLIB_HH */

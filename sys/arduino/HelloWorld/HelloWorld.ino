@@ -58,8 +58,12 @@
     ucg_dev_ili9325_18x240x320_itdb02	[ucg_ext_none, ucg_ext_ili9325_18]
     ucg_dev_ili9341_18x240x320		[ucg_ext_none, ucg_ext_ili9341_18]
     ucg_dev_st7735_18x128x160		[ucg_ext_none, ucg_ext_st7735_18]
-
-
+    
+  Hardware SPI Pins:
+    Arduino Uno		scl=13, sda=11
+    Arduino Due		scl=76, sda=75
+    Arduino Mega	scl=52, sda=51
+    
   >>> Please uncomment (and update) one of the following constructors. <<<
   
 */
@@ -77,6 +81,12 @@
 /* simplified interface */
 Ucglib_ST7735_18x128x160_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_SSD1351_18x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
 void setup(void)
 {
