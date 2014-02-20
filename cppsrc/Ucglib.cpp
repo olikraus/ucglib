@@ -41,7 +41,7 @@
 #include "Ucglib.h"
 
 /*=========================================================================*/
-/* SW SPI */
+/* 8 Bit SW SPI */
 
 #if  defined(__SAM3X8E__)
 //#elif defined(__SAM3X8E__)
@@ -267,6 +267,151 @@ void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
   ucg_SetFontMode(&ucg, font_mode);
 }
 
+/*=========================================================================*/
+/* 9 Bit SW SPI */
+
+static void ucg_com_arduino_send_9bit_SW_SPI(ucg_t *ucg, uint8_t first_bit, uint8_t data)
+{
+  uint8_t i = 8;
+
+  if ( first_bit != 0 )
+  {
+    digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1 );
+  }
+  else
+  {
+    digitalWrite(ucg->pin_list[UCG_PIN_SDA], 0 );
+  }
+  // no delay required, also Arduino Due is slow enough
+  //delayMicroseconds(1);
+  digitalWrite(ucg->pin_list[UCG_PIN_SCL], 1 );
+  //delayMicroseconds(1);
+  i--;
+  digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0 );
+  //delayMicroseconds(1);
+
+  do
+  {
+    if ( data & 128 )
+    {
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1 );
+    }
+    else
+    {
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 0 );
+    }
+    // no delay required, also Arduino Due is slow enough
+    //delayMicroseconds(1);
+    digitalWrite(ucg->pin_list[UCG_PIN_SCL], 1 );
+    //delayMicroseconds(1);
+    i--;
+    digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0 );
+    //delayMicroseconds(1);
+    data <<= 1;
+  } while( i > 0 );
+  
+}
+
+static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
+{
+
+  switch(msg)
+  {
+    case UCG_COM_MSG_POWER_UP:
+      /* "data" is a pointer to ucg_com_info_t structure with the following information: */
+      /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
+      /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
+      
+      /* setup pins */
+      pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
+      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+
+      break;
+    case UCG_COM_MSG_POWER_DOWN:
+      break;
+    case UCG_COM_MSG_DELAY:
+      delayMicroseconds(arg);
+      break;
+    case UCG_COM_MSG_CHANGE_RESET_LINE:
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CS_LINE:
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CD_LINE:
+      /* ignored, there is not CD line */
+      break;
+    case UCG_COM_MSG_SEND_BYTE:
+      ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, arg);
+      break;
+    case UCG_COM_MSG_REPEAT_1_BYTE:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_2_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[1]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_3_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[1]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[2]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_STR:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, *data++);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      {
+	uint8_t last_cd = ucg->com_status &UCG_COM_STATUS_MASK_CS;
+	while(arg > 0)
+	{
+	  if ( *data != 0 )
+	  {
+	    if ( *data == 1 )
+	    {
+	      last_cd = 0;
+	    }
+	    else
+	    {
+	      last_cd = 1;
+	    }
+	  }
+	  data++;
+	  ucg_com_arduino_send_9bit_SW_SPI(ucg, last_cd, *data); 
+	  data++;
+	  arg--;
+	}
+      }
+      break;
+  }
+  return 1;
+}
+
+void Ucglib3Wire9bitSWSPI::begin(ucg_font_mode_fnptr font_mode)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_3wire_9bit_SW_SPI); 
+  ucg_SetFontMode(&ucg, font_mode);
+}
 
 /*=========================================================================*/
 /* 8 Bit Parallel */
