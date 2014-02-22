@@ -82,12 +82,14 @@
 //Ucglib_ST7735_18x128x160_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
-Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+Ucglib_PCF8833_12x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
 
 void setup(void)
 {
@@ -99,10 +101,12 @@ void setup(void)
 
 void loop(void)
 {
-  ucg.setRotate90();
+  //ucg.setRotate90();
   ucg.setFont(ucg_font_ncenR14r);
   ucg.setPrintPos(0,25);
   ucg.setColor(255, 255, 255);
+  ucg.setColor(255, 0, 0);
+  //ucg.setColor(0, 255, 0);
   ucg.setColor(1, 255, 0,0);
   ucg.print("Hello World!");
 

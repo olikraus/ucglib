@@ -298,4 +298,22 @@ class Ucglib_SSSD1351_18x128x128_SWSPI : public Ucglib4WireSWSPI
 };
 
 
+//class Ucglib_PCF8833_12x128x128_HWSPI : public Ucglib4WireHWSPI
+//{
+//  public:
+//  Ucglib_PCF8833_12x128x128_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+//    Ucglib4WireHWSPI(ucg_dev_pcf8833_12x128x128, ucg_ext_pcf8833_12, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+//    { }
+//};
+
+
+class Ucglib_PCF8833_12x128x128_SWSPI : public Ucglib3Wire9bitSWSPI
+{
+  public:
+  Ucglib_PCF8833_12x128x128_SWSPI( uint8_t scl, uint8_t sda, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib3Wire9bitSWSPI(ucg_dev_pcf8833_12x128x128, ucg_ext_pcf8833_12, /*scl=*/ scl, /*sda=*/ sda, /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+
 #endif /* _UCGLIB_HH */

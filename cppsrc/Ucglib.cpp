@@ -272,7 +272,7 @@ void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
 
 static void ucg_com_arduino_send_9bit_SW_SPI(ucg_t *ucg, uint8_t first_bit, uint8_t data)
 {
-  uint8_t i = 8;
+  uint8_t i;
 
   if ( first_bit != 0 )
   {
@@ -286,10 +286,10 @@ static void ucg_com_arduino_send_9bit_SW_SPI(ucg_t *ucg, uint8_t first_bit, uint
   //delayMicroseconds(1);
   digitalWrite(ucg->pin_list[UCG_PIN_SCL], 1 );
   //delayMicroseconds(1);
-  i--;
   digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0 );
   //delayMicroseconds(1);
 
+  i = 8;
   do
   {
     if ( data & 128 )
@@ -351,38 +351,38 @@ static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16
       /* ignored, there is not CD line */
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, arg);
+      ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, arg);
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[1]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[0]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[1]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, data[2]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[2]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CS, *data++);
+	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, *data++);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
       {
-	uint8_t last_cd = ucg->com_status &UCG_COM_STATUS_MASK_CS;
+	uint8_t last_cd = ucg->com_status &UCG_COM_STATUS_MASK_CD;
 	while(arg > 0)
 	{
 	  if ( *data != 0 )
