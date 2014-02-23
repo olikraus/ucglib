@@ -191,10 +191,6 @@ ucg_int_t ucg_dev_pcf8833_12x128x128(ucg_t *ucg, ucg_int_t msg, void *data)
       /* let do power down by the conroller procedures */
       return ucg_dev_ic_pcf8833_12(ucg, msg, data);  
     
-    case UCG_MSG_GET_DIMENSION:
-      ((ucg_wh_t *)data)->w = 128;
-      ((ucg_wh_t *)data)->h = 128;
-      return 1;
   }
   
   /* all other messages are handled by the controller procedures */

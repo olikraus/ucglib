@@ -362,7 +362,7 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data)
 	//b = data[0];
 	//bb = data[1];
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.x>>lo)))&b)|bb );
+	ucg_com_SendByte(ucg, (((uint8_t)(((ucg->arg.pixel.pos.x)>>lo)))&b)|bb );
 	//data+=2;
 	break;
       case 11:
@@ -374,7 +374,7 @@ void ucg_com_SendCmdSeq(ucg_t *ucg, const ucg_pgm_uint8_t *data)
 	//b = data[0];
 	//bb = data[1];
 	ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1 );
-	ucg_com_SendByte(ucg, (((uint8_t)((ucg->arg.pixel.pos.y>>lo)))&b)|bb );
+	ucg_com_SendByte(ucg, (((uint8_t)(((ucg->arg.pixel.pos.y)>>lo)))&b)|bb );
 	//data+=2;
 	break;
       case 15:

@@ -267,10 +267,11 @@ void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
   ucg_SetFontMode(&ucg, font_mode);
 }
 
+
 /*=========================================================================*/
 /* 9 Bit SW SPI */
 
-static void ucg_com_arduino_send_9bit_SW_SPI(ucg_t *ucg, uint8_t first_bit, uint8_t data)
+static void ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg_t *ucg, uint8_t first_bit, uint8_t data)
 {
   uint8_t i;
 
@@ -351,32 +352,32 @@ static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16
       /* ignored, there is not CD line */
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, arg);
+      ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, arg);
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[2]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[2]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	ucg_com_arduino_send_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, *data++);
+	ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, *data++);
 	arg--;
       }
       break;
@@ -397,7 +398,7 @@ static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16
 	    }
 	  }
 	  data++;
-	  ucg_com_arduino_send_9bit_SW_SPI(ucg, last_cd, *data); 
+	  ucg_com_arduino_send_3wire_9bit_SW_SPI(ucg, last_cd, *data); 
 	  data++;
 	  arg--;
 	}
@@ -412,6 +413,165 @@ void Ucglib3Wire9bitSWSPI::begin(ucg_font_mode_fnptr font_mode)
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_3wire_9bit_SW_SPI); 
   ucg_SetFontMode(&ucg, font_mode);
 }
+
+/*=========================================================================*/
+/* 9 Bit HW SPI */
+
+#define UCG_COM_ARDUINO_3WIRE_8BIT_BUF_LEN 9
+static uint8_t ucg_com_3wire_9bit_buffer[UCG_COM_ARDUINO_3WIRE_8BIT_BUF_LEN];
+static uint8_t ucg_com_3wire_9bit_buf_bytepos;
+static uint8_t ucg_com_3wire_9bit_buf_bitpos;
+
+static void ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg_t *ucg) UCG_NOINLINE;
+static void ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg_t *ucg)
+{
+  uint8_t i;
+  ucg_com_3wire_9bit_buf_bytepos = 0;
+  ucg_com_3wire_9bit_buf_bitpos = 7;
+  for( i = 0; i < UCG_COM_ARDUINO_3WIRE_8BIT_BUF_LEN; i++ )
+    ucg_com_3wire_9bit_buffer[0] = 0;
+}
+
+static void ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg_t *ucg) UCG_NOINLINE;
+static void ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg_t *ucg)
+{
+  
+  ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg);
+}
+
+static void ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg_t *ucg, uint8_t first_bit, uint8_t data)
+{
+  uint8_t i;
+  
+  if ( first_bit != 0 )
+    ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |= (1<<ucg_com_3wire_9bit_buf_bitpos);
+  
+  if ( ucg_com_3wire_9bit_buf_bitpos > 0 )
+  {
+    ucg_com_3wire_9bit_buf_bitpos--;
+  }
+  else
+  {
+    ucg_com_3wire_9bit_buf_bitpos = 7;
+    ucg_com_3wire_9bit_buf_bytepos++;
+  }
+  ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |=  data >> (7-ucg_com_3wire_9bit_buf_bitpos);
+
+  if ( ucg_com_3wire_9bit_buf_bitpos == 7 )
+  {
+    ucg_com_3wire_9bit_buf_bytepos++;
+  }
+  else
+  {
+    //data &= (1<< (7-ucg_com_3wire_9bit_buf_bitpos))-1;
+    ucg_com_3wire_9bit_buf_bytepos++;
+    ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |=  data << ucg_com_3wire_9bit_buf_bitpos;
+    ucg_com_3wire_9bit_buf_bitpos--;
+  }
+}
+
+static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
+{
+
+  switch(msg)
+  {
+    case UCG_COM_MSG_POWER_UP:
+      /* "data" is a pointer to ucg_com_info_t structure with the following information: */
+      /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
+      /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
+      
+      /* setup pins */
+      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+
+      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+
+      break;
+    case UCG_COM_MSG_POWER_DOWN:
+      break;
+    case UCG_COM_MSG_DELAY:
+      delayMicroseconds(arg);
+      break;
+    case UCG_COM_MSG_CHANGE_RESET_LINE:
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      break;
+    case UCG_COM_MSG_CHANGE_CS_LINE:
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+      
+      if ( arg == 0 )
+	ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg);
+      else
+	ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg);      
+      break;
+    case UCG_COM_MSG_CHANGE_CD_LINE:
+      /* ignored, there is not CD line */
+      break;
+    case UCG_COM_MSG_SEND_BYTE:
+      ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, arg);
+      break;
+    case UCG_COM_MSG_REPEAT_1_BYTE:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_2_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_3_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[0]);
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[1]);
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, data[2]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_STR:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, *data++);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      {
+	uint8_t last_cd = ucg->com_status &UCG_COM_STATUS_MASK_CD;
+	while(arg > 0)
+	{
+	  if ( *data != 0 )
+	  {
+	    if ( *data == 1 )
+	    {
+	      last_cd = 0;
+	    }
+	    else
+	    {
+	      last_cd = 1;
+	    }
+	  }
+	  data++;
+	  ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, last_cd, *data); 
+	  data++;
+	  arg--;
+	}
+      }
+      break;
+  }
+}
+/*
+void Ucglib3Wire9bitHWSPI::begin(ucg_font_mode_fnptr font_mode)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_3wire_9bit_HW_SPI); 
+  ucg_SetFontMode(&ucg, font_mode);
+}
+*/
+
 
 /*=========================================================================*/
 /* 8 Bit Parallel */

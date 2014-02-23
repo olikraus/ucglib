@@ -103,11 +103,15 @@ void loop(void)
 {
   //ucg.setRotate90();
   ucg.setFont(ucg_font_ncenR14r);
-  ucg.setPrintPos(0,25);
   ucg.setColor(255, 255, 255);
   ucg.setColor(255, 0, 0);
   //ucg.setColor(0, 255, 0);
   ucg.setColor(1, 255, 0,0);
+  
+  ucg.setPrintPos(0,25);
+  ucg.print("Hello World!");
+
+  ucg.setPrintPos(1,50);
   ucg.print("Hello World!");
 
   delay(500);  

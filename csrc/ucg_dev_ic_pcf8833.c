@@ -39,12 +39,15 @@
 
 #define XOFFSET 0
 
+#define WIDTH 132
+#define HEIGHT 132
+
 const ucg_pgm_uint8_t ucg_pcf8833_set_pos_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   UCG_C11( 0x036, 0x000),
-  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),					/* set x position */
-  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(WIDTH-1),					/* set x position */
+  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(HEIGHT-1),		/* set y position */
   UCG_C10(0x02c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
@@ -63,8 +66,8 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir0_seq[] =
     bit 3:	rgb
   */
   UCG_C11( 0x036, 0x000),
-  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),					/* set x position */
-  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(WIDTH-1),					/* set x position */
+  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(HEIGHT-1),		/* set y position */
 
   UCG_C10(0x02c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
@@ -84,7 +87,7 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir1_seq[] =
   UCG_C11( 0x036, 0x000),
   
   UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(HEIGHT-1),		/* set y position */
 
   UCG_C10(0x02c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
@@ -104,8 +107,8 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir2_seq[] =
   */
   UCG_C11( 0x036, 0x040),
   //UCG_C11( 0x036, 0x020),			/* it seems that this command needs to be sent twice */
-  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),					/* set x position */
-  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_D1(WIDTH-1),					/* set x position */
+  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(HEIGHT-1),		/* set y position */
 
   UCG_C10(0x02c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
@@ -126,7 +129,7 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir3_seq[] =
   UCG_C11( 0x036, 0x080),
   //UCG_C11( 0x036, 0x0d0),		/* it seems that this command needs to be sent twice */
   UCG_C10(0x02a),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
-  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x02b),	UCG_VARY(0,0x0ff, 0), UCG_D1(HEIGHT-1),		/* set y position */
 
   UCG_C10(0x02c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
@@ -135,12 +138,12 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir3_seq[] =
 
 uint8_t ucg_pcf8833_get_color_high_byte(ucg_t *ucg)
 {
-    return (ucg->arg.pixel.rgb.color[0]<<3) | (ucg->arg.pixel.rgb.color[1] >>5);  
+    return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5)&7);  
 }
 
 uint8_t ucg_pcf8833_get_color_low_byte(ucg_t *ucg)
 {
-    return ((ucg->arg.pixel.rgb.color[1]&(7<<2))<<5) | (ucg->arg.pixel.rgb.color[2] >>3);  
+    return (((ucg->arg.pixel.rgb.color[1]&7))<<5) | (((ucg->arg.pixel.rgb.color[2]) >>3)&0x01f);  
 }
 
 ucg_int_t ucg_handle_pcf8833_l90fx(ucg_t *ucg)
@@ -152,30 +155,23 @@ ucg_int_t ucg_handle_pcf8833_l90fx(ucg_t *ucg)
     switch(ucg->arg.dir)
     {
       case 0: 
-	ucg->arg.pixel.pos.x += XOFFSET;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir0_seq);	
-	ucg->arg.pixel.pos.x -= XOFFSET;
 	break;
       case 1: 
-	ucg->arg.pixel.pos.x += XOFFSET;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir1_seq);	
-	ucg->arg.pixel.pos.x -= XOFFSET;
 	break;
       case 2: 
 	tmp = ucg->arg.pixel.pos.x;
-	ucg->arg.pixel.pos.x = 127-tmp;
-	ucg->arg.pixel.pos.x += XOFFSET;	
+	ucg->arg.pixel.pos.x = WIDTH-1-tmp;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir2_seq);	
 	ucg->arg.pixel.pos.x = tmp;
 	break;
       case 3: 
       default: 
-	ucg->arg.pixel.pos.x += XOFFSET;
 	tmp = ucg->arg.pixel.pos.y;
-	ucg->arg.pixel.pos.y = 127-tmp;
+	ucg->arg.pixel.pos.y = HEIGHT-1-tmp;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir3_seq);	
 	ucg->arg.pixel.pos.y = tmp;
-	ucg->arg.pixel.pos.x -= XOFFSET;
 	break;
     }
     c[0] = ucg_pcf8833_get_color_high_byte(ucg);
@@ -309,14 +305,14 @@ ucg_int_t ucg_handle_pcf8833_l90se(ucg_t *ucg)
 	break;
       case 2: 
 	tmp = ucg->arg.pixel.pos.x;
-	ucg->arg.pixel.pos.x = 127-tmp;
+	ucg->arg.pixel.pos.x = WIDTH-1-tmp;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir2_seq);	
 	ucg->arg.pixel.pos.x = tmp;
 	break;
       case 3: 
       default: 
 	tmp = ucg->arg.pixel.pos.y;
-	ucg->arg.pixel.pos.y = 127-tmp;
+	ucg->arg.pixel.pos.y = HEIGHT-1-tmp;
 	ucg_com_SendCmdSeq(ucg, ucg_pcf8833_set_pos_dir3_seq);	
 	ucg->arg.pixel.pos.y = tmp;
 	break;
@@ -344,6 +340,9 @@ ucg_int_t ucg_dev_ic_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
+      //ucg->display_offset.x = 2;
+      //ucg->display_offset.y = 2;
+
       /* setup com interface and provide information on the clock speed */
       /* of the serial and parallel interface. Values are nanoseconds. */
       return ucg_com_PowerUp(ucg, 150, 160);
@@ -351,8 +350,8 @@ ucg_int_t ucg_dev_ic_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
       /* not yet implemented */
       return 1;
     case UCG_MSG_GET_DIMENSION:
-      ((ucg_wh_t *)data)->w = 128;
-      ((ucg_wh_t *)data)->h = 128;
+      ((ucg_wh_t *)data)->w = WIDTH;
+      ((ucg_wh_t *)data)->h = HEIGHT;
       return 1;
     case UCG_MSG_DRAW_PIXEL:
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
