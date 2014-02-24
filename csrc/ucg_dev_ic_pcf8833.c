@@ -138,12 +138,12 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir3_seq[] =
 
 uint8_t ucg_pcf8833_get_color_high_byte(ucg_t *ucg)
 {
-    return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5)&7);  
+    return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5)&7);
 }
 
 uint8_t ucg_pcf8833_get_color_low_byte(ucg_t *ucg)
 {
-    return (((ucg->arg.pixel.rgb.color[1]&7))<<5) | (((ucg->arg.pixel.rgb.color[2]) >>3)&0x01f);  
+    return ((((ucg->arg.pixel.rgb.color[1]))<<3)&0x0e0) | (((ucg->arg.pixel.rgb.color[2]) >>3)&0x01f);  
 }
 
 ucg_int_t ucg_handle_pcf8833_l90fx(ucg_t *ucg)
