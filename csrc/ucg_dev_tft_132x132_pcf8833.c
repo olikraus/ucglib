@@ -1,6 +1,6 @@
 /*
 
-  ucg_dev_tft_128x128_pcf8833.c
+  ucg_dev_tft_132x132_pcf8833.c
   
   pcf8833 with 3-Wire SPI (SCK, SDI, CS and optional reset)
 
@@ -37,8 +37,8 @@
 
 #include "ucg.h"
 
-//static const uint8_t ucg_dev_ssd1351_128x128_init_seq[] PROGMEM = {
-static const ucg_pgm_uint8_t ucg_tft_128x128_pcf8833_init_seq[] = {
+//static const uint8_t ucg_dev_ssd1351_132x132_init_seq[] PROGMEM = {
+static const ucg_pgm_uint8_t ucg_tft_132x132_pcf8833_init_seq[] = {
   UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
   UCG_RST(1),					
   UCG_CS(1),					/* disable chip */
@@ -82,117 +82,32 @@ static const ucg_pgm_uint8_t ucg_tft_128x128_pcf8833_init_seq[] = {
   UCG_C12(  0x02b, 0x005, 0x07f),              /* Vertical GRAM Address Set */
   UCG_C10(  0x02c),               			/* Write Data to GRAM */
 
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-
-  UCG_C12(  0x02a, 0x005, 0x07f),              /* Horizontal GRAM Address Set */
-  UCG_C12(  0x02b, 0x006, 0x07f),              /* Vertical GRAM Address Set */
-  UCG_C10(  0x02c),               			/* Write Data to GRAM */
-
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-  UCG_D2(31<<3,0),
-
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-  UCG_D2(7,7<<5),
-
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-  UCG_D2(0,31),
-
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0xff, 0xff, 0xff),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(0,0,15),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-  UCG_D3(15,0,0),
-
-  UCG_DLY_MS(999),
-  UCG_DLY_MS(999),
+  UCG_DLY_MS(10),
   
   UCG_CS(1),					/* disable chip */
   UCG_END(),					/* end of sequence */
 };
 
-ucg_int_t ucg_dev_pcf8833_12x128x128(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_pcf8833_16x132x132(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
       /* 1. Call to the controller procedures to setup the com interface */
-      if ( ucg_dev_ic_pcf8833_12(ucg, msg, data) == 0 )
+      if ( ucg_dev_ic_pcf8833_16(ucg, msg, data) == 0 )
 	return 0;
 
       /* 2. Send specific init sequence for this display module */
-	ucg_com_SendCmdSeq(ucg, ucg_tft_128x128_pcf8833_init_seq);
+	ucg_com_SendCmdSeq(ucg, ucg_tft_132x132_pcf8833_init_seq);
       
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:
       /* let do power down by the conroller procedures */
-      return ucg_dev_ic_pcf8833_12(ucg, msg, data);  
+      return ucg_dev_ic_pcf8833_16(ucg, msg, data);  
     
   }
   
   /* all other messages are handled by the controller procedures */
-  return ucg_dev_ic_pcf8833_12(ucg, msg, data);  
+  return ucg_dev_ic_pcf8833_16(ucg, msg, data);  
 }

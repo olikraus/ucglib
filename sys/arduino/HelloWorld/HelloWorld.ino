@@ -89,7 +89,7 @@
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
-Ucglib_PCF8833_12x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
+Ucglib_PCF8833_16x132x132_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
 
 void setup(void)
 {

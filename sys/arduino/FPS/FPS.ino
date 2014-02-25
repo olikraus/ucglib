@@ -75,18 +75,27 @@
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 76, /*sda=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Due, SW SPI via HW SPI Pins */
 //Ucglib4WireSWSPI ucg(ucg_dev_ssd1351_18x128x128_ilsoft, ucg_ext_ssd1351_18, /*scl=*/ 52, /*sda=*/ 51, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Mega, SW SPI via HW SPI Pins */
-//Ucglib4WireSWSPI ucg(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5, /*cs=*/ 3, /*reset=*/ 4);
+//Ucglib4WireSWSPI ucg(ucg_dev_ili9341_18x240x320, ucg_ext_ili9341_18, /*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5, /*cs=*/ 3, /*reset=*/ 4);	/* currently only works with DUE, but why??? */
 //Ucglib4WireSWSPI ucg(ucg_dev_st7735_18x128x160, ucg_ext_st7735_18, /*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, SW SPI via HW SPI Pins */
 //Ucglib4WireHWSPI ucg(ucg_dev_st7735_18x128x160, ucg_ext_st7735_18, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* Arduino Uno, HW SPI Pins */
 
 /* simplified interface */
 //Ucglib_ST7735_18x128x160_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
-Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_SSD1351_18x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+Ucglib_PCF8833_16x132x132_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
 
 
 void setup(void) {
   delay(1000);
-  ucg.begin();
+  ucg.begin(UCG_FONT_MODE_TRANSPARENT);
   ucg.setColor(0, 0,0,0);
   ucg.setColor(1, 0,0,0);
   ucg.setColor(2, 0,0,0);

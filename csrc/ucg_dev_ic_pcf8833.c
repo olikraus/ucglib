@@ -335,7 +335,7 @@ ucg_int_t ucg_handle_pcf8833_l90se(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_dev_ic_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ic_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -365,15 +365,15 @@ ucg_int_t ucg_dev_ic_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      //ucg_handle_l90fx(ucg, ucg_dev_ic_pcf8833_12);
+      //ucg_handle_l90fx(ucg, ucg_dev_ic_pcf8833_16);
       ucg_handle_pcf8833_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      ucg_handle_l90tc(ucg, ucg_dev_ic_pcf8833_12);
+      ucg_handle_l90tc(ucg, ucg_dev_ic_pcf8833_16);
       //ucg_handle_pcf8833_l90tc(ucg);
       return 1;	
      case UCG_MSG_DRAW_L90BF:
-      ucg_handle_l90bf(ucg, ucg_dev_ic_pcf8833_12);
+      ucg_handle_l90bf(ucg, ucg_dev_ic_pcf8833_16);
       return 1;
       
     /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
@@ -385,12 +385,12 @@ ucg_int_t ucg_dev_ic_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
   return ucg_dev_default_cb(ucg, msg, data);  
 }
 
-ucg_int_t ucg_ext_pcf8833_12(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_ext_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      ucg_handle_l90se(ucg, ucg_dev_ic_pcf8833_12);
+      ucg_handle_l90se(ucg, ucg_dev_ic_pcf8833_16);
       //ucg_handle_pcf8833_l90se(ucg);
       break;
   }
