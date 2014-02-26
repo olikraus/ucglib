@@ -519,21 +519,18 @@ static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16
 	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
       break;
     case UCG_COM_MSG_CHANGE_CS_LINE:
+      if ( arg != 0 )
+	ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg);      
+      
       if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
 	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
       
       if ( arg == 0 )
 	ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg);
-      else
-	ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg);      
+      
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
-      /* used for init and totransfer any remaining data to the display */
-      if ( arg == 0 )
-	ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg);
-      else
-	ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg);
-    
+      /* not used */
       break;
     case UCG_COM_MSG_SEND_BYTE:
       ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg, ucg->com_status &UCG_COM_STATUS_MASK_CD, arg);
