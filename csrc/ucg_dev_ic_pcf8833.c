@@ -138,12 +138,12 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir3_seq[] =
 
 uint8_t ucg_pcf8833_get_color_high_byte(ucg_t *ucg)
 {
-    return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5)&7);
+    return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5));
 }
 
 uint8_t ucg_pcf8833_get_color_low_byte(ucg_t *ucg)
 {
-    return ((((ucg->arg.pixel.rgb.color[1]))<<3)&0x0e0) | (((ucg->arg.pixel.rgb.color[2]) >>3)&0x01f);  
+    return ((((ucg->arg.pixel.rgb.color[1]))<<3)&0x0e0) | (((ucg->arg.pixel.rgb.color[2]) >>3));
 }
 
 ucg_int_t ucg_handle_pcf8833_l90fx(ucg_t *ucg)
@@ -204,45 +204,43 @@ ucg_int_t ucg_handle_pcf8833_l90tc(ucg_t *ucg)
     buf[0] = 0x001;	// change to 0 (cmd mode)
     buf[1] = 0x02a;	// set x
     buf[2] = 0x002;	// change to 1 (arg mode)
-    buf[3] = 0x000;	// upper part x
+    buf[3] = 0x000;	// x/y
     buf[4] = 0x000;	// no change
-    buf[5] = 0x000;	// will be overwritten by x value
+    buf[5] = 0x000;	// end value
     buf[6] = 0x001;	// change to 0 (cmd mode)
     buf[7] = 0x02c;	// write data
     buf[8] = 0x002;	// change to 1 (data mode)
-    buf[9] = 0x000;	// red value
+    buf[9] = ucg_pcf8833_get_color_high_byte(ucg);
     buf[10] = 0x000;	// no change
-    buf[11] = 0x000;	// green value
-    buf[12] = 0x000;	// no change
-    buf[13] = 0x000;	// blue value      
+    buf[11] = ucg_pcf8833_get_color_low_byte(ucg);
     
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
 	buf[1] = 0x02a;	// set x
+	buf[5] = WIDTH-1;	// end value
 	break;
       case 1: 	
 	dx = 0; dy = 1; 
         buf[1] = 0x02b;	// set y
+	buf[5] = HEIGHT-1;	// end value
 	break;
       case 2: 
 	dx = -1; dy = 0; 
         buf[1] = 0x02a;	// set x
+	buf[5] = WIDTH-1;	// end value
 	break;
       case 3: 
       default:
 	dx = 0; dy = -1; 
         buf[1] = 0x02b;	// set y
+	buf[5] = HEIGHT-1;	// end value
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
-    buf[9] = ucg->arg.pixel.rgb.color[0];
-    buf[11] = ucg->arg.pixel.rgb.color[1];
-    buf[13] = ucg->arg.pixel.rgb.color[2];
-    //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
     
     for( i = 0; i < ucg->arg.len; i++ )
     {
@@ -250,14 +248,13 @@ ucg_int_t ucg_handle_pcf8833_l90tc(ucg_t *ucg)
       {
 	if ( (ucg->arg.dir&1) == 0 )
 	{
-	  buf[5] = ucg->arg.pixel.pos.x;
+	  buf[3] = ucg->arg.pixel.pos.x;
 	}
 	else
 	{
-	  buf[3] = ucg->arg.pixel.pos.y>>8;
-	  buf[5] = ucg->arg.pixel.pos.y&255;
+	  buf[3] = ucg->arg.pixel.pos.y;
 	}
-	ucg_com_SendCmdDataSequence(ucg, 7, buf, 0);
+	ucg_com_SendCmdDataSequence(ucg, 6, buf, 0);
       }
       pixmap<<=1;
       ucg->arg.pixel.pos.x+=dx;
@@ -320,10 +317,11 @@ ucg_int_t ucg_handle_pcf8833_l90se(ucg_t *ucg)
     
     for( i = 0; i < ucg->arg.len; i++ )
     {
-      c[0] = ucg->arg.ccs_line[0].current;
-      c[1] = ucg->arg.ccs_line[1].current; 
-      c[2] = ucg->arg.ccs_line[2].current;
-      ucg_com_SendRepeat3Bytes(ucg, 1, c);
+      
+      c[0] = (ucg->arg.ccs_line[0].current&0x0f8) | (((ucg->arg.ccs_line[1].current) >>5));
+      c[1] = ((((ucg->arg.ccs_line[1].current))<<3)&0x0e0) | (((ucg->arg.ccs_line[2].current) >>3));
+      
+      ucg_com_SendRepeat2Bytes(ucg, 1, c);
       ucg_ccs_step(ucg->arg.ccs_line+0);
       ucg_ccs_step(ucg->arg.ccs_line+1);
       ucg_ccs_step(ucg->arg.ccs_line+2);
@@ -369,8 +367,8 @@ ucg_int_t ucg_dev_ic_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg_handle_pcf8833_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      ucg_handle_l90tc(ucg, ucg_dev_ic_pcf8833_16);
-      //ucg_handle_pcf8833_l90tc(ucg);
+      //ucg_handle_l90tc(ucg, ucg_dev_ic_pcf8833_16);
+      ucg_handle_pcf8833_l90tc(ucg);
       return 1;	
      case UCG_MSG_DRAW_L90BF:
       ucg_handle_l90bf(ucg, ucg_dev_ic_pcf8833_16);
@@ -390,8 +388,8 @@ ucg_int_t ucg_ext_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      ucg_handle_l90se(ucg, ucg_dev_ic_pcf8833_16);
-      //ucg_handle_pcf8833_l90se(ucg);
+      //ucg_handle_l90se(ucg, ucg_dev_ic_pcf8833_16);
+      ucg_handle_pcf8833_l90se(ucg);
       break;
   }
   return 1;
