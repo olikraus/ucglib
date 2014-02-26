@@ -197,6 +197,17 @@ class Ucglib4WireHWSPI : public Ucglib
     void begin(ucg_font_mode_fnptr font_mode);
 };
 
+class Ucglib3Wire9bitHWSPI : public Ucglib
+{
+  public:
+    Ucglib3Wire9bitHWSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+
+	  ucg.pin_list[UCG_PIN_RST] = reset; 
+	  ucg.pin_list[UCG_PIN_CS] = cs; }
+    void begin(ucg_font_mode_fnptr font_mode);
+};
+
 
 #ifdef __AVR__	
 class Ucglib8BitPortD : public Ucglib
@@ -298,13 +309,13 @@ class Ucglib_SSSD1351_18x128x128_SWSPI : public Ucglib4WireSWSPI
 };
 
 
-//class Ucglib_PCF8833_12x128x128_HWSPI : public Ucglib4WireHWSPI
-//{
-//  public:
-//  Ucglib_PCF8833_12x128x128_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
-//    Ucglib4WireHWSPI(ucg_dev_pcf8833_12x128x128, ucg_ext_pcf8833_12, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
-//    { }
-//};
+class Ucglib_PCF8833_16x132x132_HWSPI : public Ucglib3Wire9bitHWSPI
+{
+  public:
+  Ucglib_PCF8833_16x132x132_HWSPI( uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib3Wire9bitHWSPI(ucg_dev_pcf8833_16x132x132, ucg_ext_pcf8833_16, /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
 
 
 class Ucglib_PCF8833_16x132x132_SWSPI : public Ucglib3Wire9bitSWSPI

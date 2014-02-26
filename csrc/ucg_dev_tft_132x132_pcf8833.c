@@ -88,6 +88,24 @@ static const ucg_pgm_uint8_t ucg_tft_132x132_pcf8833_init_seq[] = {
   UCG_END(),					/* end of sequence */
 };
 
+const ucg_pgm_uint8_t test_seq[] = 
+{
+  UCG_CS(0),					/* enable chip */
+  
+  UCG_D1(0),
+  UCG_D1(0x0a0),
+  UCG_D1(255),
+  UCG_D1(255),
+
+  UCG_D1(255),
+  UCG_D1(255),
+  UCG_D1(255),
+  UCG_D1(255),
+  
+  UCG_CS(1),					/* enable chip */
+  UCG_END()
+};
+
 ucg_int_t ucg_dev_pcf8833_16x132x132(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
@@ -99,7 +117,12 @@ ucg_int_t ucg_dev_pcf8833_16x132x132(ucg_t *ucg, ucg_int_t msg, void *data)
 
       /* 2. Send specific init sequence for this display module */
 	ucg_com_SendCmdSeq(ucg, ucg_tft_132x132_pcf8833_init_seq);
-      
+      /*
+      for(;;)
+      {
+	ucg_com_SendCmdSeq(ucg, test_seq);
+      }
+      */
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:
