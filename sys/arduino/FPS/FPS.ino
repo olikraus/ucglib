@@ -46,7 +46,7 @@
   ILI9341, Arduino Due, SW SPI		Text: 10.6		Box: 16.5		Gradient: 12.9
   
   28 Feb 2014
-  PCF8833, Arduino Uno, HW SPI	Text:  3.3  	Box: 5.2		Gradient:  3.1
+  PCF8833, Arduino Uno, HW SPI	Text:  3.3  	Box: 5.6		Gradient:  3.2
 
 */
 

@@ -421,6 +421,7 @@ void Ucglib3Wire9bitSWSPI::begin(ucg_font_mode_fnptr font_mode)
 static uint8_t ucg_com_3wire_9bit_buffer[UCG_COM_ARDUINO_3WIRE_8BIT_BUF_LEN];
 static uint8_t ucg_com_3wire_9bit_buf_bytepos;
 static uint8_t ucg_com_3wire_9bit_buf_bitpos;
+static uint8_t ucg_com_3wire_9bit_cd_mask;
 
 static void ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg_t *ucg) UCG_NOINLINE;
 static void ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg_t *ucg)
@@ -428,6 +429,7 @@ static void ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg_t *ucg)
   uint8_t i;
   ucg_com_3wire_9bit_buf_bytepos = 0;
   ucg_com_3wire_9bit_buf_bitpos = 7;
+  ucg_com_3wire_9bit_cd_mask = 128;
   for( i = 0; i < UCG_COM_ARDUINO_3WIRE_8BIT_BUF_LEN; i++ )
     ucg_com_3wire_9bit_buffer[i] = 0; /* this is also the NOP command for the PCF8833 */
 }
@@ -449,17 +451,20 @@ static void ucg_com_arduino_send_3wire_9bit_HW_SPI(ucg_t *ucg, uint8_t first_bit
 {
   
   if ( first_bit != 0 )
-    ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |= (1<<ucg_com_3wire_9bit_buf_bitpos);
+    ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |= ucg_com_3wire_9bit_cd_mask;
   
   if ( ucg_com_3wire_9bit_buf_bitpos > 0 )
   {
     ucg_com_3wire_9bit_buf_bitpos--;
+    ucg_com_3wire_9bit_cd_mask >>= 1;
   }
   else
   {
     ucg_com_3wire_9bit_buf_bitpos = 7;
     ucg_com_3wire_9bit_buf_bytepos++;
+    ucg_com_3wire_9bit_cd_mask = 128;
   }
+  
   ucg_com_3wire_9bit_buffer[ucg_com_3wire_9bit_buf_bytepos] |=  data >> (7-ucg_com_3wire_9bit_buf_bitpos);
 
   if ( ucg_com_3wire_9bit_buf_bitpos == 7 )
