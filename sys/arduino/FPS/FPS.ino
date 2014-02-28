@@ -45,6 +45,8 @@
   ILI9325, Arduino Uno, Port D		Text:  5.8		Box: 17.5		Gradient:  5.5
   ILI9341, Arduino Due, SW SPI		Text: 10.6		Box: 16.5		Gradient: 12.9
   
+  28 Feb 2014
+  PCF8833, Arduino Uno, HW SPI	Text:  3.3  	Box: 5.2		Gradient:  3.1
 
 */
 

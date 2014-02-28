@@ -512,6 +512,8 @@ static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16
       SPI.end();
       break;
     case UCG_COM_MSG_DELAY:
+      /* flush pending data first, then do the delay */
+      ucg_com_arduino_flush_3wire_9bit_HW_SPI(ucg);      
       delayMicroseconds(arg);
       break;
     case UCG_COM_MSG_CHANGE_RESET_LINE:
