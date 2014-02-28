@@ -67,7 +67,18 @@
 
 /* simplified interface */
 //Ucglib_ST7735_18x128x160_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
-Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 7, /*sda=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*scl=*/ 4, /*sda=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
+
+//Ucglib_SSD1351_18x128x128_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+
+//Ucglib_PCF8833_16x132x132_SWSPI ucg(/*scl=*/ 13, /*sda=*/ 11, /*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
+//Ucglib_PCF8833_16x132x132_HWSPI ucg(/*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
 
 void setup(void)
 {
