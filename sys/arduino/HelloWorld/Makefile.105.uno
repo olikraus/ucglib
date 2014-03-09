@@ -42,7 +42,7 @@
 BOARD:=uno
 
 # additional definitions
-DEFS:=-DU8G_16BIT=1
+DEFS:=
 
   
 U8G_PATH:=$(shell cd ../../.. && pwd)/csrc/
