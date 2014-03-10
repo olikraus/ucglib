@@ -341,6 +341,7 @@ struct _ucg_t
 /* draw  bit pattern with foreground (idx 1) and background (idx 0) color */
 #define UCG_MSG_DRAW_L90BF 25	
 
+
 #define UCG_COM_STATUS_MASK_POWER 8
 #define UCG_COM_STATUS_MASK_RESET 4
 #define UCG_COM_STATUS_MASK_CS 2

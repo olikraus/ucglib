@@ -104,6 +104,9 @@ ucg_int_t ucg_dev_tga(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_L90SE:
       ucg_handle_l90se(ucg, ucg_dev_tga);
       return 1;
+    case UCG_MSG_DRAW_L90BF:
+      ucg_handle_l90bf(ucg, ucg_dev_tga);
+      return 1;
   }
   return ucg_dev_default_cb(ucg, msg, data);  
 }
