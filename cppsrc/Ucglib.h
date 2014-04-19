@@ -97,6 +97,8 @@ class Ucglib : public Print
       { return ucg_GetFontAscent(&ucg); }
     ucg_int_t getFontDescent(void)
       { return ucg_GetFontDescent(&ucg); }
+    ucg_int_t getStrWidth(const char *s)
+      { return ucg_GetStrWidth(&ucg, s); }
     
     void setColor(uint8_t idx, uint8_t r, uint8_t g, uint8_t b)
       { ucg_SetColor(&ucg, idx, r, g, b); }

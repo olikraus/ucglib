@@ -10,3 +10,8 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Fixed GraphicsDemo for larger screen sizes
   * Added Profont and Logisoso fonts
   * Support for PCF8833 and ST7735
+2014-04-19	v0.03   Oliver Kraus <olikraus@gmail.com>
+  * Support for Freetronics OLED with SSD1351 (Ucglib_SSD1351_18x128x128_FT_SWSPI)
+  * Added ucg_int_t getStrWidth(const char *s) to the C++ interface
+
+  
