@@ -24,7 +24,13 @@ int main(void)
   ucg_int_t i;
   
   ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT) ;
   ucg_SetFont(&ucg, ucg_font_ncenB24);
+
+
+  ucg_SetColor(&ucg, 0, 0, 255, 0);
+  ucg_DrawLine(&ucg, 30,30, 60, 40);
+  ucg_DrawLine(&ucg, 30,30, 40, 60);
   
   ucg_SetColor(&ucg, 0, 255, 0, 0);
  

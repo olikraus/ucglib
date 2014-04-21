@@ -13,5 +13,7 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
 2014-04-19	v0.03   Oliver Kraus <olikraus@gmail.com>
   * Support for Freetronics OLED with SSD1351 (Ucglib_SSD1351_18x128x128_FT_SWSPI)
   * Added ucg_int_t getStrWidth(const char *s) to the C++ interface
+2014-04-21	v0.04   Oliver Kraus <olikraus@gmail.com>
+  * void drawLine(ucg_int_t x1, ucg_int_t y1, ucg_int_t x2, ucg_int_t y2)
 
   
