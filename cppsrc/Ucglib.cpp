@@ -166,9 +166,6 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 
 static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
-#ifdef __AVR__
-  ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
-#endif
 
   switch(msg)
   {
@@ -176,7 +173,11 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
       /* "data" is a pointer to ucg_com_info_t structure with the following information: */
       /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
       /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
-      
+
+#ifdef __AVR__
+      ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
+#endif
+    
       /* setup pins */
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
@@ -201,8 +202,11 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
 	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
       break;
     case UCG_COM_MSG_CHANGE_CS_LINE:
+#ifdef __AVR__
+      ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
+#endif    
       if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
-	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);      
       break;
     case UCG_COM_MSG_CHANGE_CD_LINE:
       digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);

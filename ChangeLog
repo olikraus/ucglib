@@ -15,5 +15,11 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Added ucg_int_t getStrWidth(const char *s) to the C++ interface
 2014-04-21	v0.04   Oliver Kraus <olikraus@gmail.com>
   * void drawLine(ucg_int_t x1, ucg_int_t y1, ucg_int_t x2, ucg_int_t y2)
-
+2014-04-27	v0.05   Oliver Kraus <olikraus@gmail.com>
+  * Issue 9: Scale2x2 verified
+  * Issue 11: Low level proc for solid text is closed
+  * Issue 14: Speed improvement for 8 bit SW SPI
+  
+  
+  
   
