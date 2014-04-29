@@ -49,7 +49,7 @@
 //Ucglib8BitPortD ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 //Ucglib8Bit ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, 0, 1, 2, 3, 4, 5, 6, 7, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 
-//Ucglib_ST7735_18x128x160_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+Ucglib_ST7735_18x128x160_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
@@ -263,12 +263,15 @@ void fonts(void)
   ucg.setFont(ucg_font_helvB12r);
   ucg.setPrintPos(2,62+d);
   ucg.print("ABC abc 123");
+  /* big fonts removed, some trouble with the Arduino IDE */
+  /*
   ucg.setFont(ucg_font_helvB14r);
   ucg.setPrintPos(2,79+d);
   ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB18r);
   ucg.setPrintPos(2,79+22+d);
   ucg.print("ABC abc 123");
+  */
   
   ucg.setFont(ucg_font_ncenR14r);
   DLY();

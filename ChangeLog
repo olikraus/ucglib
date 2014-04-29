@@ -19,6 +19,8 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Issue 9: Scale2x2 verified
   * Issue 11: Low level proc for solid text is closed
   * Issue 14: Speed improvement for 8 bit SW SPI
+2014-04-29	v1.00   Oliver Kraus <olikraus@gmail.com>
+  * Small change to GraphicsTest.ino
   
   
   
