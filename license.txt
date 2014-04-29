@@ -9,8 +9,6 @@ See also:
 Fonts are licensed under different conditions.
 Detailed information on the licensing conditions for each font
 are given on:
-http://code.google.com/p/u8glib/wiki/fontgroup
-and in the future also on 
 http://code.google.com/p/ucglib/wiki/fontgroup
 
 ============ X11 Fonts COUR, HELV, NCEN, TIM, SYMB ============
