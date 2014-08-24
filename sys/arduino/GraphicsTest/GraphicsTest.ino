@@ -268,8 +268,9 @@ void fonts(void)
   ucg.setPrintPos(2,45+d);
   ucg.print("ABC abc 123");
   ucg.setFont(ucg_font_helvB12r);
-  ucg.setPrintPos(2,62+d);
-  ucg.print("ABC abc 123");
+  //ucg.setPrintPos(2,62+d);
+  //ucg.print("ABC abc 123");
+  ucg.drawString(2,62+d, 0, "ABC abc 123"); // test drawString
   
   ucg.setFontMode(UCG_FONT_MODE_SOLID);
 

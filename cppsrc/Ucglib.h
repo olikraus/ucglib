@@ -89,6 +89,16 @@ class Ucglib : public Print
     ucg_int_t getWidth(void) { return ucg_GetWidth(&ucg); }
     ucg_int_t getHeight(void) { return ucg_GetHeight(&ucg); }
     
+    
+    void setFontRefHeightText(void) 	{ ucg_SetFontRefHeightText(&ucg); }
+    void setFontRefHeightExtendedText(void) { ucg_SetFontRefHeightExtendedText(&ucg); }
+    void setFontRefHeightAll(void) 	{ ucg_SetFontRefHeightAll(&ucg); }
+
+    void setFontPosBaseline(void) 	{ ucg_SetFontPosBaseline(&ucg); }
+    void setFontPosBottom(void) 	{ ucg_SetFontPosBottom(&ucg); }
+    void setFontPosTop(void) 		{ ucg_SetFontPosTop(&ucg); }
+    void setFontPosCenter(void) 	{ ucg_SetFontPosCenter(&ucg); }
+    
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
     void setFontMode(ucg_font_mode_fnptr font_mode) 
