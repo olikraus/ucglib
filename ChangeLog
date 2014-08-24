@@ -21,8 +21,10 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Issue 14: Speed improvement for 8 bit SW SPI
 2014-04-29	v1.00   Oliver Kraus <olikraus@gmail.com>
   * Small change to GraphicsTest.ino
-2014-xx-xx	v1.01   Oliver Kraus <olikraus@gmail.com>
+2014-08-24	v1.01   Oliver Kraus <olikraus@gmail.com>
   * Fixed problem with rot180/rot270 and solid font mode (issue 30)
+  * drawString, drawGlyph, setFontRefXXX procedures
+  
 
   
   
