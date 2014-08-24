@@ -49,6 +49,13 @@ static const ucg_pgm_uint8_t ucg_tft_240x320_ili9325_init_seq[] = {
   UCG_RST(1),
   UCG_DLY_MS(50),
   UCG_CS(0),					/* enable chip */
+  
+  //UCG_C22(0x000, 0x001,0x001, 0x000), 	/* Driver Output Control, bits 8 & 10 */
+  //UCG_C22(  0x000, 0x007, 0x001, 0x033),              /* Display Control 1: Operate, display ON, Partial image off */  
+  //UCG_CS(1),					/* disable chip */
+  //UCG_END(),					/* end of sequence */
+  
+  
   UCG_C22(0x000, 0x001,0x001, 0x000), 	/* Driver Output Control, bits 8 & 10 */
   UCG_C22(0x000, 0x002, 0x007, 0x000),              /* LCD Driving Wave Control, bit 9: Set line inversion */
   //UCG_C22(0x000, 0x003, 0x010, 0x030),              /* Entry Mode, GRAM write direction and BGR (Bit 12)=1 (16 bit transfer, 65K Mode)*/
@@ -140,6 +147,7 @@ ucg_int_t ucg_dev_ili9325_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *dat
 
       /* 2. Send specific init sequence for this display module */
       ucg_com_SendCmdSeq(ucg, ucg_tft_240x320_ili9325_init_seq);
+      
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:

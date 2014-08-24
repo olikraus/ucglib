@@ -160,8 +160,9 @@ ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
     case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90BF:
     case UCG_MSG_DRAW_L90SE:
-    case UCG_MSG_DRAW_L90RL:
+    //case UCG_MSG_DRAW_L90RL:
       ucg->arg.dir+=2;
       ucg->arg.dir&=3;
       ucg_rotate_180_xy(ucg, &(ucg->arg.pixel.pos)); 
@@ -220,8 +221,9 @@ ucg_int_t ucg_dev_rotate270(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
     case UCG_MSG_DRAW_L90FX:
     case UCG_MSG_DRAW_L90TC:
+    case UCG_MSG_DRAW_L90BF:
     case UCG_MSG_DRAW_L90SE:
-    case UCG_MSG_DRAW_L90RL:
+//    case UCG_MSG_DRAW_L90RL:
       ucg->arg.dir+=3;
       ucg->arg.dir&=3;
       ucg_rotate_270_xy(ucg, &(ucg->arg.pixel.pos)); 

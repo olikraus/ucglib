@@ -52,6 +52,16 @@
 #define setbit(pio, mask) ((pio)->PIO_SODR = (mask))
 #define clrbit(pio, mask) ((pio)->PIO_CODR = (mask))
 
+static void ucg_nano_delay(void)
+{
+  volatile uint32_t i;
+  for( i = 0; i < 1; i++ )
+  {
+    __NOP;
+  }
+  delayMicroseconds(1);
+}
+
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
 {
   uint32_t sda_pin = ucg->pin_list[UCG_PIN_SDA];
@@ -72,13 +82,13 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
     {
       clrbit( sda_port, sda_pin) ;
     }
-    // no delay required, Arduino Due is slow enough
     //delayMicroseconds(1);
+    ucg_nano_delay();
     setbit( scl_port, scl_pin);
     //delayMicroseconds(1);
+    ucg_nano_delay();
     i--;
     clrbit( scl_port, scl_pin) ;
-    //delayMicroseconds(1);
     data <<= 1;
   } while( i > 0 );
   
@@ -268,6 +278,140 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
 void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_SW_SPI); 
+  ucg_SetFontMode(&ucg, font_mode);
+}
+
+
+/*=========================================================================*/
+/* 8 Bit SW SPI for ILI9325 (mode IM3=0, IM2=1, IM1=0, IM0=0 */
+
+static int16_t ucg_com_arduino_illi9325_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
+{
+
+  switch(msg)
+  {
+    case UCG_COM_MSG_POWER_UP:
+      /* "data" is a pointer to ucg_com_info_t structure with the following information: */
+      /*	((ucg_com_info_t *)data)->serial_clk_speed value in nanoseconds */
+      /*	((ucg_com_info_t *)data)->parallel_clk_speed value in nanoseconds */
+
+#ifdef __AVR__
+      ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
+#endif
+    
+      /* setup pins */
+      pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+
+      digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
+      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+
+      break;
+    case UCG_COM_MSG_POWER_DOWN:
+      break;
+    case UCG_COM_MSG_DELAY:
+      delayMicroseconds(arg);
+      break;
+    case UCG_COM_MSG_CHANGE_RESET_LINE:
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], arg);
+      break;
+      
+    case UCG_COM_MSG_CHANGE_CS_LINE:
+#ifdef __AVR__
+      ucg_com_arduino_init_shift_out(ucg->pin_list[UCG_PIN_SDA], ucg->pin_list[UCG_PIN_SCL]);
+#endif    
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], arg);      
+      break;
+      
+    case UCG_COM_MSG_CHANGE_CD_LINE:
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+      {
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);      
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 0);      
+      }
+
+      if ( ucg->com_status & UCG_COM_STATUS_MASK_CD )
+	ucg_com_arduino_send_generic_SW_SPI(ucg, 0x072);
+      else
+	ucg_com_arduino_send_generic_SW_SPI(ucg, 0x070);      
+	
+      break;
+      
+    case UCG_COM_MSG_SEND_BYTE:
+      ucg_com_arduino_send_generic_SW_SPI(ucg, arg);
+      break;
+    case UCG_COM_MSG_REPEAT_1_BYTE:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_2_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[1]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_REPEAT_3_BYTES:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[0]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[1]);
+	ucg_com_arduino_send_generic_SW_SPI(ucg, data[2]);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_STR:
+      while( arg > 0 ) {
+	ucg_com_arduino_send_generic_SW_SPI(ucg, *data++);
+	arg--;
+      }
+      break;
+    case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
+      while(arg > 0)
+      {
+	if ( *data != 0 )
+	{
+	  if ( *data == 1 )
+	  {
+	    if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	    {
+	      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);      
+	      digitalWrite(ucg->pin_list[UCG_PIN_CS], 0);      
+	    }
+	    ucg_com_arduino_send_generic_SW_SPI(ucg, 0x070);
+	  }
+	  else
+	  {
+	    if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	    {
+	      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);      
+	      digitalWrite(ucg->pin_list[UCG_PIN_CS], 0);      
+	    }
+	    ucg_com_arduino_send_generic_SW_SPI(ucg, 0x072);
+	  }
+	}
+	data++;
+	ucg_com_arduino_send_generic_SW_SPI(ucg, *data);
+	data++;
+	arg--;
+      }
+      break;
+  }
+  return 1;
+}
+
+void Ucglib3WireILI9325SWSPI::begin(ucg_font_mode_fnptr font_mode)
+{ 
+  ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_illi9325_SW_SPI); 
   ucg_SetFontMode(&ucg, font_mode);
 }
 

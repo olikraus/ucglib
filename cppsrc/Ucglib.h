@@ -165,6 +165,19 @@ class Ucglib4WireSWSPI : public Ucglib
     void begin(ucg_font_mode_fnptr font_mode);
 };
 
+class Ucglib3WireILI9325SWSPI : public Ucglib
+{
+  public:
+    Ucglib3WireILI9325SWSPI(ucg_dev_fnptr dev, ucg_dev_fnptr ext, uint8_t scl, uint8_t sda, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE)
+      { init(); dev_cb = dev; ext_cb = ext; 
+
+	  ucg.pin_list[UCG_PIN_SCL] = scl; 	
+	  ucg.pin_list[UCG_PIN_SDA] = sda; 
+	  ucg.pin_list[UCG_PIN_RST] = reset; 
+	  ucg.pin_list[UCG_PIN_CS] = cs; }
+    void begin(ucg_font_mode_fnptr font_mode);
+};
+
 class Ucglib3Wire9bitSWSPI : public Ucglib
 {
   public:

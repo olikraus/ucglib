@@ -1,8 +1,9 @@
 /*
 
-  ucg_dev_ic_ili9325.c
+  ucg_dev_ic_ili9325_spi.c
   
-  Specific code for the ili9325 controller (TFT displays)
+  Specific code for the ili9325 controller (TFT displays) with SPI mode (IM3=0, IM2=1, IM1=1, IM0=1)
+  1 May 2014: Currently, this is not working
 
   Universal uC Color Graphics Library
   
@@ -57,7 +58,7 @@ static const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir0_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x030),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C12(0x003, 0xc0 | 0x010, 0x030),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
@@ -74,7 +75,7 @@ static const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir1_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x038),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C12(0x003, 0xc0 | 0x010, 0x038),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
@@ -91,7 +92,7 @@ static const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir2_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x000),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C12(0x003, 0xc0 | 0x010, 0x000),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
@@ -108,7 +109,7 @@ static const ucg_pgm_uint8_t ucg_ili9325_set_pos_dir3_seq[] =
   /* last byte: 0x038 vertical increment (dir = 1) */
   /* last byte: 0x000 horizontal deccrement (dir = 2) */
   /* last byte: 0x008 vertical deccrement (dir = 3) */
-  UCG_C22(0x000, 0x003, 0xc0 | 0x010, 0x008),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
+  UCG_C12(0x003, 0xc0 | 0x010, 0x008),              	/* Entry Mode, GRAM write direction and BGR (Bit 12)=1, set TRI (Bit 15) and DFM (Bit 14) --> three byte transfer */
   UCG_C10(0x020),	UCG_VARX(0,0x00, 0), UCG_VARX(0,0x0ff, 0),					/* set x position */
   UCG_C10(0x021),	UCG_VARY(8,0x01, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
 
@@ -172,7 +173,7 @@ static const ucg_pgm_uint8_t ucg_ili9325_set_y_pos_seq[] =
 };
 
 /* without CmdDataSequence */ 
-ucg_int_t xxxxxx_ucg_handle_ili9325_l90tc(ucg_t *ucg)
+static ucg_int_t xxxxxx_ucg_handle_ili9325_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -419,7 +420,7 @@ static ucg_int_t ucg_handle_ili9325_l90se(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ic_ili9325_spi_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -466,7 +467,7 @@ ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
   return ucg_dev_default_cb(ucg, msg, data);  
 }
 
-ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_ext_ili9325_spi_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {

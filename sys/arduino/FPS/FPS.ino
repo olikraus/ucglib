@@ -35,7 +35,7 @@
 
   1 Feb 2014
   SSD1351, Arduino Due, HW SPI	Text: 13.2  	Box: 28.6		Gradient: 17.9
-  SSD1351, Arduino Due, SW SPI	Text: 11.1  	Box: 17.3		Gradient: 12.9
+  SSD1351, Arduino Due, SW SPI	Text: 11.1  	Box: 17.3		Gradient: 12.9		1 May 2014: this has been reduced to get better signal quality
   SSD1351, Arduino Uno, HW SPI	Text:  2.6  	Box: 12.8		Gradient:  4.6
   SSD1351, Arduino Uno, SW SPI	Text:  1.6  	Box:  3.4		Gradient:  2.2
 
@@ -43,7 +43,7 @@
   SSD1351, Arduino Uno, HW SPI	Text:  5.0  	Box: 15.2		Gradient:  5.3
   SSD1351, Arduino Uno, SW SPI	Text:  2.7  	Box:  3.4		Gradient:  2.2
   ILI9325, Arduino Uno, Port D		Text:  5.8		Box: 17.5		Gradient:  5.5
-  ILI9341, Arduino Due, SW SPI		Text: 10.6		Box: 16.5		Gradient: 12.9
+  ILI9341, Arduino Due, SW SPI		Text: 10.6		Box: 16.5		Gradient: 12.9		1 May 2014: this has been reduced to get better signal quality
   
   28 Feb 2014
   PCF8833, Arduino Uno, HW SPI	Text:  3.3  	Box: 5.6		Gradient:  3.2
@@ -52,6 +52,8 @@
   27 Apr 2014, Issue 14 (SW SPI improvement)
   ST7735, Arduino Uno, SW SPI		Text:  2.2  	Box: 3.4		Gradient:  2.4
   
+  1 May 2014, (SW SPI speed reduced for Due)
+  ST7735, Arduino Due, SW SPI		Text:  4.9  	Box: 4.9		Gradient:  4.4
   
 
 */
@@ -70,7 +72,7 @@
 //Ucglib8BitPortD ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 //Ucglib8Bit ucg(ucg_dev_ili9325_18x240x320_itdb02, ucg_ext_ili9325_18, 0, 1, 2, 3, 4, 5, 6, 7, /* wr= */ 18 , /* cd= */ 19 , /* cs= */ 17, /* reset= */ 16 );
 
-Ucglib_ST7735_18x128x160_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_ST7735_18x128x160_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
