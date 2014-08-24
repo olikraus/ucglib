@@ -125,6 +125,9 @@ class Ucglib : public Print
     void drawVLine(ucg_int_t x, ucg_int_t y, ucg_int_t len) { ucg_DrawVLine(&ucg, x, y, len); }
     void drawLine(ucg_int_t x1, ucg_int_t y1, ucg_int_t x2, ucg_int_t y2) { ucg_DrawLine(&ucg, x1, y1, x2, y2); }
 
+    ucg_int_t drawGlyph(ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding) { return ucg_DrawGlyph(&ucg, x, y, dir, encoding); }
+    ucg_int_t drawString(ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str) { return ucg_DrawString(&ucg, x, y, dir, str); }
+    
     void drawBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_DrawBox(&ucg, x, y, w, h); }
     void clearScreen(void) { ucg_ClearScreen(&ucg); }
     void drawRBox(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h, ucg_int_t r) { ucg_DrawRBox(&ucg, x, y, w, h, r); }

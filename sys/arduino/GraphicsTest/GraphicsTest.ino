@@ -257,7 +257,9 @@ void fonts(void)
   ucg.setPrintDir(0);
   ucg.setPrintPos(2,18);
   ucg.print("Fonts");
-  
+
+  ucg.setFontMode(UCG_FONT_MODE_TRANSPARENT);
+
   ucg.setColor(255, 200, 170);
   ucg.setFont(ucg_font_helvB08r);
   ucg.setPrintPos(2,30+d);
@@ -268,6 +270,23 @@ void fonts(void)
   ucg.setFont(ucg_font_helvB12r);
   ucg.setPrintPos(2,62+d);
   ucg.print("ABC abc 123");
+  
+  ucg.setFontMode(UCG_FONT_MODE_SOLID);
+
+  ucg.setColor(255, 200, 170);
+  ucg.setColor(1, 0, 100, 120);		// background color in solid mode
+  ucg.setFont(ucg_font_helvB08r);
+  ucg.setPrintPos(2,75+30+d);
+  ucg.print("ABC abc 123");
+  ucg.setFont(ucg_font_helvB10r);
+  ucg.setPrintPos(2,75+45+d);
+  ucg.print("ABC abc 123");
+  ucg.setFont(ucg_font_helvB12r);
+  ucg.setPrintPos(2,75+62+d);
+  ucg.print("ABC abc 123");
+
+  ucg.setFontMode(UCG_FONT_MODE_TRANSPARENT);
+
   /* big fonts removed, some trouble with the Arduino IDE */
   /*
   ucg.setFont(ucg_font_helvB14r);
