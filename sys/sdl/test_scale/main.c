@@ -17,10 +17,11 @@ int main(void)
 {
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
   ucg_SetFont(&ucg, ucg_font_ncenB12);  
   ucg_SetColor(&ucg, 0, 255, 180, 40);
   
-  ucg_DrawTransparentGlyph(&ucg, 20,20, 0, 'A');
+  ucg_DrawGlyph(&ucg, 20,20, 0, 'A');
   ucg_SetScale2x2(&ucg);
 
   ucg_DrawHLine(&ucg, 1,1,11);
@@ -43,11 +44,12 @@ int main(void)
   ucg_DrawTransparentGlyph(&ucg, 20,20, 2, 'A');
   ucg_DrawTransparentGlyph(&ucg, 20,20, 3, 'A');
   */
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_SOLID);
   /*
   ucg_DrawSolidGlyph(&ucg, 20,20, 0, 'A');
   ucg_DrawSolidGlyph(&ucg, 20,20, 1, 'A');
   */
-  ucg_DrawSolidGlyph(&ucg, 20,20, 2, 'A');
+  ucg_DrawGlyph(&ucg, 20,20, 2, 'A');
   //ucg_DrawSolidGlyph(&ucg, 20,20, 3, 'A');
 
   while( ucg_sdl_get_key() < 0 )

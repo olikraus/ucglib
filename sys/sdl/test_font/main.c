@@ -86,6 +86,8 @@ int main(void)
   ucg_int_t a,b;
   
   ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_SOLID);
+  
   //ucg_SetRotate90(&ucg);
   ucg_SetFont(&ucg, ucg_font_ncenB24);  
   //ucg_SetFont(&ucg, ucg_font_profont10);  
@@ -104,7 +106,7 @@ int main(void)
   
   ucg_SetColor(&ucg, 0, 255, 255, 0);
   ucg_SetColor(&ucg, 1, 0, 0, 0);
-  ucg_DrawSolidString(&ucg, 0, 30, 0, "Ucglib");
+  ucg_DrawString(&ucg, 0, 30, 0, "Ucglib");
 
   while( ucg_sdl_get_key() < 0 )
     ;

@@ -17,6 +17,7 @@ int main(void)
 {
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
   ucg_SetFont(&ucg, ucg_font_ncenB24);  
   ucg_SetRotate90(&ucg);
 
