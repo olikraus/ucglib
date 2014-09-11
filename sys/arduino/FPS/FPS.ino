@@ -57,8 +57,7 @@
 
   11 Sep 2014
   ILI9341, Arduino Due, HW SPI	Text: 12.4		Box: 22.4		Gradient: 16.5	
-  ILI9341, Arduino Due, SW SPI		Text: 1.3		Box: 1.1		Gradient: 1.1		not sure what has happened here, this should be much faster
-
+  ILI9341, Arduino Due, SW SPI		Text: 4.7		Box: 4.7		Gradient: 4.4
 
 */
 
@@ -81,8 +80,8 @@
 
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
-Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
-//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 76, /*data=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
+//Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
+Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 76, /*data=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
 
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);

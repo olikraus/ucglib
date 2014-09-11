@@ -59,7 +59,7 @@ static void ucg_nano_delay(void)
   {
     __NOP;
   }
-  delayMicroseconds(1);
+  //delayMicroseconds(1);
 }
 
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
