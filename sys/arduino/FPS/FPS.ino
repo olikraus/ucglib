@@ -59,9 +59,9 @@
   ILI9341, Arduino Due, HW SPI	Text: 12.4		Box: 22.4		Gradient: 16.5	
   ILI9341, Arduino Due, SW SPI		Text: 4.7		Box: 4.7		Gradient: 4.4
 
-  11 Sep 2014
-  ILI9341, Arduino Due, SdSpi		Text: 13.9		Box: 30.5		Gradient: 20.2		no multibyte transfer	
-  ILI9341, Arduino Due, SdSpi		Text: 13.9		Box: 38.0		Gradient: 19.7		with multibyte transfer	
+  12 Sep 2014
+  ILI9341, Arduino Due, HW SdSpi	Text: 13.9		Box: 30.5		Gradient: 20.2		no multibyte transfer	
+  ILI9341, Arduino Due, HW SdSpi	Text: 13.9		Box: 38.0		Gradient: 19.7		with multibyte transfer	
 
 
 */
