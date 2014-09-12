@@ -59,6 +59,11 @@
   ILI9341, Arduino Due, HW SPI	Text: 12.4		Box: 22.4		Gradient: 16.5	
   ILI9341, Arduino Due, SW SPI		Text: 4.7		Box: 4.7		Gradient: 4.4
 
+  11 Sep 2014
+  ILI9341, Arduino Due, SdSpi		Text: 13.9		Box: 30.5		Gradient: 20.2		no multibyte transfer	
+  ILI9341, Arduino Due, SdSpi		Text: 13.9		Box: 38.0		Gradient: 19.7		with multibyte transfer	
+
+
 */
 
 #include <SPI.h>
@@ -80,8 +85,8 @@
 
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
-//Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
-Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 76, /*data=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
+Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
+//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 76, /*data=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
 
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
