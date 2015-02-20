@@ -10,7 +10,7 @@ int ucg_sdl_get_key(void);
 //extern const ucg_fntpgm_uint8_t ucg_font_ncenB18[] UCG_FONT_SECTION("ucg_font_ncenB18");
 //extern const u8g_fntpgm_uint8_t u8g_font_ncenB18[] U8G_FONT_SECTION("u8g_font_ncenB18");
 
-ucg_t ucg;
+ucg_t *ucg_ptr;
 
 
 
@@ -128,9 +128,9 @@ uint8_t tga_read_write_pixel(void)
   tga_read_buf(tga_pixel, 3*TGA_PIX_BUF_SIZE);
   for( i = 0; i < TGA_PIX_BUF_SIZE; i++ )
   {
-    ucg_SetColor(&ucg, 0, buf[2], buf[1], buf[0]);
+    ucg_SetColor(ucg_ptr, 0, buf[2], buf[1], buf[0]);
     buf += 3;
-    ucg_DrawPixel(&ucg,tga_x, ucg_GetHeight(&ucg)-1-tga_y);
+    ucg_DrawPixel(ucg_ptr,tga_x, ucg_GetHeight(ucg_ptr)-1-tga_y);
     tga_x++;
     if ( tga_x >= tga_width )
     {
@@ -150,35 +150,25 @@ uint8_t pos = 0;
 
 void draw(void) 
 {
-  uint8_t file_is_ok = 0;
   if ( tga_open("test.tga") != 0 )
   {
     if ( tga_read_header() != 0 )
     {
       while( tga_read_write_pixel() != 0 )
         ;
-      file_is_ok = 1;
     }
     tga_close();
   }
 }
 
+ucg_t ucg_obj;
 
 int main(void)
 {
+  ucg_ptr = &ucg_obj;
   
-  ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
+  ucg_Init(ucg_ptr, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   draw();
-  /*
-  ucg_SetFont(&ucg, ucg_font_ncenB12);  
-  ucg_SetColor(&ucg, 0, 255, 180, 40);
-  
-  ucg_DrawGlyph(&ucg, 20,20, 0, 'A');
-  
-  ucg_DrawDisc(&ucg, 60,20,11, UCG_DRAW_ALL);
-
-  ucg_DrawRBox(&ucg, 50, 40, 35, 15, 7);
-  */
 
   while( ucg_sdl_get_key() < 0 )
     ;
