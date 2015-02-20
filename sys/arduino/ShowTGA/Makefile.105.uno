@@ -67,6 +67,7 @@ AVRDUDE_PORT:=/dev/ttyACM0
 
 # List of all libaries which should be included.
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/SPI/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SD/
 #EXTRA_DIRS+=$(ARDUINO_PATH)libraries/.../
 
 #=== fetch parameter from boards.txt processor parameter ===
