@@ -192,14 +192,18 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
       digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       break;
     case UCG_COM_MSG_POWER_DOWN:
@@ -303,14 +307,18 @@ static int16_t ucg_com_arduino_illi9325_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
       digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       break;
     case UCG_COM_MSG_POWER_DOWN:
@@ -474,13 +482,17 @@ static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16
       /* setup pins */
       pinMode(ucg->pin_list[UCG_PIN_SDA], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_SCL], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
       digitalWrite(ucg->pin_list[UCG_PIN_SDA], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0);
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       break;
     case UCG_COM_MSG_POWER_DOWN:
@@ -641,11 +653,15 @@ static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16
       ucg_com_arduino_init_3wire_9bit_HW_SPI(ucg);
     
       /* setup pins */
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       /* setup Arduino SPI */
       SPI.begin();
@@ -782,8 +798,11 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
       /* setup pins */
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_WR], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+    
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
       pinMode(ucg->pin_list[UCG_PIN_D0], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_D1], OUTPUT);
@@ -796,8 +815,10 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
 
       digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       break;
     case UCG_COM_MSG_POWER_DOWN:
@@ -901,8 +922,11 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint16_t arg, uin
       /* setup pins */
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_WR], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
 
       pinMode(0, OUTPUT);
       pinMode(1, OUTPUT);
@@ -915,8 +939,10 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint16_t arg, uin
 
       digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
-      digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_CS], 1);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       break;
     case UCG_COM_MSG_POWER_DOWN:
@@ -1015,9 +1041,12 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t ar
       
       /* setup pins */
     
-      pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_RST], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_CD], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
+      
+      if ( ucg->pin_list[UCG_PIN_CS] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
       
       /* setup Arduino SPI */
       SPI.begin();

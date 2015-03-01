@@ -115,7 +115,7 @@ const ucg_pgm_uint8_t ucg_ld50t6160_set_pos_dir3_seq[] =
 ucg_int_t ucg_handle_ld50t6160_l90fx(ucg_t *ucg)
 {
   uint8_t c[3];
-  ucg_int_t tmp;
+  //ucg_int_t tmp;
   if ( ucg_clip_l90fx(ucg) != 0 )
   {
     switch(ucg->arg.dir)
