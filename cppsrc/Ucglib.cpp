@@ -770,7 +770,93 @@ void Ucglib3Wire9bitHWSPI::begin(ucg_font_mode_fnptr font_mode)
 /*=========================================================================*/
 /* 8 Bit Parallel */
 
-static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
+
+#if defined(__PIC32MX) || defined(__arm__)
+/* CHIPKIT PIC32 */
+static volatile uint32_t *u8g_data_port[9];
+static uint32_t u8g_data_mask[9];
+#else
+static volatile uint8_t *u8g_data_port[9];
+static uint8_t u8g_data_mask[9];
+#endif
+
+static void ucg_com_arduino_init_8bit(ucg_t *ucg)
+{
+
+  u8g_data_port[0] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D0]));
+  u8g_data_mask[0] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D0]);  
+  
+  u8g_data_port[1] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D1]));
+  u8g_data_mask[1] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D1]);  
+  
+  u8g_data_port[2] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D2]));
+  u8g_data_mask[2] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D2]);  
+  
+  u8g_data_port[3] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D3]));
+  u8g_data_mask[3] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D3]);  
+  
+  u8g_data_port[4] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D4]));
+  u8g_data_mask[4] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D4]);  
+  
+  u8g_data_port[5] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D5]));
+  u8g_data_mask[5] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D5]);  
+  
+  if ( ucg->pin_list[UCG_PIN_D6] != UCG_PIN_VAL_NONE )
+  {
+    u8g_data_port[6] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D6]));
+    u8g_data_mask[6] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D6]);  
+  }
+  
+  if ( ucg->pin_list[UCG_PIN_D7] != UCG_PIN_VAL_NONE )
+  {
+    u8g_data_port[7] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_D7]));
+    u8g_data_mask[7] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_D7]);  
+  }  
+
+  u8g_data_port[8] =  portOutputRegister(digitalPinToPort(ucg->pin_list[UCG_PIN_WR]));
+  u8g_data_mask[8] =  digitalPinToBitMask(ucg->pin_list[UCG_PIN_WR]);  
+  
+}
+
+static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
+{
+  int i;
+  for( i = 0; i < 8; i++ )
+  {
+    if ( data & 1 )
+      *u8g_data_port[i] |= u8g_data_mask[i]; 
+    else
+      *u8g_data_port[i] &= ~u8g_data_mask[i]; 
+    data >>= 1;
+  }
+
+  #if defined(__arm__)
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+#elif defined(__AVR__)
+#else
+  delayMicroseconds(1);
+#endif
+  
+  *u8g_data_port[8] &= ~u8g_data_mask[8]; 
+  
+#if defined(__arm__)
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+#elif defined(__AVR__)
+#else
+  delayMicroseconds(1);
+#endif
+  
+  *u8g_data_port[8] |= u8g_data_mask[8]; 
+}
+
+/*
+static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
 {
     digitalWrite(ucg->pin_list[UCG_PIN_D0], (data & 1) == 0 ? 0 : 1 );
     digitalWrite(ucg->pin_list[UCG_PIN_D1], (data & 2) == 0 ? 0 : 1 );
@@ -787,6 +873,7 @@ static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
     delayMicroseconds(1);
     digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);
 }
+*/
 
 static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
@@ -824,6 +911,8 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
       if ( ucg->pin_list[UCG_PIN_RST] != UCG_PIN_VAL_NONE )
 	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
+      ucg_com_arduino_init_8bit(ucg);
+      
       break;
     case UCG_COM_MSG_POWER_DOWN:
       break;
@@ -842,32 +931,32 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
       digitalWrite(ucg->pin_list[UCG_PIN_CD], arg);
       break;
     case UCG_COM_MSG_SEND_BYTE:
-      ucg_com_arduino_send_generic_8bit(ucg, arg);
+      ucg_com_arduino_send_8bit(ucg, arg);
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       while( arg > 0 ) {
-	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
+	ucg_com_arduino_send_8bit(ucg, data[0]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_2_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
-	ucg_com_arduino_send_generic_8bit(ucg, data[1]);
+	ucg_com_arduino_send_8bit(ucg, data[0]);
+	ucg_com_arduino_send_8bit(ucg, data[1]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_REPEAT_3_BYTES:
       while( arg > 0 ) {
-	ucg_com_arduino_send_generic_8bit(ucg, data[0]);
-	ucg_com_arduino_send_generic_8bit(ucg, data[1]);
-	ucg_com_arduino_send_generic_8bit(ucg, data[2]);
+	ucg_com_arduino_send_8bit(ucg, data[0]);
+	ucg_com_arduino_send_8bit(ucg, data[1]);
+	ucg_com_arduino_send_8bit(ucg, data[2]);
 	arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       while( arg > 0 ) {
-	ucg_com_arduino_send_generic_8bit(ucg, *data++);
+	ucg_com_arduino_send_8bit(ucg, *data++);
 	arg--;
       }
       break;
@@ -886,7 +975,7 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
 	  }
 	}
 	data++;
-	ucg_com_arduino_send_generic_8bit(ucg, *data);
+	ucg_com_arduino_send_8bit(ucg, *data);
 	data++;
 	arg--;
       }

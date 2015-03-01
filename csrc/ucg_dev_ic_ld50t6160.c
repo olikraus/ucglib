@@ -157,106 +157,10 @@ static ucg_int_t ucg_handle_ld50t6160_l90fx(ucg_t *ucg)
 
 /*
   L2TC (Glyph Output)
-  
 */
 
-/* with CmdDataSequence */ 
-ucg_int_t ucg_handle_ld50t6160_l90tc(ucg_t *ucg)
-{
-  if ( ucg_clip_l90tc(ucg) != 0 )
-  {
-    uint8_t buf[26];
-    ucg_int_t dx, dy;
-    ucg_int_t i;
-    unsigned char pixmap;
-    uint8_t bitcnt;
-    ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
-    ucg_com_SendCmdSeq(ucg, ucg_ld50t6160_set_pos_seq);	
 
-    buf[0] = 0x001;	// change to 0 (cmd mode)
-    buf[1] = 0x00a;	// set x
-    buf[2] = 0x002;	// change to 1 (arg mode)
-    buf[3] = 0x000;	// upper part xs
-    buf[4] = 0x000;	// no change
-    buf[5] = 0x000;	// lower part xs
-    buf[6] = 0x000;	// no change
-    buf[7] = 0x000;	// upper part xe
-    buf[8] = 0x000;	// no change
-    buf[9] = 0x000;	// lower part xe
-    buf[10] = 0x000;	// no change
-    buf[11] = 0x000;	// upper part ys
-    buf[12] = 0x000;	// no change
-    buf[13] = 0x000;	// lower part ys
-    buf[14] = 0x000;	// no change
-    buf[15] = 0x000;	// upper part ye
-    buf[16] = 0x000;	// no change
-    buf[17] = 0x000;	// lower part ye    
-    buf[18] = 0x001;	// change to 0 (cmd mode)    
-    buf[19] = 0x00c;	// write data
-    buf[20] = 0x002;	// change to 1 (data mode)
-    buf[21] = 0x000;	// red value
-    buf[22] = 0x000;	// no change
-    buf[23] = 0x000;	// green value
-    buf[24] = 0x000;	// no change
-    buf[25] = 0x000;	// blue value      
-    
-    switch(ucg->arg.dir)
-    {
-      case 0: 
-	dx = 1; dy = 0; 
-	break;
-      case 1: 	
-	dx = 0; dy = 1; 
-	break;
-      case 2: 
-	dx = -1; dy = 0; 
-	break;
-      case 3: 
-      default:
-	dx = 0; dy = -1; 
-	break;
-    }
-    pixmap = ucg_pgm_read(ucg->arg.bitmap);
-    bitcnt = ucg->arg.pixel_skip;
-    pixmap <<= bitcnt;
-    buf[9] = ucg->arg.pixel.rgb.color[0];
-    buf[11] = ucg->arg.pixel.rgb.color[1];
-    buf[13] = ucg->arg.pixel.rgb.color[2];
-    //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
-    
-    for( i = 0; i < ucg->arg.len; i++ )
-    {
-      if ( (pixmap & 128) != 0 )
-      {
-	if ( (ucg->arg.dir&1) == 0 )
-	{
-	  buf[5] = ucg->arg.pixel.pos.x;
-	}
-	else
-	{
-	  buf[3] = ucg->arg.pixel.pos.y>>8;
-	  buf[5] = ucg->arg.pixel.pos.y&255;
-	}
-	ucg_com_SendCmdDataSequence(ucg, 7, buf, 0);
-      }
-      pixmap<<=1;
-      ucg->arg.pixel.pos.x+=dx;
-      ucg->arg.pixel.pos.y+=dy;
-      bitcnt++;
-      if ( bitcnt >= 8 )
-      {
-	ucg->arg.bitmap++;
-	pixmap = ucg_pgm_read(ucg->arg.bitmap);
-	bitcnt = 0;
-      }
-    }
-    ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
-    return 1;
-  }
-  return 0;
-}
-
-static ucg_int_t this_should_be_ported_xxxxxx_ucg_handle_ssd1289_l90tc(ucg_t *ucg)
+static ucg_int_t ucg_handle_ld50t6160_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -267,34 +171,32 @@ static ucg_int_t this_should_be_ported_xxxxxx_ucg_handle_ssd1289_l90tc(ucg_t *uc
     unsigned char pixmap;
     uint8_t bitcnt;
     ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
-    ucg_com_SendCmdSeq(ucg, ucg_ssd1289_set_pos_seq);	
     switch(ucg->arg.dir)
     {
       case 0: 
 	dx = 1; dy = 0; 
-	seq = ucg_ssd1289_set_x_pos_seq;
+	seq = ucg_ld50t6160_set_pos_dir0_seq;
 	break;
       case 1: 
 	dx = 0; dy = 1; 
-	seq = ucg_ssd1289_set_y_pos_seq;
+	seq = ucg_ld50t6160_set_pos_dir1_seq;
 	break;
       case 2: 
 	dx = -1; dy = 0; 
-	seq = ucg_ssd1289_set_x_pos_seq;
+	seq = ucg_ld50t6160_set_pos_dir2_seq;
 	break;
       case 3: 
       default:
 	dx = 0; dy = -1; 
-	seq = ucg_ssd1289_set_y_pos_seq;
+	seq = ucg_ld50t6160_set_pos_dir3_seq;
 	break;
     }
     pixmap = ucg_pgm_read(ucg->arg.bitmap);
     bitcnt = ucg->arg.pixel_skip;
     pixmap <<= bitcnt;
-    buf[0] = ucg->arg.pixel.rgb.color[0];
-    buf[1] = ucg->arg.pixel.rgb.color[1];
-    buf[2] = ucg->arg.pixel.rgb.color[2];
-    //ucg_com_SetCSLineStatus(ucg, 0);		/* enable chip */
+    buf[0] = ucg->arg.pixel.rgb.color[0]>>2;
+    buf[1] = ucg->arg.pixel.rgb.color[1]>>2;
+    buf[2] = ucg->arg.pixel.rgb.color[2]>>2;
     
     for( i = 0; i < ucg->arg.len; i++ )
     {
@@ -411,8 +313,8 @@ ucg_int_t ucg_dev_ic_ld50t6160_18(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg_handle_ld50t6160_l90fx(ucg);
       return 1;
     case UCG_MSG_DRAW_L90TC:
-      ucg_handle_l90tc(ucg, ucg_dev_ic_ld50t6160_18);
-      //ucg_handle_ld50t6160_l90tc(ucg);
+      //ucg_handle_l90tc(ucg, ucg_dev_ic_ld50t6160_18);
+      ucg_handle_ld50t6160_l90tc(ucg);
       return 1;
      case UCG_MSG_DRAW_L90BF:
       ucg_handle_l90bf(ucg, ucg_dev_ic_ld50t6160_18);
