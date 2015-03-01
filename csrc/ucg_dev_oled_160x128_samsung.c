@@ -151,6 +151,19 @@ static const ucg_pgm_uint8_t ucg_samsung_160x128_init_seq[] = {
 	
   	UCG_C11(0x30, 0x13),			/* Internal Regulator for Row Scan, value taken from Samsung OLED flow chart */
 
+	/* 
+	  Set full dot current 
+	  Red : DOT CURRENT = 9Ah, 
+	  Green : DOT CURRENT = 5Ch, 
+	  Blue : DOT CURRENT = B1h
+	*/
+	UCG_DLY_MS(10),
+	UCG_C10(0x0e),				/* set dot current */
+	UCG_A2(0x09, 0x0a),			/* red */
+	UCG_A2(0x05, 0x0c),			/* green */
+	UCG_A2(0x0b, 0x01),			/* blue */
+	UCG_DLY_MS(10),
+
   	UCG_C11(0x02, 0x01),			/* Display on */
 
 	UCG_CS(1),					/* disable chip */
