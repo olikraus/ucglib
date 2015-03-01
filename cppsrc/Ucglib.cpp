@@ -778,8 +778,10 @@ static void ucg_com_arduino_send_generic_8bit(ucg_t *ucg, uint8_t data)
     digitalWrite(ucg->pin_list[UCG_PIN_D3], (data & 8) == 0 ? 0 : 1 );
     digitalWrite(ucg->pin_list[UCG_PIN_D4], (data & 16) == 0 ? 0 : 1 );
     digitalWrite(ucg->pin_list[UCG_PIN_D5], (data & 32) == 0 ? 0 : 1 );
-    digitalWrite(ucg->pin_list[UCG_PIN_D6], (data & 64) == 0 ? 0 : 1 );
-    digitalWrite(ucg->pin_list[UCG_PIN_D7], (data & 128) == 0 ? 0 : 1 );  
+    if ( ucg->pin_list[UCG_PIN_D6] != UCG_PIN_VAL_NONE )
+      digitalWrite(ucg->pin_list[UCG_PIN_D6], (data & 64) == 0 ? 0 : 1 );
+    if ( ucg->pin_list[UCG_PIN_D7] != UCG_PIN_VAL_NONE )
+      digitalWrite(ucg->pin_list[UCG_PIN_D7], (data & 128) == 0 ? 0 : 1 );  
     delayMicroseconds(1);
     digitalWrite(ucg->pin_list[UCG_PIN_WR], 0);
     delayMicroseconds(1);
@@ -810,8 +812,10 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
       pinMode(ucg->pin_list[UCG_PIN_D3], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_D4], OUTPUT);
       pinMode(ucg->pin_list[UCG_PIN_D5], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_D6], OUTPUT);
-      pinMode(ucg->pin_list[UCG_PIN_D7], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_D6] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_D6], OUTPUT);
+      if ( ucg->pin_list[UCG_PIN_D7] != UCG_PIN_VAL_NONE )
+	pinMode(ucg->pin_list[UCG_PIN_D7], OUTPUT);
 
       digitalWrite(ucg->pin_list[UCG_PIN_CD], 1);
       digitalWrite(ucg->pin_list[UCG_PIN_WR], 1);

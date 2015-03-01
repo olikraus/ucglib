@@ -372,5 +372,13 @@ class Ucglib_PCF8833_16x132x132_SWSPI : public Ucglib3Wire9bitSWSPI
     { }
 };
 
+class Ucglib_LD50T6160_18x160x128_6Bit : public Ucglib8Bit
+{
+  public:
+  Ucglib_LD50T6160_18x160x128_6Bit( uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4, uint8_t d5, uint8_t wr, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib8Bit(ucg_dev_ld50t6160_18x160x128_samsung, ucg_ext_ld50t6160_18, /*d0 =*/ d0, /*d1 =*/ d1, /*d2 =*/ d2, /*d3 =*/ d3, /*d4 =*/ d4, /*d5 =*/ d5,
+	UCG_PIN_VAL_NONE, UCG_PIN_VAL_NONE, /*wr=*/ wr, /*cd=*/ cd, /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
 
 #endif /* _UCGLIB_HH */
