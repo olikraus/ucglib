@@ -157,29 +157,29 @@ static const ucg_pgm_uint8_t ucg_samsung_160x128_init_seq[] = {
 	UCG_END(),					/* end of sequence */
 };
 
-ucg_int_t ucg_dev_ssd1351_18x128x128_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data)
+ucg_int_t ucg_dev_ld50t6160_18x160x128_samsung(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
     case UCG_MSG_DEV_POWER_UP:
       /* 1. Call to the controller procedures to setup the com interface */
-      if ( ucg_dev_ic_ssd1351_18(ucg, msg, data) == 0 )
+      if ( ucg_dev_ic_ld50t6160_18(ucg, msg, data) == 0 )
 	return 0;
 
       /* 2. Send specific init sequence for this display module */
-      ucg_com_SendCmdSeq(ucg, ucg_ilsoft_ssd1351_init_seq);
+      ucg_com_SendCmdSeq(ucg, ucg_samsung_160x128_init_seq);
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:
-      /* let do power down by the conroller procedures */
-      return ucg_dev_ic_ssd1351_18(ucg, msg, data);  
+      /* let do power down by the controller procedures */
+      return ucg_dev_ic_ld50t6160_18(ucg, msg, data);  
     
     case UCG_MSG_GET_DIMENSION:
       ((ucg_wh_t *)data)->w = 128;
-      ((ucg_wh_t *)data)->h = 128;
+      ((ucg_wh_t *)data)->h = 160;
       return 1;
   }
   
   /* all other messages are handled by the controller procedures */
-  return ucg_dev_ic_ssd1351_18(ucg, msg, data);  
+  return ucg_dev_ic_ld50t6160_18(ucg, msg, data);  
 }

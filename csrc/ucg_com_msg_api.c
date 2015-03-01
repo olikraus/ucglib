@@ -281,11 +281,9 @@ CFG_CD(c,a)	Configure CMD/DATA line: "c" logic level CMD, "a" logic level CMD Ar
 #define DLY_MS(t)				0x080 | (((t)>>8)&15), (t)&255
 #define DLY_US(t)				0x090 | (((t)>>8)&15), (t)&255
 
-/* 
   s: Shift right
   a: And mask
   o: Or mask
-*/
 #define UCG_VARX(s,a,o)		0x0a0 | ((s)&15), (a), (o)
 #define UCG_VARY(s,a,o)		0x0b0 | ((s)&15), (a), (o)
 

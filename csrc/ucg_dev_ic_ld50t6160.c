@@ -322,8 +322,8 @@ ucg_int_t ucg_dev_ic_ld50t6160_18(ucg_t *ucg, ucg_int_t msg, void *data)
       /* not yet implemented */
       return 1;
     case UCG_MSG_GET_DIMENSION:
-      ((ucg_wh_t *)data)->w = 240;
-      ((ucg_wh_t *)data)->h = 320;
+      ((ucg_wh_t *)data)->w = 128;
+      ((ucg_wh_t *)data)->h = 160;
       return 1;
     case UCG_MSG_DRAW_PIXEL:
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
