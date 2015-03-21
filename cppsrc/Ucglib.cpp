@@ -821,6 +821,24 @@ static void ucg_com_arduino_init_8bit(ucg_t *ucg)
 static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
 {
   int i;
+  #if defined(__arm__)
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+#endif
   for( i = 0; i < 8; i++ )
   {
     if ( data & 1 )
@@ -835,6 +853,19 @@ static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
   __NOP;
   __NOP;
   __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  delayMicroseconds(1);
 #elif defined(__AVR__)
 #else
   delayMicroseconds(1);
@@ -847,6 +878,19 @@ static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
   __NOP;
   __NOP;
   __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  __NOP;
+  delayMicroseconds(1);
 #elif defined(__AVR__)
 #else
   delayMicroseconds(1);
