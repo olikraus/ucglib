@@ -146,6 +146,8 @@ int main(int argc, char **argv)
   
   bf = bf_Open();
   bf->is_verbose = is_verbose;
+  //bf->bbx_mode = BDF_BBX_MODE_MAX;
+  
   bf_ParseFile(bf, bdf_filename);
   bf_Map(bf, map_str);
   bf_CalculateSelectedNumberOfGlyphs(bf);
@@ -158,8 +160,8 @@ int main(int argc, char **argv)
   //bf_CalculateMaxBitFieldSize(bf, &(bf->max));  
   //bf_RLECompressAllGlyphs(bf, &(bf->max));
 
-  bf_CalculateMaxBitFieldSize(bf, NULL);  
-  bf_RLECompressAllGlyphs(bf, NULL);
+  bf_CalculateMaxBitFieldSize(bf);  
+  bf_RLECompressAllGlyphs(bf);
 
 
   tga_init(200, 100);

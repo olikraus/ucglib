@@ -459,7 +459,7 @@ int bg_rle_compress(bg_t *bg, bbx_t *bbx, unsigned rle_bits_per_0, unsigned rle_
   return 1;
 }
 
-unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, bbx_t *bbx, int rle_0, int rle_1, int is_output)
+unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_1, int is_output)
 {
   int i;
   bg_t *bg;
@@ -471,6 +471,21 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, bbx_t *bbx, int rle
     bg = bf->glyph_list[i];
     if ( bg->map_to >= 0 )
     {
+      
+      if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
+      {
+	local_bbx = bg->bbx;	
+      }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
+      {
+	local_bbx = bf->max;	
+      }
+      else
+      {
+	local_bbx = bf->max;
+      }
+      
+      /*
       if ( bbx == NULL )
       {
 	local_bbx = bg->bbx;
@@ -482,6 +497,7 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, bbx_t *bbx, int rle
 	//local_bbx.x = bg->bbx.x;
 	//local_bbx.w = bg->bbx.w;
       }
+      */
       bg_rle_compress(bg, &local_bbx, rle_0, rle_1, is_output); 
       total_bits += bg->target_cnt*8+bg->target_bit_pos;
       if ( is_output != 0 )
@@ -494,7 +510,7 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, bbx_t *bbx, int rle
   return total_bits;
 }
 
-void bf_RLECompressAllGlyphs(bf_t *bf, bbx_t *bbx)
+void bf_RLECompressAllGlyphs(bf_t *bf)
 {
   int i, j;
   bg_t *bg;
@@ -508,7 +524,7 @@ void bf_RLECompressAllGlyphs(bf_t *bf, bbx_t *bbx)
   {
     for( rle_1 = 2; rle_1 < 7; rle_1++ )
     {
-      total_bits = bf_RLECompressAllGlyphsWithFieldSize(bf, bbx, rle_0, rle_1, 0);
+      total_bits = bf_RLECompressAllGlyphsWithFieldSize(bf, rle_0, rle_1, 0);
       if ( min_total_bits > total_bits )
       {
 	min_total_bits = total_bits;
@@ -519,7 +535,7 @@ void bf_RLECompressAllGlyphs(bf_t *bf, bbx_t *bbx)
     }
   }
   bf_Log(bf, "RLE Compress: best zero bits %d, one bits %d, total bit size %lu", best_rle_0, best_rle_1, min_total_bits);
-  total_bits = bf_RLECompressAllGlyphsWithFieldSize(bf, bbx, best_rle_0, best_rle_1, 0);
+  total_bits = bf_RLECompressAllGlyphsWithFieldSize(bf, best_rle_0, best_rle_1, 0);
 
 
   bf_ClearTargetData(bf);

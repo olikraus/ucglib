@@ -48,6 +48,8 @@ bf_t *bf_Open(void)
     bf->enc_x = 0;
     bf->enc_y = 0;
     
+    bf->bbx_mode = BDF_BBX_MODE_MINIMAL;
+    
     return bf;
   }
   return NULL;
@@ -319,7 +321,7 @@ int get_signed_bit_size(long v)
   return get_unsigned_bit_size(v) + 1;
 }
 
-void bf_CalculateMaxBitFieldSize(bf_t *bf, bbx_t *bbx)
+void bf_CalculateMaxBitFieldSize(bf_t *bf)
 {
   int i;
   bg_t *bg;
@@ -335,7 +337,19 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf, bbx_t *bbx)
     bg = bf->glyph_list[i];
     if ( bg->map_to >= 0 )
     {
-      
+      if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
+      {
+	local_bbx = bg->bbx;	
+      }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
+      {
+	local_bbx = bf->max;	
+      }
+      else
+      {
+	local_bbx = bf->max;
+      }
+      /*
       if ( bbx == NULL )
 	local_bbx = bg->bbx;
       else
@@ -345,6 +359,7 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf, bbx_t *bbx)
 	//local_bbx.x = bg->bbx.x;
 	//local_bbx.w = bg->bbx.w;
       }
+      */
       
       bs = get_unsigned_bit_size(local_bbx.w);
       if ( bf->bbx_w_max_bit_size < bs )
@@ -354,7 +369,7 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf, bbx_t *bbx)
       if ( bf->bbx_h_max_bit_size < bs )
 	bf->bbx_h_max_bit_size = bs;
       
-      printf("%ld ", local_bbx.x);
+      //printf("%ld ", local_bbx.x);
       bs = get_signed_bit_size(local_bbx.x);
       if ( bf->bbx_x_max_bit_size < bs )
 	bf->bbx_x_max_bit_size = bs;

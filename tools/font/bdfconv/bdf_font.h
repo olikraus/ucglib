@@ -8,6 +8,10 @@
 
 #define BDF_LINE_LEN 1024
 
+#define BDF_BBX_MODE_MINIMAL 0
+#define BDF_BBX_MODE_MAX 1
+#define BDF_BBX_MODE_HEIGHT 2
+
 struct _bdf_font_struct
 {
   int is_verbose;
@@ -41,6 +45,7 @@ struct _bdf_font_struct
   
   long selected_glyphs;	/* number of mapped glyphs */
   
+  int bbx_mode;		/* bounding box mode, one of BDF_BBX_MODE_xxx */
   /* bf_CalculateMaxBBX */
   bbx_t max;			/* max bbx, calculated from the mapped glyphs by bf_CalculateMaxBBX */
 
@@ -102,8 +107,8 @@ void bf_ShowAllGlyphs(bf_t *bf, bbx_t *bbx);
 void bf_CalculateMaxBBX(bf_t *bf);
 
 void bf_CalculateMinMaxDWidth(bf_t *bf);
-void bf_CalculateMaxBitFieldSize(bf_t *bf, bbx_t *bbx);
-void bf_RLECompressAllGlyphs(bf_t *bf, bbx_t *bbx);
+void bf_CalculateMaxBitFieldSize(bf_t *bf);
+void bf_RLECompressAllGlyphs(bf_t *bf);
 
 
 /* bdf_parser.c */
