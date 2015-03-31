@@ -483,21 +483,10 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
       else
       {
 	local_bbx = bf->max;
+	local_bbx.x = bg->bbx.x;
+	local_bbx.w = bg->bbx.w;
       }
       
-      /*
-      if ( bbx == NULL )
-      {
-	local_bbx = bg->bbx;
-      }
-      else
-      {
-	local_bbx = *bbx;
-	//local_bbx = bg->bbx;
-	//local_bbx.x = bg->bbx.x;
-	//local_bbx.w = bg->bbx.w;
-      }
-      */
       bg_rle_compress(bg, &local_bbx, rle_0, rle_1, is_output); 
       total_bits += bg->target_cnt*8+bg->target_bit_pos;
       if ( is_output != 0 )

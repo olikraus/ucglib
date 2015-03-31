@@ -348,18 +348,9 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
       else
       {
 	local_bbx = bf->max;
+	local_bbx.x = bg->bbx.x;
+	local_bbx.w = bg->bbx.w;
       }
-      /*
-      if ( bbx == NULL )
-	local_bbx = bg->bbx;
-      else
-      {
-	local_bbx = *bbx;
-	//local_bbx = bg->bbx;
-	//local_bbx.x = bg->bbx.x;
-	//local_bbx.w = bg->bbx.w;
-      }
-      */
       
       bs = get_unsigned_bit_size(local_bbx.w);
       if ( bf->bbx_w_max_bit_size < bs )
