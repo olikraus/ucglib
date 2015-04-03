@@ -371,6 +371,8 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
 	  local_bbx.w += bg->bbx.x;
 	  //bg->shift_x = bg->bbx.x;
 	}
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
       }
       
       bs = get_unsigned_bit_size(local_bbx.w);
@@ -418,19 +420,26 @@ bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, co
   bf_t *bf;
 
   bf = bf_Open(is_verbose, bbx_mode);
-  
-  bf_ParseFile(bf, bdf_filename);
-  bf_Map(bf, map_str);
-  bf_CalculateSelectedNumberOfGlyphs(bf);
-  
-  bf_ReduceAllGlyph(bf);
-  bf_CalculateMaxBBX(bf);
-  //bf_ShowAllGlyphs(bf, &(bf->max));
-  bf_CalculateMinMaxDWidth(bf);
-  
-  bf_CalculateMaxBitFieldSize(bf);  
-  bf_RLECompressAllGlyphs(bf);
-  
-  return bf;
+  if ( bf != NULL )
+  {
+    
+    if ( bf_ParseFile(bf, bdf_filename) != 0 )
+    {
+      bf_Map(bf, map_str);
+      bf_CalculateSelectedNumberOfGlyphs(bf);
+      
+      bf_ReduceAllGlyph(bf);
+      bf_CalculateMaxBBX(bf);
+      //bf_ShowAllGlyphs(bf, &(bf->max));
+      bf_CalculateMinMaxDWidth(bf);
+      
+      bf_CalculateMaxBitFieldSize(bf);  
+      bf_RLECompressAllGlyphs(bf);
+    
+      return bf;
+    }
+    bf_Close(bf);
+  }
+  return NULL;
 }
 

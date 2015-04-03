@@ -517,6 +517,8 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
 	  local_bbx.w += bg->bbx.x;
 	  //bg->shift_x = bg->bbx.x;
 	}
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
 	
 	
       }
@@ -585,6 +587,10 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
   bf_AddTargetData(bf, bf->bbx_x_max_bit_size);
   bf_AddTargetData(bf, bf->bbx_y_max_bit_size);
   bf_AddTargetData(bf, bf->dx_max_bit_size);
+  
+  bf_AddTargetData(bf, bf->max.w);
+  bf_AddTargetData(bf, bf->max.h);
+  bf_AddTargetData(bf, bf->max.y);
 
   for( i = 0; i < bf->glyph_cnt; i++ )
   {

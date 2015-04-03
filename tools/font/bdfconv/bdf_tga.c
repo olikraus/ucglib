@@ -51,9 +51,19 @@ static int bits_per_char_height;
 static int bits_per_char_x;
 static int bits_per_char_y;
 static int bits_per_delta_x;
+static int char_width;
+static int char_height;
+static int char_descent;
 
+int tga_get_char_width(void)
+{
+    return char_width;
+}
 
-
+int tga_get_char_height(void)
+{
+    return char_height;
+}
 
 int tga_init(uint16_t w, uint16_t h)
 {
@@ -132,6 +142,10 @@ void tga_set_font(uint8_t *font)
     bits_per_char_x = *font++;
     bits_per_char_y = *font++;
     bits_per_delta_x = *font++;
+    char_width = *font++;
+    char_height = *font++;
+    char_descent = *(int8_t *)font;
+    font++;
     tga_font = font;
 }
 
@@ -254,17 +268,20 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
   
   f->glyph_width = tga_fd_get_unsigned_bits(f, bits_per_char_width);
   f->glyph_height = tga_fd_get_unsigned_bits(f, bits_per_char_height);
+  x = tga_fd_get_signed_bits(f, bits_per_char_x);
+  y = tga_fd_get_signed_bits(f, bits_per_char_y);
+  d = tga_fd_get_signed_bits(f, bits_per_delta_x);
+  
+  
+  
   if ( f->glyph_width > 0 )
   {
-    x = tga_fd_get_signed_bits(f, bits_per_char_x);
-    y = tga_fd_get_signed_bits(f, bits_per_char_y);
-    d = tga_fd_get_signed_bits(f, bits_per_delta_x);
     
-    //printf("width: %d\n", f->glyph_width);
-    //printf("height: %d\n", f->glyph_height);
-    //printf("x: %d\n", x);
-    //printf("y: %d\n", y);
-    //printf("d: %d\n", d);
+    printf("width: %d\n", f->glyph_width);
+    printf("height: %d\n", f->glyph_height);
+    printf("x: %d\n", x);
+    printf("y: %d\n", y);
+    printf("d: %d\n", d);
     
     f->target_x += x;
     f->target_y -= f->glyph_height ;

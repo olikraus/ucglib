@@ -71,6 +71,7 @@ void help(void)
   printf("-v        Print log messages\n");
   printf("-x        Use max bbx for each selected glyph\n");
   printf("-m <map>  Unicode ASCII mapping\n");
+  printf("-d <fontname>  Font for description in TGA file\n");
   printf("\n");
 
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
@@ -92,15 +93,24 @@ void help(void)
 }
 
 /*================================================*/
+
+void tga_draw_line(long enc_start, bf_t *bf_desc_font, bf_t *bf)
+{
+  
+}
+
+
+/*================================================*/
 /* main */
 
 int main(int argc, char **argv)
 {
+  bf_t *bf_desc_font;
   bf_t *bf;
   char *bdf_filename = NULL;
   int is_verbose = 0;
   char *map_str ="*";
-  
+  char *desc_font_str = "";
   
   argv++;
   /*
@@ -128,6 +138,9 @@ int main(int argc, char **argv)
     {
     }
     */
+    else if ( get_str_arg(&argv, 'd', &desc_font_str) != 0 )
+    {      
+    }
     else if ( get_str_arg(&argv, 'm', &map_str) != 0 )
     {      
     }
@@ -144,8 +157,17 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
-  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
+  if ( desc_font_str[0] != '\0' )
+  {
+    bf_desc_font = bf_OpenFromFile(desc_font_str, 0, BDF_BBX_MODE_MINIMAL, "*");
+    if ( bf_desc_font == NULL )
+    {
+      exit(1);
+    }
+  }
+
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
   //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
   
   //bf_ShowAllGlyphs(bf, &(bf->max));
@@ -154,7 +176,8 @@ int main(int argc, char **argv)
   //tga_set_pixel(1, 1, 255,0,0);
 
   tga_set_font(bf->target_data);
-  tga_draw_glyph(10, 18, 'm');
+  tga_draw_glyph(10, 18, ' ');
+  /*
   tga_draw_glyph(40, 18, 'B');
 
   tga_draw_glyph(10, 50, bf->enc_x);
@@ -162,7 +185,8 @@ int main(int argc, char **argv)
   tga_draw_glyph(10+30+30, 50, bf->enc_w);
   tga_draw_glyph(10+30+30+30, 50, bf->enc_h);
   tga_draw_glyph(10+30+30+30+30, 50, 'E');
-  tga_draw_string(10,82,"BjAjQnBmj");
+  */
+  tga_draw_string(10,82,"BjAjQ QnBmj");
   tga_save("bdf.tga");
 
 
