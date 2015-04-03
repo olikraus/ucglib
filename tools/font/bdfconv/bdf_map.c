@@ -29,7 +29,7 @@ static long range_to;
 static int is_exclude;
 static long map_to;
 
-static void skip_space(char **s)
+static void skip_space(const char **s)
 {
   for(;;)
   {
@@ -41,7 +41,7 @@ static void skip_space(char **s)
   }
 }
 
-static long get_dec(char **s)
+static long get_dec(const char **s)
 {
   long v = 0;
   for(;;)
@@ -61,7 +61,7 @@ static long get_dec(char **s)
   return v;
 }
 
-static long get_hex(char **s)
+static long get_hex(const char **s)
 {
   long v = 0;
   for(;;)
@@ -93,7 +93,7 @@ static long get_hex(char **s)
   return v;
 }
 
-static long get_num(char **s)
+static long get_num(const char **s)
 {
   if ( (**s) != '$' )
     return get_dec(s);
@@ -102,7 +102,7 @@ static long get_num(char **s)
   return get_hex(s);
 }
 
-static void get_range(char **s)
+static void get_range(const char **s)
 {
   range_from = get_num(s);
   if ( **s != '-' )
@@ -117,7 +117,7 @@ static void get_range(char **s)
   }
 }
 
-static void map_cmd(char **s)
+static void map_cmd(const char **s)
 {
   if ( **s == '*' )
   {
@@ -153,7 +153,7 @@ static void map_cmd(char **s)
   }
 }
 
-void bf_map_cmd(bf_t *bf, char **s)
+void bf_map_cmd(bf_t *bf, const char **s)
 {
   int i;
   bg_t *bg;
@@ -179,7 +179,7 @@ void bf_map_cmd(bf_t *bf, char **s)
   
 }
 
-void bf_map_list(bf_t *bf, char **s)
+void bf_map_list(bf_t *bf, const char **s)
 {
   int i;
   bg_t *bg;
@@ -203,7 +203,7 @@ void bf_map_list(bf_t *bf, char **s)
   }
 }
 
-void bf_Map(bf_t *bf, char *map_cmd_list)
+void bf_Map(bf_t *bf, const char *map_cmd_list)
 {
   bf_Log(bf, "Map: map_cmd_list='%s'", map_cmd_list);
   bf_map_list(bf, &map_cmd_list);

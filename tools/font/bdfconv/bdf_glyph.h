@@ -30,6 +30,7 @@ struct _bdf_glyph_struct
   long dwidth_y;
 
   bbx_t bbx;				/* x,y are delta x,y from glyph, w,h start wth bitmap dimension, but may be reduced */
+  long shift_x;				/* extra shift for BDF_BBX_MODE_HEIGHT alignment */
 
   uint8_t *bitmap_data;
   int bitmap_width;			/* the physical width within "bitmap_data", will be larger than or equal to bbx.w */

@@ -20,6 +20,7 @@ bg_t *bg_Open(void)
     bg->target_data = NULL;
     bg->target_max = 0;
     bg->target_cnt = 0;
+    bg->shift_x = 0;
     
     return bg;
   }
@@ -157,10 +158,16 @@ void bg_SetBitmapPixel(bg_t *bg, int x, int y, int value)
 
 int bg_GetBitmapPixel(bg_t *bg, int x, int y)
 {
-  assert( x < bg->bitmap_width );
-  assert( y < bg->bitmap_height );
-  assert( x >= 0 );
-  assert( y >= 0 );
+  if ( x >= bg->bitmap_width )
+    return 0;
+  
+  if ( y >= bg->bitmap_height )
+    return 0;
+  if ( x < 0 )
+    return 0;
+  if ( y < 0 )
+    return 0;
+  
   return bg->bitmap_data[y*bg->bitmap_width + x];
 }
 
@@ -175,6 +182,9 @@ int bg_GetBBXPixel(bg_t *bg, int x, int y)
   
   /* local bitmap coordinates */
   long bitmap_x, bitmap_y;
+  
+  /* perform x offset alignment (used in BDF_BBX_MODE_HEIGHT mode only)*/
+  x += bg->shift_x;
   
   /* calculate the rectangle for the glyph */
   glyph_x0 = bg->bbx.x;

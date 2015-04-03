@@ -17,6 +17,19 @@
     (x..., y-h-descent)
     
   
+  BDF_BBX_MODE_MINIMAL
+    - exact space as intended by the font author
+    - glyphs my overlap ("mj" with osb18)
+    
+  BDF_BBX_MODE_MAX
+    - extra space may be added
+    - glyphs do not overlap
+  
+  BDF_BBX_MODE_HEIGHT
+    - extra space may be added
+    - glyphs do not overlap
+    
+  
 */
 
 
@@ -225,7 +238,7 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 {
   unsigned a, b;
   unsigned i;
-  unsigned x, y;
+  int x, y;
   unsigned d = 0;
   //unsigned total;
   
@@ -247,11 +260,11 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
     y = tga_fd_get_signed_bits(f, bits_per_char_y);
     d = tga_fd_get_signed_bits(f, bits_per_delta_x);
     
-    printf("width: %d\n", f->glyph_width);
-    printf("height: %d\n", f->glyph_height);
-    printf("x: %d\n", x);
-    printf("y: %d\n", y);
-    printf("d: %d\n", d);
+    //printf("width: %d\n", f->glyph_width);
+    //printf("height: %d\n", f->glyph_height);
+    //printf("x: %d\n", x);
+    //printf("y: %d\n", y);
+    //printf("d: %d\n", d);
     
     f->target_x += x;
     f->target_y -= f->glyph_height ;

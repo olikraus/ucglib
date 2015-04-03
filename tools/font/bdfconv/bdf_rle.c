@@ -367,6 +367,11 @@ int bg_rle_compress(bg_t *bg, bbx_t *bbx, unsigned rle_bits_per_0, unsigned rle_
     if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bg->dwidth_x + (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
       return bg_err("error in bg_rle_compress"), 0;
   }
+  else if ( bg->bf->bbx_mode == BDF_BBX_MODE_MAX )
+  {
+    if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bbx->w+ (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
+      return bg_err("error in bg_rle_compress"), 0;
+  }
   else
   {
     if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bbx->w+ (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
@@ -480,7 +485,8 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
     bg = bf->glyph_list[i];
     if ( bg->map_to >= 0 )
     {
-      
+      /* modifing the following code requires update ind bdf_font.c also */
+
       if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
       {
 	local_bbx = bg->bbx;	
@@ -488,12 +494,31 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
       else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
       {
 	local_bbx = bf->max;	
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
       }
       else
       {
 	local_bbx = bf->max;
+	local_bbx.w = bg->bbx.w;	
 	local_bbx.x = bg->bbx.x;
-	local_bbx.w = bg->bbx.w;
+		
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	{
+	  /* e.g. "j" */
+	  local_bbx.w -= bg->bbx.x;
+	  bg->shift_x = bg->bbx.x;
+	}
+	else
+	{
+	  /* e.g. "B" */
+	  local_bbx.w += bg->bbx.x;
+	  //bg->shift_x = bg->bbx.x;
+	}
+	
+	
       }
       
       bg_rle_compress(bg, &local_bbx, rle_0, rle_1, is_output); 

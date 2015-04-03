@@ -86,7 +86,7 @@ void bf_Error(bf_t *bf, char *fmt, ...);
 void bf_Log(bf_t *bf, char *fmt, ...);
 
 /* constructor/destructor */
-bf_t *bf_Open(void);
+bf_t *bf_Open(int is_verbose, int bbx_mode);
 void bf_Close(bf_t *bf);
 
 /* returns glyph position or -1 */
@@ -110,12 +110,14 @@ void bf_CalculateMinMaxDWidth(bf_t *bf);
 void bf_CalculateMaxBitFieldSize(bf_t *bf);
 void bf_RLECompressAllGlyphs(bf_t *bf);
 
+bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str);
+
 
 /* bdf_parser.c */
 int bf_ParseFile(bf_t *bf, const char *name);
 
 /* bdf_map.c */
-void bf_Map(bf_t *bf, char *map_cmd_list);
+void bf_Map(bf_t *bf, const char *map_cmd_list);
 
 /* bdf_tga.c */
 int tga_init(uint16_t w, uint16_t h);

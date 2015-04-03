@@ -25,14 +25,16 @@ void bf_Log(bf_t *bf, char *fmt, ...)
   va_end(va);
 }
 
-
-bf_t *bf_Open(void)
+/*
+  bf_Open(0, BDF_BBX_MODE_MINIMAL)
+*/
+bf_t *bf_Open(int is_verbose, int bbx_mode)
 {
   bf_t *bf;
   bf = (bf_t *)malloc(sizeof(bf_t));
   if ( bf != NULL )
   {
-    bf->is_verbose = 0;
+    bf->is_verbose = is_verbose;
     bf->glyph_list = NULL;
     bf->glyph_cnt = 0;
     bf->glyph_max = 0;
@@ -48,7 +50,7 @@ bf_t *bf_Open(void)
     bf->enc_x = 0;
     bf->enc_y = 0;
     
-    bf->bbx_mode = BDF_BBX_MODE_MINIMAL;
+    bf->bbx_mode = bbx_mode;
     
     return bf;
   }
@@ -337,6 +339,8 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
     bg = bf->glyph_list[i];
     if ( bg->map_to >= 0 )
     {
+      
+      /* modifing the following code requires update ind bdf_rle.c also */
       if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
       {
 	local_bbx = bg->bbx;	
@@ -344,12 +348,29 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
       else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
       {
 	local_bbx = bf->max;	
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
       }
       else
       {
+
 	local_bbx = bf->max;
-	local_bbx.x = bg->bbx.x;
-	local_bbx.w = bg->bbx.w;
+	local_bbx.w = bg->bbx.w;	
+	local_bbx.x = bg->bbx.x;	
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	{
+	  /* e.g. "j" */
+	  local_bbx.w -= bg->bbx.x;
+	  bg->shift_x = bg->bbx.x;
+	}
+	else
+	{
+	  /* e.g. "B" */
+	  local_bbx.w += bg->bbx.x;
+	  //bg->shift_x = bg->bbx.x;
+	}
       }
       
       bs = get_unsigned_bit_size(local_bbx.w);
@@ -374,6 +395,10 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
       {
 	bs = get_signed_bit_size(bg->dwidth_x);
       }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
+      {
+	bs = get_signed_bit_size(local_bbx.w);
+      }
       else
       {
 	bs = get_signed_bit_size(local_bbx.w);
@@ -386,5 +411,26 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
   bf_Log(bf, "bf_CalculateMaxBitFieldSize: bbx.x=%d, bbx.y=%d, bbx.w=%d, bbx.h=%d, dwidth=%d", 
       bf->bbx_x_max_bit_size, bf->bbx_y_max_bit_size, bf->bbx_w_max_bit_size, bf->bbx_h_max_bit_size, bf->dx_max_bit_size);
   
+}
+
+bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str)
+{
+  bf_t *bf;
+
+  bf = bf_Open(is_verbose, bbx_mode);
+  
+  bf_ParseFile(bf, bdf_filename);
+  bf_Map(bf, map_str);
+  bf_CalculateSelectedNumberOfGlyphs(bf);
+  
+  bf_ReduceAllGlyph(bf);
+  bf_CalculateMaxBBX(bf);
+  //bf_ShowAllGlyphs(bf, &(bf->max));
+  bf_CalculateMinMaxDWidth(bf);
+  
+  bf_CalculateMaxBitFieldSize(bf);  
+  bf_RLECompressAllGlyphs(bf);
+  
+  return bf;
 }
 

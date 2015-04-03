@@ -143,43 +143,26 @@ int main(int argc, char **argv)
     help();
     exit(1);
   }
+
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
   
-  bf = bf_Open();
-  bf->is_verbose = is_verbose;
-  bf->bbx_mode = BDF_BBX_MODE_MAX;
-  //bf->bbx_mode = BDF_BBX_MODE_HEIGHT;
-  
-  bf_ParseFile(bf, bdf_filename);
-  bf_Map(bf, map_str);
-  bf_CalculateSelectedNumberOfGlyphs(bf);
-  
-  bf_ReduceAllGlyph(bf);
-  bf_CalculateMaxBBX(bf);
   //bf_ShowAllGlyphs(bf, &(bf->max));
-  bf_CalculateMinMaxDWidth(bf);
-  
-  //bf_CalculateMaxBitFieldSize(bf, &(bf->max));  
-  //bf_RLECompressAllGlyphs(bf, &(bf->max));
-
-  bf_CalculateMaxBitFieldSize(bf);  
-  bf_RLECompressAllGlyphs(bf);
-
 
   tga_init(200, 100);
   //tga_set_pixel(1, 1, 255,0,0);
 
   tga_set_font(bf->target_data);
-  tga_draw_glyph(10, 18, ' ');
+  tga_draw_glyph(10, 18, 'm');
   tga_draw_glyph(40, 18, 'B');
 
   tga_draw_glyph(10, 50, bf->enc_x);
   tga_draw_glyph(10+30, 50, bf->enc_y);
   tga_draw_glyph(10+30+30, 50, bf->enc_w);
-  printf("encoding h %ld\n", bf->enc_h);
   tga_draw_glyph(10+30+30+30, 50, bf->enc_h);
   tga_draw_glyph(10+30+30+30+30, 50, 'E');
-  tga_draw_string(10,82,"BjAjQnBmQ");
-  
+  tga_draw_string(10,82,"BjAjQnBmj");
   tga_save("bdf.tga");
 
 
