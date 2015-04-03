@@ -146,7 +146,7 @@ int main(int argc, char **argv)
   
   bf = bf_Open();
   bf->is_verbose = is_verbose;
-  //bf->bbx_mode = BDF_BBX_MODE_MAX;
+  bf->bbx_mode = BDF_BBX_MODE_MAX;
   //bf->bbx_mode = BDF_BBX_MODE_HEIGHT;
   
   bf_ParseFile(bf, bdf_filename);
@@ -175,7 +175,10 @@ int main(int argc, char **argv)
   tga_draw_glyph(10, 50, bf->enc_x);
   tga_draw_glyph(10+30, 50, bf->enc_y);
   tga_draw_glyph(10+30+30, 50, bf->enc_w);
+  printf("encoding h %ld\n", bf->enc_h);
   tga_draw_glyph(10+30+30+30, 50, bf->enc_h);
+  tga_draw_glyph(10+30+30+30+30, 50, 'E');
+  tga_draw_string(10,82,"BjAjQnBmQ");
   
   tga_save("bdf.tga");
 

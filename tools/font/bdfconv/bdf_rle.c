@@ -361,8 +361,17 @@ int bg_rle_compress(bg_t *bg, bbx_t *bbx, unsigned rle_bits_per_0, unsigned rle_
     return bg_err("error in bg_rle_compress"), 0;
   if ( bg_AddTargetBits(bg, bg->bf->bbx_y_max_bit_size, bbx->y + (1<<(bg->bf->bbx_y_max_bit_size-1))) == 0 )
     return bg_err("error in bg_rle_compress"), 0;
-  if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bg->dwidth_x + (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
-    return bg_err("error in bg_rle_compress"), 0;
+
+  if ( bg->bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
+  {
+    if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bg->dwidth_x + (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
+      return bg_err("error in bg_rle_compress"), 0;
+  }
+  else
+  {
+    if ( bg_AddTargetBits(bg, bg->bf->dx_max_bit_size, bbx->w+ (1<<(bg->bf->dx_max_bit_size-1))) == 0 )
+      return bg_err("error in bg_rle_compress"), 0;
+  }
   
   bd_is_one = 0;
   bd_curr_len = 0;
@@ -524,7 +533,7 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
     }
   }
   bf_Log(bf, "RLE Compress: best zero bits %d, one bits %d, total bit size %lu", best_rle_0, best_rle_1, min_total_bits);
-  total_bits = bf_RLECompressAllGlyphsWithFieldSize(bf, best_rle_0, best_rle_1, 0);
+  bf_RLECompressAllGlyphsWithFieldSize(bf, best_rle_0, best_rle_1, 0);
 
 
   bf_ClearTargetData(bf);

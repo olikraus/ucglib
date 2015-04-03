@@ -370,7 +370,14 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
       if ( bf->bbx_y_max_bit_size < bs )
 	bf->bbx_y_max_bit_size = bs;
 
-      bs = get_signed_bit_size(bg->dwidth_x);
+      if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
+      {
+	bs = get_signed_bit_size(bg->dwidth_x);
+      }
+      else
+      {
+	bs = get_signed_bit_size(local_bbx.w);
+      }
       if ( bf->dx_max_bit_size < bs )
 	bf->dx_max_bit_size = bs;
       

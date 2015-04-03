@@ -1,7 +1,7 @@
 
 
 #ifndef _BDF_FONT_H
-#define BDF_FONT_H
+#define _BDF_FONT_H
 
 #include <stdio.h>
 #include "bdf_glyph.h"
@@ -122,7 +122,8 @@ int tga_init(uint16_t w, uint16_t h);
 void tga_set_pixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 void tga_save(const char *name);
 void tga_set_font(uint8_t *font);
-void tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding);
+unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding);
+void tga_draw_string(unsigned x, unsigned y, const char *s);
 
 
 #endif

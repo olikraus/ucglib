@@ -1,3 +1,23 @@
+/*
+  
+  bdf_tga.c
+  
+  
+  
+  Modes:
+    BDF_BBX_MODE_MINIMAL 0
+    BDF_BBX_MODE_MAX 1
+    BDF_BBX_MODE_HEIGHT 2
+  
+  For all modes, default reference should be the baseline. 
+  This is required for mode 0, but may be optional for 1 and 2
+  
+  If (x,y) is the user provided baseline point for the glyph, then 
+  the decoding mus tbe start at
+    (x..., y-h-descent)
+    
+  
+*/
 
 
 #include <stdint.h>
@@ -40,6 +60,10 @@ int tga_init(uint16_t w, uint16_t h)
 void tga_set_pixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
 {
   uint8_t *p;
+  if ( y>= tga_height)
+    return;
+  if ( x>= tga_width)
+    return;
   p = tga_data + (tga_height-y-1)*(size_t)tga_width*3 + (size_t)x*3;
   *p++ = b;
   *p++ = g;
@@ -197,12 +221,12 @@ void tga_fd_draw_pixel(tga_fd_t *f)
   tga_set_pixel(f->target_x+f->x, f->target_y+f->y, 255,0,0);
 }
 
-void tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
+unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 {
   unsigned a, b;
   unsigned i;
   unsigned x, y;
-  unsigned d;
+  unsigned d = 0;
   //unsigned total;
   
   
@@ -222,8 +246,16 @@ void tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
     x = tga_fd_get_signed_bits(f, bits_per_char_x);
     y = tga_fd_get_signed_bits(f, bits_per_char_y);
     d = tga_fd_get_signed_bits(f, bits_per_delta_x);
-    //f->target_x += x;
-    //f->target_y += y - f->glyph_height ;
+    
+    printf("width: %d\n", f->glyph_width);
+    printf("height: %d\n", f->glyph_height);
+    printf("x: %d\n", x);
+    printf("y: %d\n", y);
+    printf("d: %d\n", d);
+    
+    f->target_x += x;
+    f->target_y -= f->glyph_height ;
+    f->target_y -=y ;
     
     
     /* reset local x/y position */
@@ -260,7 +292,7 @@ void tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 	break;
     }
 
-    tga_set_pixel(f->target_x, f->target_y, 255,0,255);
+    tga_set_pixel(f->target_x, f->target_y, 0,0,255);
     
   }
   /*
@@ -269,17 +301,31 @@ void tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
   printf("cnt=%u total=%u\n", f->decode_ptr-glyph_data-2, total);
   printf("end decode\n");
   */
+  return d;
 }
 
-void tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding)
+unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding)
 {
+  unsigned dx = 0;
   tga_fd_t f;
   f.target_x = x;
   f.target_y = y;
   uint8_t *glyph_data = tga_get_glyph_data(encoding);
   if ( glyph_data != NULL )
   {
-    tga_fd_decode(&f, glyph_data);
+    dx = tga_fd_decode(&f, glyph_data);
+    tga_set_pixel(x, y, 0,0,255);
+  }
+  return dx;
+}
+
+void tga_draw_string(unsigned x, unsigned y, const char *s)
+{
+  while( *s != '\0' )
+  {
+    x += tga_draw_glyph(x,y,*s);
+    s++;
   }
 }
+
 
