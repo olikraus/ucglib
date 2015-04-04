@@ -94,13 +94,26 @@ void help(void)
 
 /*================================================*/
 
+
+
 unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x;
+  int is_empty;
   char pre[32];
   
-  sprintf(pre, "%3ld/%02lx", enc_start, enc_start);
+  is_empty = 1;
+  for( i = 0; i< 16 && is_empty != 0; i++ )
+  {
+    if ( tga_get_glyph_data(i+enc_start) != NULL )
+	is_empty = 0;
+  }
+  
+  if ( is_empty != 0 )
+    return 0;
+  
+  sprintf(pre, "%3ld/0x%02lx", enc_start, enc_start);
   
   x = 0;
   if ( bf_desc_font != NULL )
@@ -108,7 +121,7 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
     if ( bf_desc_font->target_data != NULL )
     {
       tga_set_font(bf_desc_font->target_data);
-      x += tga_draw_string(x, y, pre);
+      x += tga_draw_string(x, y, pre, 0);
     }
   }
   x += 4;
@@ -116,10 +129,25 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
   tga_set_font(bf->target_data);
   for( i = 0; i< 16; i++ )
   {
-    tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i);
+    tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i, 1);
   }
 
   return tga_get_char_height()+1;
+}
+
+void tga_draw_font(unsigned y, bf_t *bf_desc_font, bf_t *bf)
+{
+  long i;
+  for( i = 0; i < 256; i+=16 )
+  {
+    y += tga_draw_font_line(y, i, bf_desc_font, bf);
+  }
+  
+  tga_set_font(bf->target_data);
+  
+  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 1);
+  y += tga_get_char_height()+1;
+  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 0);
 }
 
 
@@ -191,18 +219,19 @@ int main(int argc, char **argv)
   }
 
   //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
-  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
-  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
   
   //bf_ShowAllGlyphs(bf, &(bf->max));
 
-  tga_init(200, 100);
+  tga_init(800, 600);
   //tga_set_pixel(1, 1, 255,0,0);
 
   tga_set_font(bf->target_data);
-  tga_draw_glyph(10, 18, ' ');
+  //tga_draw_glyph(10, 18, ' ');
 
-  tga_draw_font_line(50, 64, bf_desc_font, bf);
+  //tga_draw_font_line(50, 64, bf_desc_font, bf);
+  tga_draw_font(30, bf_desc_font, bf);
   
   /*
   tga_draw_glyph(40, 18, 'B');
@@ -213,7 +242,9 @@ int main(int argc, char **argv)
   tga_draw_glyph(10+30+30+30, 50, bf->enc_h);
   tga_draw_glyph(10+30+30+30+30, 50, 'E');
   */
-  tga_draw_string(10,82,"BjAjQ QnBmj");
+  //tga_draw_string(10,82,"BjAjQ QnBmj");
+  
+  
   tga_save("bdf.tga");
 
 
