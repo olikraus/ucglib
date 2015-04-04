@@ -121,7 +121,7 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
     if ( bf_desc_font->target_data != NULL )
     {
       tga_set_font(bf_desc_font->target_data);
-      x += tga_draw_string(x, y, pre, 0);
+      x += tga_draw_string(x, y, pre, 0, 0);
     }
   }
   x += 4;
@@ -132,22 +132,30 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
     tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i, 1);
   }
 
-  return tga_get_char_height()+1;
+  return x + (tga_get_char_width()+2)*16;
 }
 
 void tga_draw_font(unsigned y, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
+  unsigned x, xmax;
+  xmax = 0;
   for( i = 0; i < 256; i+=16 )
   {
-    y += tga_draw_font_line(y, i, bf_desc_font, bf);
+    x = tga_draw_font_line(y, i, bf_desc_font, bf);
+    if ( x > 0 )
+    {
+      if ( xmax < x )
+	xmax = x;
+      y +=  tga_get_char_height()+1;
+    }
   }
   
   tga_set_font(bf->target_data);
   
-  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 1);
-  y += tga_get_char_height()+1;
-  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 0);
+  //tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 1, xmax);
+  //y += tga_get_char_height()+1;
+  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 0, xmax);
 }
 
 
@@ -219,8 +227,8 @@ int main(int argc, char **argv)
   }
 
   //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
-  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
-  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
   
   //bf_ShowAllGlyphs(bf, &(bf->max));
 

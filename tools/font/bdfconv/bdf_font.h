@@ -128,7 +128,7 @@ uint8_t *tga_get_glyph_data(uint8_t encoding);
 int tga_get_char_width(void);
 int tga_get_char_height(void);
 unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding, int is_hints);
-unsigned tga_draw_string(unsigned x, unsigned y, const char *s, int is_hints);
+unsigned tga_draw_string(unsigned x, unsigned y, const char *s, int is_hints, unsigned max_dx);
 
 
 #endif

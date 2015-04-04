@@ -358,12 +358,15 @@ unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding, int is_hints)
   return dx;
 }
 
-unsigned tga_draw_string(unsigned x, unsigned y, const char *s, int is_hints)
+unsigned tga_draw_string(unsigned x, unsigned y, const char *s, int is_hints, unsigned max_dx)
 {
   unsigned dx = 0;
   while( *s != '\0' )
   {
     dx += tga_draw_glyph(x+dx,y,*s, is_hints);
+    if ( max_dx > 0 )
+      if ( dx > max_dx )
+	break;
     s++;
   }
   return dx;
