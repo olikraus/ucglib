@@ -349,13 +349,15 @@ unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding)
   return dx;
 }
 
-void tga_draw_string(unsigned x, unsigned y, const char *s)
+unsigned tga_draw_string(unsigned x, unsigned y, const char *s)
 {
+  unsigned dx = 0;
   while( *s != '\0' )
   {
-    x += tga_draw_glyph(x,y,*s);
+    dx += tga_draw_glyph(x+dx,y,*s);
     s++;
   }
+  return dx;
 }
 
 

@@ -94,9 +94,32 @@ void help(void)
 
 /*================================================*/
 
-void tga_draw_line(long enc_start, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
 {
+  long i;
+  unsigned x;
+  char pre[32];
   
+  sprintf(pre, "%3ld/%02lx", enc_start, enc_start);
+  
+  x = 0;
+  if ( bf_desc_font != NULL )
+  {
+    if ( bf_desc_font->target_data != NULL )
+    {
+      tga_set_font(bf_desc_font->target_data);
+      x += tga_draw_string(x, y, pre);
+    }
+  }
+  x += 4;
+  
+  tga_set_font(bf->target_data);
+  for( i = 0; i< 16; i++ )
+  {
+    tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i);
+  }
+
+  return tga_get_char_height()+1;
 }
 
 
@@ -157,6 +180,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  bf_desc_font = NULL;
   if ( desc_font_str[0] != '\0' )
   {
     bf_desc_font = bf_OpenFromFile(desc_font_str, 0, BDF_BBX_MODE_MINIMAL, "*");
@@ -177,6 +201,9 @@ int main(int argc, char **argv)
 
   tga_set_font(bf->target_data);
   tga_draw_glyph(10, 18, ' ');
+
+  tga_draw_font_line(50, 64, bf_desc_font, bf);
+  
   /*
   tga_draw_glyph(40, 18, 'B');
 
