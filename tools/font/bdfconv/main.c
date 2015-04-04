@@ -155,7 +155,12 @@ unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font
       tga_set_font(bf_desc_font->target_data);
       x += tga_draw_string(x, y, fontname, 0, 0);
       y +=  tga_get_char_height()+1;
-      sprintf(s, "Max width %u, max height %u, 'A' height %d", tga_get_char_width(), tga_get_char_height(), cap_a_height);
+      
+      sprintf(s, "Max width %u, max height %u", tga_get_char_width(), tga_get_char_height());
+      x = 0;
+      x += tga_draw_string(x, y, s, 0, 0);
+      
+      sprintf(s, "'A' height %d, font size %d ", cap_a_height, bf->target_cnt);
       x = 0;
       x += tga_draw_string(x, y, s, 0, 0);
     }
