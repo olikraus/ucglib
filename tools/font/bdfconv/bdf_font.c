@@ -199,7 +199,7 @@ void bf_ReduceAllGlyph(bf_t *bf)
       red_y = bg->bitmap_height - bg->bbx.h;
       if ( red_x > 0 || red_y > 0 )
       {
-	bf_Log(bf, "Reduce: Encoding %ld, x by %d, y by %d", bg->encoding, red_x, red_y);
+	//bf_Log(bf, "Reduce: Encoding %ld, x by %d, y by %d", bg->encoding, red_x, red_y);
       }
     }
   }

@@ -70,8 +70,9 @@ void help(void)
   printf("-h        Display this help\n");
   printf("-v        Print log messages\n");
   printf("-x        Use max bbx for each selected glyph\n");
-  printf("-m <map>  Unicode ASCII mapping\n");
-  printf("-d <fontname>  Font for description in TGA file\n");
+  printf("-m 'map'  Unicode ASCII mapping\n");
+  printf("-l <margin>   Overview picture: Set left margin\n");
+  printf("-d <fontname> Overview picture: Font for description\n");
   printf("\n");
 
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
@@ -94,9 +95,18 @@ void help(void)
 
 /*================================================*/
 
+unsigned tga_get_line_height(bf_t *bf_desc_font, bf_t *bf)
+{
+  unsigned h;
+  tga_set_font(bf_desc_font->target_data);
+  h = tga_get_char_height();
+  tga_set_font(bf->target_data);
+  if ( h < tga_get_char_height() )
+    return tga_get_char_height();
+  return h;
+}
 
-
-unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font_line(unsigned left_margin, unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x;
@@ -115,7 +125,7 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
   
   sprintf(pre, "%3ld/0x%02lx", enc_start, enc_start);
   
-  x = 0;
+  x = left_margin;
   if ( bf_desc_font != NULL )
   {
     if ( bf_desc_font->target_data != NULL )
@@ -132,12 +142,12 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
     tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i, 1);
   }
 
-  return x + (tga_get_char_width()+2)*16;
+  return left_margin + x + (tga_get_char_width()+2)*16;
 }
 
-unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font_info(unsigned left_margin, unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
 {
-  unsigned x = 0;
+  unsigned x;
   int cap_a, cap_a_height;
   static char s[256];
   
@@ -153,16 +163,17 @@ unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font
     if ( bf_desc_font->target_data != NULL )
     {
       tga_set_font(bf_desc_font->target_data);
+      x = left_margin;
       x += tga_draw_string(x, y, fontname, 0, 0);
       y +=  tga_get_char_height()+1;
       
       sprintf(s, "Max width %u, max height %u", tga_get_char_width(), tga_get_char_height());
-      x = 0;
+      x = left_margin;
       x += tga_draw_string(x, y, s, 0, 0);
       y +=  tga_get_char_height()+1;
       
       sprintf(s, "'A' height %d, font size %d ", cap_a_height, bf->target_cnt);
-      x = 0;
+      x = left_margin;
       x += tga_draw_string(x, y, s, 0, 0);
     }
     return (tga_get_char_height()+1)*3;
@@ -171,15 +182,15 @@ unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font
 }
 
 
-void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
+void tga_draw_font(unsigned left_margin, unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x, xmax;
   xmax = 0;
   
-  y += tga_draw_font_info( y, fontname, bf_desc_font, bf);
+  y += tga_draw_font_info( left_margin, y, fontname, bf_desc_font, bf);
   tga_set_font(bf->target_data);
-  y +=  tga_get_char_height()+1;
+  y +=   tga_get_line_height(bf_desc_font, bf)+1;
   tga_set_font(bf_desc_font->target_data);
   y -=  tga_get_char_height()+1;
   tga_set_font(bf->target_data);
@@ -187,12 +198,12 @@ void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *b
   
   for( i = 0; i < 256; i+=16 )
   {
-    x = tga_draw_font_line(y, i, bf_desc_font, bf);
+    x = tga_draw_font_line(left_margin, y, i, bf_desc_font, bf);
     if ( x > 0 )
     {
       if ( xmax < x )
 	xmax = x;
-      y +=  tga_get_char_height()+1;
+      y +=  tga_get_line_height(bf_desc_font, bf)+1;
     }
   }
   
@@ -200,7 +211,7 @@ void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *b
   
   //tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz", 1, xmax);
   //y += tga_get_char_height()+1;
-  tga_draw_string(0, y, "Woven silk pyjamas exchanged for blue quartz.", 0, xmax);
+  tga_draw_string(left_margin, y, "Woven silk pyjamas exchanged for blue quartz.", 0, xmax);
 }
 
 
@@ -215,6 +226,7 @@ int main(int argc, char **argv)
   int is_verbose = 0;
   char *map_str ="*";
   char *desc_font_str = "";
+  unsigned long left_margin = 0;
   
   argv++;
   /*
@@ -237,11 +249,9 @@ int main(int argc, char **argv)
     {
       is_verbose = 1;
     }
-    /*
-    else if ( get_num_arg(&argv, 's', &speed) != 0 )
+    else if ( get_num_arg(&argv, 'l', &left_margin) != 0 )
     {
     }
-    */
     else if ( get_str_arg(&argv, 'd', &desc_font_str) != 0 )
     {      
     }
@@ -284,7 +294,7 @@ int main(int argc, char **argv)
   //tga_draw_glyph(10, 18, ' ');
 
   //tga_draw_font_line(50, 64, bf_desc_font, bf);
-  tga_draw_font(30, bdf_filename, bf_desc_font, bf);
+  tga_draw_font(left_margin, tga_get_char_height(), bdf_filename, bf_desc_font, bf);
   
   /*
   tga_draw_glyph(40, 18, 'B');

@@ -348,7 +348,8 @@ int bg_rle_compress(bg_t *bg, bbx_t *bbx, unsigned rle_bits_per_0, unsigned rle_
   
 
   /* step 0: output initial information */
-  if ( bg_AddTargetData(bg, bg->encoding) < 0 )
+  //printf("%ld %ld\n", (long)bg->encoding, (long)bg->map_to);
+  if ( bg_AddTargetData(bg, bg->map_to) < 0 )
     return bg_err("error in bg_rle_compress"), 0;
   /* size, will be added later */
   if ( bg_AddTargetData(bg, 0) < 0 )
