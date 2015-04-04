@@ -100,8 +100,12 @@ void bf_CalculateSelectedNumberOfGlyphs(bf_t *bf);
 
 void bf_ReduceAllGlyph(bf_t *bf);
 
+int bf_GetIndexByEncoding(bf_t *bf, long encoding);
+
 /* only shows glyphs, which will be mapped (call bf_Map() first) */
 void bf_ShowAllGlyphs(bf_t *bf, bbx_t *bbx);
+
+
 
 /* calculate the max bbx for all mapped glyphs (call bf_Map() first) */
 void bf_CalculateMaxBBX(bf_t *bf);

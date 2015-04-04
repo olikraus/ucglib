@@ -308,7 +308,7 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data, int is_hints)
 	{
 	  if ( is_hints )
 	  {
-	    tga_set_pixel(f->target_x+f->x, f->target_y+f->y, 0x0e0,0x0e0,0x0e0);
+	    tga_set_pixel(f->target_x+f->x, f->target_y+f->y, 0x0e8,0x0e8,0x0e8);
 	  }
 	  tga_fd_inc(f);
 	}

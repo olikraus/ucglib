@@ -221,6 +221,19 @@ void bf_ShowAllGlyphs(bf_t *bf, bbx_t *bbx)
   }
 }
 
+int bf_GetIndexByEncoding(bf_t *bf, long encoding)
+{
+  int i;
+  bg_t *bg;
+  for( i = 0; i < bf->glyph_cnt; i++ )
+  {
+    bg = bf->glyph_list[i];
+    if ( bg->encoding == encoding )
+      return i;
+  }
+  return -1;
+}
+
 void bf_CalculateMaxBBX(bf_t *bf)
 {
   int i;
