@@ -95,6 +95,10 @@ void help(void)
 
 /*================================================*/
 
+unsigned long left_margin = 1;
+
+/*================================================*/
+
 unsigned tga_get_line_height(bf_t *bf_desc_font, bf_t *bf)
 {
   unsigned h;
@@ -106,7 +110,7 @@ unsigned tga_get_line_height(bf_t *bf_desc_font, bf_t *bf)
   return h;
 }
 
-unsigned tga_draw_font_line(unsigned left_margin, unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x;
@@ -145,7 +149,7 @@ unsigned tga_draw_font_line(unsigned left_margin, unsigned y, long enc_start, bf
   return left_margin + x + (tga_get_char_width()+2)*16;
 }
 
-unsigned tga_draw_font_info(unsigned left_margin, unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
 {
   unsigned x;
   int cap_a, cap_a_height;
@@ -182,13 +186,13 @@ unsigned tga_draw_font_info(unsigned left_margin, unsigned y, const char *fontna
 }
 
 
-void tga_draw_font(unsigned left_margin, unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
+void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x, xmax;
   xmax = 0;
   
-  y += tga_draw_font_info( left_margin, y, fontname, bf_desc_font, bf);
+  y += tga_draw_font_info( y, fontname, bf_desc_font, bf);
   tga_set_font(bf->target_data);
   y +=   tga_get_line_height(bf_desc_font, bf)+1;
   tga_set_font(bf_desc_font->target_data);
@@ -198,7 +202,7 @@ void tga_draw_font(unsigned left_margin, unsigned y, const char *fontname, bf_t 
   
   for( i = 0; i < 256; i+=16 )
   {
-    x = tga_draw_font_line(left_margin, y, i, bf_desc_font, bf);
+    x = tga_draw_font_line(y, i, bf_desc_font, bf);
     if ( x > 0 )
     {
       if ( xmax < x )
@@ -226,7 +230,6 @@ int main(int argc, char **argv)
   int is_verbose = 0;
   char *map_str ="*";
   char *desc_font_str = "";
-  unsigned long left_margin = 0;
   
   argv++;
   /*
@@ -294,7 +297,7 @@ int main(int argc, char **argv)
   //tga_draw_glyph(10, 18, ' ');
 
   //tga_draw_font_line(50, 64, bf_desc_font, bf);
-  tga_draw_font(left_margin, tga_get_char_height(), bdf_filename, bf_desc_font, bf);
+  tga_draw_font(tga_get_char_height(), bdf_filename, bf_desc_font, bf);
   
   /*
   tga_draw_glyph(40, 18, 'B');
