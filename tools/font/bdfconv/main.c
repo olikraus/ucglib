@@ -166,21 +166,24 @@ unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font
   {
     if ( bf_desc_font->target_data != NULL )
     {
+      
       tga_set_font(bf_desc_font->target_data);
+      
+      y +=  tga_get_char_height()+1;
       x = left_margin;
       x += tga_draw_string(x, y, fontname, 0, 0);
-      y +=  tga_get_char_height()+1;
-      
+
+      y +=  tga_get_char_height()+1;      
       sprintf(s, "Max width %u, max height %u", tga_get_char_width(), tga_get_char_height());
       x = left_margin;
       x += tga_draw_string(x, y, s, 0, 0);
-      y +=  tga_get_char_height()+1;
-      
+
+      y +=  tga_get_char_height()+1;      
       sprintf(s, "'A' height %d, font size %d ", cap_a_height, bf->target_cnt);
       x = left_margin;
       x += tga_draw_string(x, y, s, 0, 0);
+      return (tga_get_char_height()+1)*3;
     }
-    return (tga_get_char_height()+1)*3;
   }
   return 0;
 }
@@ -297,7 +300,7 @@ int main(int argc, char **argv)
   //tga_draw_glyph(10, 18, ' ');
 
   //tga_draw_font_line(50, 64, bf_desc_font, bf);
-  tga_draw_font(tga_get_char_height(), bdf_filename, bf_desc_font, bf);
+  tga_draw_font(0, bdf_filename, bf_desc_font, bf);
   
   /*
   tga_draw_glyph(40, 18, 'B');
