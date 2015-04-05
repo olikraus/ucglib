@@ -9,8 +9,8 @@
 #define BDF_LINE_LEN 1024
 
 #define BDF_BBX_MODE_MINIMAL 0
-#define BDF_BBX_MODE_MAX 1
-#define BDF_BBX_MODE_HEIGHT 2
+#define BDF_BBX_MODE_HEIGHT 1
+#define BDF_BBX_MODE_MAX 2
 
 struct _bdf_font_struct
 {

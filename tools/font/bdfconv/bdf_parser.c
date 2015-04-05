@@ -400,7 +400,7 @@ int bf_ParseFile(bf_t *bf, const char *name)
   bf->fp = fopen(name, "r");
   if ( bf->fp == NULL )
   {
-    bf_Error(bf, "Can not open bdf file '%s", name);
+    bf_Error(bf, "Can not open bdf file '%s'", name);
     return 0;
   }
   r = bf_parse_file(bf);

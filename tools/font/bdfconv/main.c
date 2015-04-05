@@ -34,10 +34,14 @@ int get_num_arg(char ***argv, int c, unsigned long *result)
   {
     if ( (**argv)[1] == c )
     {
+      
       if ( (**argv)[2] == '\0' )
       {
-	(*argv)++;
-	*result = strtoul((**argv), NULL, 10);
+	if ( *((*argv)+1) != NULL )
+	{
+	  (*argv)++;
+	  *result = strtoul((**argv), NULL, 10);
+	}
       }
       else
       {
@@ -69,16 +73,17 @@ void help(void)
   printf("bdfconv [options] filename\n");
   printf("-h        Display this help\n");
   printf("-v        Print log messages\n");
-  printf("-x        Use max bbx for each selected glyph\n");
+  printf("-b <n>    Font build mode, 0: proportional, 1: common height, 2: monospace\n");
   printf("-m 'map'  Unicode ASCII mapping\n");
   printf("-l <margin>   Overview picture: Set left margin\n");
   printf("-d <fontname> Overview picture: Font for description\n");
+  printf("-a            Overview picture: Additional font information (background, orange&blue dot)\n");
   printf("\n");
 
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
   printf("mapcmd := <default> | <maprange> | <exclude>\n");
   printf("default := \"*\"\n");
-  printf("maprange := <range> [  \">\" <num> ]\n");
+  printf("maprange := <range> [  \">\" <num> ]        Move specified glyph <range> to target code <num>\n");
   printf("exclude := \"~\" <range> \n");
   printf("range := <num> [ \"-\" <num> ]\n");
   printf("num := <hexnum> | <decnum>\n");
@@ -96,6 +101,8 @@ void help(void)
 /*================================================*/
 
 unsigned long left_margin = 1;
+unsigned long build_bbx_mode = 0;
+int font_picture_extra_info = 0;
 
 /*================================================*/
 
@@ -143,7 +150,7 @@ unsigned tga_draw_font_line(unsigned y, long enc_start, bf_t *bf_desc_font, bf_t
   tga_set_font(bf->target_data);
   for( i = 0; i< 16; i++ )
   {
-    tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i, 1);
+    tga_draw_glyph(x + (tga_get_char_width()+2)*i,y,enc_start+i, font_picture_extra_info);
   }
 
   return left_margin + x + (tga_get_char_width()+2)*16;
@@ -196,11 +203,8 @@ void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *b
   xmax = 0;
   
   y += tga_draw_font_info( y, fontname, bf_desc_font, bf);
-  tga_set_font(bf->target_data);
+  
   y +=   tga_get_line_height(bf_desc_font, bf)+1;
-  tga_set_font(bf_desc_font->target_data);
-  y -=  tga_get_char_height()+1;
-  tga_set_font(bf->target_data);
   
   
   for( i = 0; i < 256; i+=16 )
@@ -255,6 +259,13 @@ int main(int argc, char **argv)
     {
       is_verbose = 1;
     }
+    else if ( is_arg(&argv, 'a') != 0 )
+    {
+      font_picture_extra_info = 1;
+    }
+    else if ( get_num_arg(&argv, 'b', &build_bbx_mode) != 0 )
+    {
+    }
     else if ( get_num_arg(&argv, 'l', &left_margin) != 0 )
     {
     }
@@ -287,9 +298,18 @@ int main(int argc, char **argv)
     }
   }
 
-  bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
+  
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, build_bbx_mode, map_str);
+  //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MINIMAL, map_str);
   //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_MAX, map_str);
   //bf = bf_OpenFromFile(bdf_filename, is_verbose, BDF_BBX_MODE_HEIGHT, map_str);
+  
+  if ( bf == NULL )
+  {
+    //bf_Error(bf, "Error with file '%s'", bdf_filename);
+
+    exit(1);
+  }
   
   //bf_ShowAllGlyphs(bf, &(bf->max));
 
