@@ -277,6 +277,14 @@ void bf_CalculateMaxBBX(bf_t *bf)
       }
     }
   }
+  
+  if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
+  {
+    bf->max.w = ( bf->max.w + 7 ) & ~7;
+    bf->max.h = ( bf->max.h + 7 ) & ~7;
+  }
+
+  
   bf_Log(bf, "CalculateMaxBBX: x=%ld, y=%ld, w=%ld, h=%ld", bf->max.x, bf->max.y, bf->max.w, bf->max.h);
   bf_Log(bf, "CalculateMaxBBX: Encodings x=%ld, y=%ld, w=%ld, h=%ld", bf->enc_x, bf->enc_y, bf->enc_w, bf->enc_h);
 }
@@ -365,6 +373,16 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
 	if ( bg->bbx.x < 0 )
 	  bg->shift_x = bg->bbx.x;
       }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
+      {
+	local_bbx.w = (bf->max.w+7) & ~7;
+	local_bbx.h = (bf->max.h+7) & ~7;
+	local_bbx.x = bf->max.x;
+	local_bbx.y = bf->max.y;
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
+      }
       else
       {
 
@@ -427,6 +445,53 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
       bf->bbx_x_max_bit_size, bf->bbx_y_max_bit_size, bf->bbx_w_max_bit_size, bf->bbx_h_max_bit_size, bf->dx_max_bit_size);
   
 }
+
+int bf_WriteUCGCByFP(bf_t *bf, FILE *out_fp, const char *fontname, const char *indent)
+{
+  int i;
+  int bytes_per_line = 16;
+  
+  fprintf(out_fp, "/*\n");
+  fprintf(out_fp, "  Fontname: %s\n", bf->str_font);
+  fprintf(out_fp, "  Copyright: %s\n", bf->str_copyright);
+  fprintf(out_fp, "  Glyphs: %d/%d\n", (int)bf->selected_glyphs, (int)bf->glyph_cnt );
+  fprintf(out_fp, "  BBX Build Mode: %d\n", (int)bf->bbx_mode);
+  fprintf(out_fp, "*/\n");
+  fprintf(out_fp, "#include \"ucg.h\"\n");  
+  fprintf(out_fp, "const ucg_fntpgm_uint8_t %s[%d] UCG_FONT_SECTION(\"%s\") = {\n", fontname, bf->target_cnt, fontname);
+  fprintf(out_fp, "  ");
+    
+  for( i = 0; i < bf->target_cnt; i++ )
+  {
+    fprintf(out_fp, "%d", bf->target_data[i]);
+    if ( i+1 != bf->target_cnt )
+      fprintf(out_fp, ",");
+    if ( (i+1) % bytes_per_line == 0 )
+      fprintf(out_fp, "\n%s", indent);    
+  }
+
+  fprintf(out_fp, "};\n");  
+  return 1;
+}
+
+int bf_WriteUCGCByFilename(bf_t *bf, const char *filename, const char *fontname, const char *indent)
+{
+  FILE *fp;
+  fp = fopen(filename, "wb");
+  if ( fp == NULL )
+  {
+    bf_Log(bf, "bf_WriteUCGCByFilename: Open error '%s'", filename);
+    return 0;
+  }
+  
+  bf_WriteUCGCByFP(bf, fp, fontname, indent);
+  bf_Log(bf, "bf_WriteUCGCByFilename: Write file '%s'", filename);
+  
+  fclose(fp);
+  return 1;
+}
+
+
 
 bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str)
 {

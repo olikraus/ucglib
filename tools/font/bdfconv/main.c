@@ -73,10 +73,12 @@ void help(void)
   printf("bdfconv [options] filename\n");
   printf("-h        Display this help\n");
   printf("-v        Print log messages\n");
-  printf("-b <n>    Font build mode, 0: proportional, 1: common height, 2: monospace\n");
+  printf("-b <n>    Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
   printf("-m 'map'  Unicode ASCII mapping\n");
+  printf("-o <file>  C output file\n");
+  printf("-n <name>  C indentifier (font name)\n");
   printf("-l <margin>   Overview picture: Set left margin\n");
-  printf("-d <fontname> Overview picture: Font for description\n");
+  printf("-d <file>     Overview picture: BDF font for description\n");
   printf("-a            Overview picture: Additional font information (background, orange&blue dot)\n");
   printf("-t            Overview picture: Test string (Woven silk pyjamas exchanged for blue quartz.)\n");
   printf("\n");
@@ -105,6 +107,8 @@ unsigned long left_margin = 1;
 unsigned long build_bbx_mode = 0;
 int font_picture_extra_info = 0;
 int font_picture_test_string = 0;
+char *c_filename = NULL;
+char *target_fontname = "bdf_font";
 
 /*================================================*/
 
@@ -282,6 +286,12 @@ int main(int argc, char **argv)
     else if ( get_str_arg(&argv, 'd', &desc_font_str) != 0 )
     {      
     }
+    else if ( get_str_arg(&argv, 'o', &c_filename) != 0 )
+    {      
+    }
+    else if ( get_str_arg(&argv, 'n', &target_fontname) != 0 )
+    {      
+    }
     else if ( get_str_arg(&argv, 'm', &map_str) != 0 )
     {      
     }
@@ -320,6 +330,10 @@ int main(int argc, char **argv)
   tga_draw_font(0, bdf_filename, bf_desc_font, bf);
   tga_save("bdf.tga");
 
+  if ( c_filename != NULL )
+  {
+    bf_WriteUCGCByFilename(bf, c_filename, target_fontname, "  ");
+  }
 
   
   bf_Close(bf);

@@ -11,6 +11,7 @@
 #define BDF_BBX_MODE_MINIMAL 0
 #define BDF_BBX_MODE_HEIGHT 1
 #define BDF_BBX_MODE_MAX 2
+#define BDF_BBX_MODE_M8 3
 
 struct _bdf_font_struct
 {
@@ -113,6 +114,8 @@ void bf_CalculateMaxBBX(bf_t *bf);
 void bf_CalculateMinMaxDWidth(bf_t *bf);
 void bf_CalculateMaxBitFieldSize(bf_t *bf);
 void bf_RLECompressAllGlyphs(bf_t *bf);
+
+int bf_WriteUCGCByFilename(bf_t *bf, const char *filename, const char *fontname, const char *indent);
 
 bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str);
 

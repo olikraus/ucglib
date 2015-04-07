@@ -499,6 +499,16 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
 	if ( bg->bbx.x < 0 )
 	  bg->shift_x = bg->bbx.x;
       }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
+      {
+	local_bbx.w = (bf->max.w+7) & ~7;
+	local_bbx.h = (bf->max.h+7) & ~7;
+	local_bbx.x = bf->max.x;
+	local_bbx.y = bf->max.y;
+	local_bbx.x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
+      }
       else
       {
 	local_bbx = bf->max;

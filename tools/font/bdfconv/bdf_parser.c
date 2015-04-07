@@ -67,6 +67,8 @@ static const char *bf_get_string(bf_t *bf)
   
   if ( bf_curr(bf) != '\"' )
     return bf_get_identifier(bf);
+
+  bf_next(bf);
   
   for(;;)
   {
@@ -83,6 +85,36 @@ static const char *bf_get_string(bf_t *bf)
   }
   if ( bf_curr(bf) == '\"' )
     bf_next(bf);
+  
+  bf_skipspace(bf);
+  return buf;
+}
+
+static const char *bf_get_eol_string(bf_t *bf)
+{
+  static char buf[BDF_LINE_LEN];
+  int i = 0;
+  int c;
+
+  buf[0] = '\0';
+  
+  if ( bf_curr(bf) == '\"' )
+    return bf_get_string(bf);
+  bf_next(bf);
+  
+  for(;;)
+  {
+    c = bf_curr(bf);
+    if ( c == '\0'  )
+      break;
+    if ( c == '\n' || c == '\r' )
+      break;
+    if ( i >= BDF_LINE_LEN-2 )
+      break;
+    buf[i++] = c;
+    buf[i] = '\0';
+    bf_next(bf);
+  }
   
   bf_skipspace(bf);
   return buf;
@@ -211,7 +243,7 @@ static int bf_parse_line(bf_t *bf)
     {      
       if ( bf->str_font != NULL )
 	free(bf->str_font);
-      bf->str_font = strdup(bf_get_string(bf));
+      bf->str_font = strdup(bf_get_eol_string(bf));
     }
     else if ( strcmp(cmd, "SIZE" ) == 0 )	/* args: lll */
     {      
@@ -274,7 +306,7 @@ static int bf_parse_line(bf_t *bf)
     {      
       if ( bf->str_copyright != NULL )
 	free(bf->str_copyright);
-      bf->str_copyright = strdup(bf_get_string(bf));
+      bf->str_copyright = strdup(bf_get_eol_string(bf));
     }
     else if ( strcmp(cmd, "_XMBDFED_INFO" ) == 0 )	/* args: s */
     {      
