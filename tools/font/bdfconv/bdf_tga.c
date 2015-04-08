@@ -144,8 +144,15 @@ void tga_set_font(uint8_t *font)
     bits_per_delta_x = *font++;
     char_width = *font++;
     char_height = *font++;
+    font++;	/* x offset */
     char_descent = *(int8_t *)font;
     font++;
+  
+    font++;
+    font++;
+    font++;
+    font++;
+    
     tga_font = font;
 }
 
@@ -169,6 +176,7 @@ struct tga_fd_struct
 {
   unsigned target_x;
   unsigned target_y;
+  unsigned is_transparent;
   
   unsigned x;						/* local coordinates, (0,0) is upper left */
   unsigned y;
@@ -243,12 +251,26 @@ int tga_fd_get_signed_bits(tga_fd_t *t, int cnt)
 }
 
 
-void tga_fd_draw_pixel(tga_fd_t *f)
+void tga_fd_draw_fg_pixel(tga_fd_t *f, unsigned cnt)
 {
-  tga_set_pixel(f->target_x+f->x, f->target_y+f->y, 0,0,0);
+  while( cnt > 0 )
+  {
+    cnt--;
+    tga_set_pixel(f->target_x+f->x+cnt, f->target_y+f->y, 0,0,0);
+  }
 }
 
-unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data, int is_hints)
+void tga_fd_draw_bg_pixel(tga_fd_t *f, unsigned cnt)
+{
+  while( cnt > 0 )
+  {
+    cnt--;
+    if ( f->is_transparent == 0 )
+      tga_set_pixel(f->target_x+f->x+cnt, f->target_y+f->y, 0x0e8,0x0e8,0x0e8);
+  }
+}
+
+unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 {
   unsigned a, b;
   unsigned i;
@@ -301,33 +323,36 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data, int is_hints)
     {
       a = tga_fd_get_unsigned_bits(f, bits_per_0);
       b = tga_fd_get_unsigned_bits(f, bits_per_1);
-      //printf("[a=%u b=%u x=%u/%u y=%u]", a, b, f->x, f->glyph_width, f->y);
       do
       {
+	
 	for( i = 0; i < a; i++ )
 	{
-	  if ( is_hints )
-	  {
-	    tga_set_pixel(f->target_x+f->x, f->target_y+f->y, 0x0e8,0x0e8,0x0e8);
-	  }
-	  tga_fd_inc(f);
+	  tga_fd_draw_bg_pixel(f,1);
+	  tga_fd_inc(f);    
 	}
+	
+	/*
+	while( a + f->x > f->glyph_width )
+	{
+	  tga_fd_draw_bg_pixel(f,f->glyph_width-f->x);
+	  f->x = 0;
+	  f->y++;
+	  a -= f->glyph_width-f->x;
+	}
+	tga_fd_draw_bg_pixel(f,1);
+	*/
 
 	for( i = 0; i < b; i++ )
 	{	
-	  tga_fd_draw_pixel(f);
-	  tga_fd_inc(f);
+	  tga_fd_draw_fg_pixel(f,1);
+	  tga_fd_inc(f);    
 	}
 	
       } while( tga_fd_get_unsigned_bits(f, 1) != 0 );
       
       if ( f->y >= f->glyph_height )
 	break;
-    }
-
-    if ( is_hints )
-    {
-      // tga_set_pixel(f->target_x, f->target_y, 28,133,240);
     }
   }
   /*
@@ -345,10 +370,11 @@ unsigned tga_draw_glyph(unsigned x, unsigned y, uint8_t encoding, int is_hints)
   tga_fd_t f;
   f.target_x = x;
   f.target_y = y;
+  f.is_transparent = !is_hints;
   uint8_t *glyph_data = tga_get_glyph_data(encoding);
   if ( glyph_data != NULL )
   {
-    dx = tga_fd_decode(&f, glyph_data, is_hints);
+    dx = tga_fd_decode(&f, glyph_data);
     if ( is_hints )
     {
       tga_set_pixel(x+dx, y, 28,133,240);	/* orange: reference point */

@@ -556,6 +556,55 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
   unsigned long total_bits = 0;
   unsigned long min_total_bits = 0xffffffff;
   
+  int idx_cap_a;
+  int idx_cap_a_ascent;
+  int idx_1;
+  int idx_1_ascent;
+  int idx_g;
+  int idx_g_descent;
+  int idx_para;
+  int idx_para_ascent;
+  int idx_para_descent;
+  
+  idx_cap_a_ascent = 0;
+  idx_cap_a = bf_GetIndexByEncoding(bf, 'A');
+  if ( idx_cap_a >= 0 )
+  {
+    idx_cap_a_ascent = bf->glyph_list[idx_cap_a]->bbx.h+bf->glyph_list[idx_cap_a]->bbx.y;
+  }
+
+  idx_1_ascent = 0;
+  idx_1 = bf_GetIndexByEncoding(bf, '1');
+  if ( idx_1 >= 0 )
+  {
+    idx_1_ascent = bf->glyph_list[idx_1]->bbx.h+bf->glyph_list[idx_1]->bbx.y;
+  }
+
+  idx_g_descent = 0;
+  idx_g = bf_GetIndexByEncoding(bf, 'g');
+  if ( idx_g >= 0 )
+  {
+    idx_g_descent = bf->glyph_list[idx_g]->bbx.y;
+  }
+
+
+  idx_para_ascent = 0;
+  idx_para = bf_GetIndexByEncoding(bf, '(');
+  if ( idx_para >= 0 )
+  {
+    idx_para_ascent = bf->glyph_list[idx_para]->bbx.h+bf->glyph_list[idx_para]->bbx.y;
+    idx_para_descent = bf->glyph_list[idx_para]->bbx.y;
+  }
+  else
+  {
+    idx_para_ascent = idx_cap_a_ascent;
+    if ( idx_para_ascent == 0 )
+      idx_para_ascent = idx_1_ascent;
+      
+    idx_para_descent = idx_g_descent;
+  }
+
+  
   for( rle_0 = 2; rle_0 < 7; rle_0++ )
   {
     for( rle_1 = 2; rle_1 < 7; rle_1++ )
@@ -601,7 +650,17 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
   
   bf_AddTargetData(bf, bf->max.w);
   bf_AddTargetData(bf, bf->max.h);
+  bf_AddTargetData(bf, bf->max.x);
   bf_AddTargetData(bf, bf->max.y);
+
+  if ( idx_cap_a_ascent > 0 )
+    bf_AddTargetData(bf, idx_cap_a_ascent);
+  else
+    bf_AddTargetData(bf, idx_1_ascent);
+  bf_AddTargetData(bf, idx_g_descent);
+    
+  bf_AddTargetData(bf, idx_para_ascent);
+  bf_AddTargetData(bf, idx_para_descent);
 
   for( i = 0; i < bf->glyph_cnt; i++ )
   {
