@@ -279,6 +279,19 @@ void tga_fd_draw_bg_pixel(tga_fd_t *f, unsigned cnt)
   }
 }
 
+void  tga_draw_hline(unsigned x,unsigned y, unsigned cnt,  unsigned is_foreground)
+{
+  while( cnt > 0 )
+  {
+    cnt--;
+    if ( is_foreground == 0 )
+      tga_set_pixel(x+cnt, y, 0x0e8,0x0e8,0x0e8);
+    else
+      tga_set_pixel(x+cnt, y, 255,0,0);
+  }
+}
+
+
 void tga_fd_draw_pixel(tga_fd_t *f, unsigned cnt, unsigned is_foreground)
 {
   if ( is_foreground )

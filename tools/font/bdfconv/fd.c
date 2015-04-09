@@ -54,23 +54,32 @@ uint8_t *fd_get_glyph_data(fd_t *fd, uint8_t encoding)
   return NULL;
 }
 
-unsigned fd_get_unsigned_bits(fd_t *f, unsigned cnt)
+__attribute__((noinline)) unsigned fd_get_unsigned_bits(fd_t *f, unsigned cnt) 
 {
   unsigned val;
   unsigned bit_pos = f->decode_bit_pos;
+  unsigned rem_bits;
   
-  val = *(f->decode_ptr);
+  val = f->decode_byte;
+  rem_bits = 8;
+  rem_bits -= bit_pos;
   
-  val >>= bit_pos;
-  if ( bit_pos + cnt >= 8 )
+  bit_pos += cnt;    
+  if ( cnt >= rem_bits )
   {
     f->decode_ptr++;
-    val |= *(f->decode_ptr) << (8-bit_pos);
-    bit_pos -= 8;
+    f->decode_byte = *(f->decode_ptr);
+    
+    val |= f->decode_byte << (rem_bits);
+    
+    bit_pos -= 8;    
+    f->decode_byte >>= bit_pos;
   }
+  else
+  {
+    f->decode_byte >>= cnt;
+  }  
   val &= (1U<<cnt)-1;
-  bit_pos += cnt;
-  
   f->decode_bit_pos = bit_pos;
   return val;
 }
@@ -80,16 +89,14 @@ int fd_get_signed_bits(fd_t *fd, int cnt)
   return (int)fd_get_unsigned_bits(fd, cnt) - ((1<<cnt)>>1);
 }
 
+void  tga_draw_hline(unsigned x,unsigned y, unsigned cnt,  unsigned is_foreground);
+
+
 void fd_draw_pixel(fd_t *f, unsigned cnt, unsigned is_foreground)
 {
-  if ( is_foreground )
-  {
-    tga_fd_draw_fg_pixel(f, cnt);
-  }
-  else
-  {
-    tga_fd_draw_bg_pixel(f, cnt);
-  }
+  if ( f->is_transparent != 0 && is_foreground == 0 )
+    return;
+  tga_draw_hline(f->target_x+f->x, f->target_y+f->y, cnt,  is_foreground);
 }
 
 void fd_decode_len(fd_t *fd, unsigned len, unsigned is_foreground)
@@ -128,6 +135,8 @@ unsigned fd_decode(fd_t *f)
   
   f->decode_ptr += 1;
   f->decode_ptr += 1;
+  
+  f->decode_byte = *(f->decode_ptr);		/* init decoder */
   
   f->glyph_width = fd_get_unsigned_bits(f, f->bits_per_char_width);
   f->glyph_height = fd_get_unsigned_bits(f, f->bits_per_char_height);

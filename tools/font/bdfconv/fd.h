@@ -18,7 +18,7 @@ struct fd_struct
   
   const uint8_t *decode_ptr;			/* pointer to the compressed data */
   unsigned decode_bit_pos;			/* bitpos inside a byte of the compressed data */
-  unsigned decode_val;
+  unsigned decode_byte;
   
   uint8_t glyph_cnt;
   uint8_t bits_per_0;
