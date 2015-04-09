@@ -31,6 +31,8 @@ struct fd_struct
   uint8_t char_width;
   uint8_t char_height;
   uint8_t char_descent;
+  unsigned capital_a_pos;
+  unsigned small_a_pos;
   
   uint8_t *font;
   

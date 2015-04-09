@@ -18,6 +18,7 @@ void fd_init(fd_t *fd)
 void fd_set_font(fd_t *fd, uint8_t *font)
 {
     fd->glyph_cnt = *font++;
+    font++;	/* bbx mode */
     fd->bits_per_0 = *font++;
     fd->bits_per_1 = *font++;
     fd->bits_per_char_width = *font++;
@@ -35,7 +36,14 @@ void fd_set_font(fd_t *fd, uint8_t *font)
     font++;
     font++;
     font++;
-    
+
+    fd->capital_a_pos= *font++;
+    fd->capital_a_pos <<= 8;
+    fd->capital_a_pos |= *font++;
+    fd->small_a_pos = *font++;
+    fd->small_a_pos <<= 8;
+    fd->small_a_pos |= *font++;
+  
     fd->font = font;
 }
 

@@ -32,6 +32,7 @@
 
 */
 
+#define BDF_RLE_FONT_GLYPH_START 21
 
 #include <stdio.h>
 #include <assert.h>
@@ -548,6 +549,24 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
   return total_bits;
 }
 
+
+unsigned bf_RLE_get_glyph_data(bf_t *bf, uint8_t encoding)
+{
+  int i;
+  uint8_t *font = bf->target_data;
+  font += BDF_RLE_FONT_GLYPH_START;
+  for( i = 0; i < bf->selected_glyphs; i++ )
+  {
+    if ( font[0] == encoding )
+    {
+      return font-bf->target_data;
+    }
+    font += font[1];
+  }
+  return 0;
+}
+
+
 void bf_RLECompressAllGlyphs(bf_t *bf)
 {
   int i, j;
@@ -567,6 +586,8 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
   int idx_para;
   int idx_para_ascent;
   int idx_para_descent;
+  
+  unsigned pos;
   
   idx_cap_a_ascent = 0;
   idx_cap_a = bf_GetIndexByEncoding(bf, 'A');
@@ -640,29 +661,43 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
 
   bf_Log(bf, "RLE Compress: Font code generation, selected glyphs=%d, total glyphs=%d", bf->selected_glyphs, bf->glyph_cnt);
   
+  /* 0 */
   bf_AddTargetData(bf, bf->selected_glyphs);
+  bf_AddTargetData(bf, bf->bbx_mode);
   bf_AddTargetData(bf, best_rle_0);
   bf_AddTargetData(bf, best_rle_1);
 
+  /* 4 */
   bf_AddTargetData(bf, bf->bbx_w_max_bit_size);
   bf_AddTargetData(bf, bf->bbx_h_max_bit_size);
   bf_AddTargetData(bf, bf->bbx_x_max_bit_size);
   bf_AddTargetData(bf, bf->bbx_y_max_bit_size);
   bf_AddTargetData(bf, bf->dx_max_bit_size);
   
+  /* 9 */
   bf_AddTargetData(bf, bf->max.w);
   bf_AddTargetData(bf, bf->max.h);
   bf_AddTargetData(bf, bf->max.x);
   bf_AddTargetData(bf, bf->max.y);
 
+  /* 13 */
   if ( idx_cap_a_ascent > 0 )
     bf_AddTargetData(bf, idx_cap_a_ascent);
   else
     bf_AddTargetData(bf, idx_1_ascent);
   bf_AddTargetData(bf, idx_g_descent);
     
+  /* 15 */
   bf_AddTargetData(bf, idx_para_ascent);
   bf_AddTargetData(bf, idx_para_descent);
+
+  /* 17 */
+  bf_AddTargetData(bf, 0);	/* start pos 'A', high/low */
+  bf_AddTargetData(bf, 0);
+
+  /* 19 */
+  bf_AddTargetData(bf, 0);	/* start pos 'a', high/low */
+  bf_AddTargetData(bf, 0);
 
   for( i = 0; i < bf->glyph_cnt; i++ )
   {
@@ -678,6 +713,17 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
       }
     }
   }
+  
+  pos = bf_RLE_get_glyph_data(bf, 'A');
+  bf->target_data[17] = pos >> 8;
+  bf->target_data[18] = pos & 255;
+  
+  pos = bf_RLE_get_glyph_data(bf, 'a');
+  bf->target_data[19] = pos >> 8;
+  bf->target_data[20] = pos & 255;
+
+  bf_Log(bf, "RLE Compress: 'A' pos = %u, 'a' pos = %u", bf_RLE_get_glyph_data(bf, 'A'), bf_RLE_get_glyph_data(bf, 'a'));
+  
   bf_Log(bf, "RLE Compress: Font size %d", bf->target_cnt);
   
 }

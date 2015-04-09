@@ -139,6 +139,7 @@ void tga_save(const char *name)
 void tga_set_font(uint8_t *font)
 {
     glyph_cnt = *font++;
+    font++;		/* bbx mode */
     bits_per_0 = *font++;
     bits_per_1 = *font++;
     bits_per_char_width = *font++;
@@ -156,7 +157,12 @@ void tga_set_font(uint8_t *font)
     font++;
     font++;
     font++;
-    
+
+    font++;
+    font++;
+    font++;
+    font++;
+  
     tga_font = font;
   
 }
