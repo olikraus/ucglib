@@ -1,7 +1,9 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "bdf_font.h"
+#include "fd.h"
 
 /*================================================*/
 
@@ -81,6 +83,7 @@ void help(void)
   printf("-d <file>     Overview picture: BDF font for description\n");
   printf("-a            Overview picture: Additional font information (background, orange&blue dot)\n");
   printf("-t            Overview picture: Test string (Woven silk pyjamas exchanged for blue quartz.)\n");
+  printf("-r Runtime test\n");
   printf("\n");
 
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
@@ -107,6 +110,7 @@ unsigned long left_margin = 1;
 unsigned long build_bbx_mode = 0;
 int font_picture_extra_info = 0;
 int font_picture_test_string = 0;
+int runtime_test = 0;
 char *c_filename = NULL;
 char *target_fontname = "bdf_font";
 
@@ -202,7 +206,7 @@ unsigned tga_draw_font_info(unsigned y, const char *fontname, bf_t *bf_desc_font
 }
 
 
-void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
+unsigned tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *bf)
 {
   long i;
   unsigned x, xmax;
@@ -233,6 +237,7 @@ void tga_draw_font(unsigned y, const char *fontname, bf_t *bf_desc_font, bf_t *b
     tga_draw_string(left_margin, y, "Woven silk pyjamas exchanged for blue quartz.", 0, xmax);
     y +=  tga_get_line_height(bf_desc_font, bf)+1;
   }
+  return y;
 }
 
 
@@ -247,6 +252,7 @@ int main(int argc, char **argv)
   int is_verbose = 0;
   char *map_str ="*";
   char *desc_font_str = "";
+  unsigned y;
   
   argv++;
   /*
@@ -276,6 +282,10 @@ int main(int argc, char **argv)
     else if ( is_arg(&argv, 't') != 0 )
     {
       font_picture_test_string = 1;
+    }
+    else if ( is_arg(&argv, 'r') != 0 )
+    {
+      runtime_test = 1;
     }
     else if ( get_num_arg(&argv, 'b', &build_bbx_mode) != 0 )
     {
@@ -327,7 +337,20 @@ int main(int argc, char **argv)
   }
   
   tga_init(800, 600);
-  tga_draw_font(0, bdf_filename, bf_desc_font, bf);
+  y = tga_draw_font(0, bdf_filename, bf_desc_font, bf);
+  
+  if ( runtime_test != 0 )
+  {
+    long i;
+    clock_t c = clock();
+    fd_t fd;
+    fd_init(&fd);
+    fd_set_font(&fd, bf->target_data);
+    for( i = 0; i < 10000; i++ )
+      fd_draw_string(&fd, left_margin, y, "Woven silk pyjamas exchanged for blue quartz.");
+    bf_Log(bf, "Runtime test: %.2lf sec", (double)(clock()-c)/(double)CLOCKS_PER_SEC);
+  }
+  
   tga_save("bdf.tga");
 
   if ( c_filename != NULL )

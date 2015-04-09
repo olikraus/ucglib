@@ -38,6 +38,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "fd.h"
+
 
 static uint16_t tga_width;
 static uint16_t tga_height;
@@ -55,6 +57,7 @@ static int bits_per_delta_x;
 static int char_width;
 static int char_height;
 static int char_descent;
+
 
 int tga_get_char_width(void)
 {
@@ -155,6 +158,7 @@ void tga_set_font(uint8_t *font)
     font++;
     
     tga_font = font;
+  
 }
 
 uint8_t *tga_get_glyph_data(uint8_t encoding)
@@ -275,22 +279,48 @@ void tga_fd_draw_bg_pixel(tga_fd_t *f, unsigned cnt)
   }
 }
 
+void tga_fd_draw_pixel(tga_fd_t *f, unsigned cnt, unsigned is_foreground)
+{
+  if ( is_foreground )
+  {
+    tga_fd_draw_fg_pixel(f, cnt);
+  }
+  else
+  {
+    tga_fd_draw_bg_pixel(f, cnt);
+  }
+}
+
+void tga_fd_decode_len(tga_fd_t *f, unsigned len, unsigned is_foreground)
+{
+  unsigned cnt, rem;
+  cnt = len;
+  for(;;)
+  {
+    rem = f->glyph_width;
+    rem -= f->x;
+    if ( cnt < rem )
+      break;
+    tga_fd_draw_pixel(f,rem, is_foreground);
+    cnt -= rem;
+    f->x = 0;
+    f->y++;
+  }
+  tga_fd_draw_pixel(f, cnt, is_foreground);
+  f->x += cnt;
+}
+
 unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 {
   unsigned a, b;
   unsigned cnt, rem;
   int x, y;
   unsigned d = 0;
-  //unsigned total;
-  
-  
-  /* init decode algorithm */
+    
   f->decode_ptr = glyph_data;
   f->decode_bit_pos = 0;
   
   f->decode_ptr += 1;
-  /* read glyph info */
-  //total = *f->decode_ptr;
   f->decode_ptr += 1;
   
   f->glyph_width = tga_fd_get_unsigned_bits(f, bits_per_char_width);
@@ -299,30 +329,17 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
   y = tga_fd_get_signed_bits(f, bits_per_char_y);
   d = tga_fd_get_signed_bits(f, bits_per_delta_x);
   
-  
-  
   if ( f->glyph_width > 0 )
   {
-    
-    //printf("width: %d\n", f->glyph_width);
-    //printf("height: %d\n", f->glyph_height);
-    //printf("x: %d\n", x);
-    //printf("y: %d\n", y);
-    //printf("d: %d\n", d);
     
     f->target_x += x;
     f->target_y -= f->glyph_height ;
     f->target_y -=y ;
-    
-    
+        
     /* reset local x/y position */
     f->x = 0;
     f->y = 0;
     
-    //puts("");
-
-    //printf("start decode ");
-
     /* decode glyph */
     for(;;)
     {
@@ -330,50 +347,14 @@ unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
       b = tga_fd_get_unsigned_bits(f, bits_per_1);
       do
       {
-	
-	cnt = a;
-	for(;;)
-	{
-	  rem = f->glyph_width;
-	  rem -= f->x;
-	  if ( cnt < rem )
-	    break;
-	  tga_fd_draw_bg_pixel(f,rem);
-	  cnt -= rem;
-	  f->x = 0;
-	  f->y++;
-	}
-	tga_fd_draw_bg_pixel(f, cnt);
-	f->x += cnt;
-
-	cnt = b;
-	for(;;)
-	{
-	  rem = f->glyph_width;
-	  rem -= f->x;
-	  if ( cnt < rem )
-	    break;
-	  tga_fd_draw_fg_pixel(f,rem);
-	  cnt -= rem;
-	  f->x = 0;
-	  f->y++;
-	}
-	tga_fd_draw_fg_pixel(f, cnt);
-	f->x += cnt;
-
-	
+	tga_fd_decode_len(f, a, 0);
+	tga_fd_decode_len(f, b, 1);
       } while( tga_fd_get_unsigned_bits(f, 1) != 0 );
-      
+
       if ( f->y >= f->glyph_height )
 	break;
     }
   }
-  /*
-  printf("\n");
-  printf("[x=%u y=%u]\n", f->x, f->y);
-  printf("cnt=%u total=%u\n", f->decode_ptr-glyph_data-2, total);
-  printf("end decode\n");
-  */
   return d;
 }
 

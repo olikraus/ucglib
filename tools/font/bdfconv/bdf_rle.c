@@ -37,6 +37,8 @@
 #include <assert.h>
 #include "bdf_font.h"
 
+#ifdef OLD_CODE
+
 #define SCREEN_W 140
 #define SCREEN_H 140
 
@@ -101,7 +103,7 @@ struct fd_struct
 typedef struct fd_struct fd_t;
 
 /* increment x and consider line wrap (inc y)*/
-void fd_inc(fd_t *f)
+static void fd_inc(fd_t *f)
 {
   unsigned x = f->x;
   x++;
@@ -114,7 +116,7 @@ void fd_inc(fd_t *f)
 }
 
 
-unsigned fd_get_unsigned_bits(fd_t *f, unsigned cnt)
+static unsigned fd_get_unsigned_bits(fd_t *f, unsigned cnt)
 {
   unsigned val;
   unsigned bit_pos = f->decode_bit_pos;
@@ -149,18 +151,18 @@ unsigned fd_get_unsigned_bits(fd_t *f, unsigned cnt)
 	r = bits(x)+1;
 
 */
-int fd_get_signed_bits(fd_t *t, int cnt)
+static int fd_get_signed_bits(fd_t *t, int cnt)
 {
   return (int)fd_get_unsigned_bits(t, cnt) - ((1<<cnt)>>1);
 }
 
 
-void fd_draw_pixel(fd_t *f)
+static void fd_draw_pixel(fd_t *f)
 {
   screen_set_pixel(f->x, f->y, '#');
 }
 
-void fd_decode(bg_t *bg, bbx_t *bbx, fd_t *f, unsigned rle_bits_per_0, unsigned rle_bits_per_1)
+static void fd_decode(bg_t *bg, bbx_t *bbx, fd_t *f, unsigned rle_bits_per_0, unsigned rle_bits_per_1)
 {
   unsigned a, b;
   unsigned i;
@@ -220,7 +222,7 @@ void fd_decode(bg_t *bg, bbx_t *bbx, fd_t *f, unsigned rle_bits_per_0, unsigned 
   screen_show();
 }
 
-
+#endif 
 
 /*===================================================*/
 
