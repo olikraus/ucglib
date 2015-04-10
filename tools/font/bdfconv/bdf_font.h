@@ -112,6 +112,7 @@ void bf_ShowAllGlyphs(bf_t *bf, bbx_t *bbx);
 void bf_CalculateMaxBBX(bf_t *bf);
 
 void bf_CalculateMinMaxDWidth(bf_t *bf);
+void bf_copy_bbx_and_update_shift(bf_t *bf, bbx_t *target_bbx, bg_t *bg);
 void bf_CalculateMaxBitFieldSize(bf_t *bf);
 void bf_RLECompressAllGlyphs(bf_t *bf);
 

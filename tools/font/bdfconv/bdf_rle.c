@@ -15,14 +15,14 @@
   9x15		2959	2649
   9x15r		1427	1242
   10x20		3453	3053
-  10x20r		1667	1417
+  10x20r		1667	1417	85%
   courB12		3959	3312
   courB12r	1857	1538
   courB24		10502      6661
-  courB24r	4775	3015
-  helvB24		10931	6904
-  helvB24r	4992	3166
-  logisoso50r	14375	5248
+  courB24r	4775	3015	63%
+  helvB24		10931	6904	63%
+  helvB24r	4992	3166	63%
+  logisoso50r	14375	5248	36%
   
   
 */
@@ -510,6 +510,8 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
     bg = bf->glyph_list[i];
     if ( bg->map_to >= 0 )
     {
+      bf_copy_bbx_and_update_shift(bf, &local_bbx, bg);
+#ifdef OLD_CLODE
       /* modifing the following code requires update ind bdf_font.c also */
 
       if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
@@ -562,7 +564,8 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
 	
 	
       }
-      
+#endif
+
       bg_rle_compress(bg, &local_bbx, rle_0, rle_1, is_output); 
       total_bits += bg->target_cnt*8+bg->target_bit_pos;
       if ( is_output != 0 )

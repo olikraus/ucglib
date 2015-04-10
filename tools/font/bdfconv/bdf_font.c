@@ -344,6 +344,59 @@ int get_signed_bit_size(long v)
   return get_unsigned_bit_size(v) + 1;
 }
 
+void bf_copy_bbx_and_update_shift(bf_t *bf, bbx_t *target_bbx, bg_t *bg)
+{
+      /* modifing the following code requires update ind bdf_rle.c also */
+      if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
+      {
+	*target_bbx = bg->bbx;	
+      }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_MAX )
+      {
+	*target_bbx = bf->max;	
+	target_bbx->x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
+	if ( target_bbx->w < bg->dwidth_x )
+	  target_bbx->w = bg->dwidth_x;
+      }
+      else if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
+      {
+	target_bbx->w = bf->max.w;
+	if ( target_bbx->w < bg->dwidth_x )
+	  target_bbx->w = bg->dwidth_x;
+	target_bbx->w = (target_bbx->w+7) & ~7;
+	target_bbx->h = (bf->max.h+7) & ~7;
+	target_bbx->x = bf->max.x;
+	target_bbx->y = bf->max.y;
+	target_bbx->x = 0;
+	if ( bg->bbx.x < 0 )
+	  bg->shift_x = bg->bbx.x;
+      }
+      else
+      {
+
+	*target_bbx = bf->max;
+	target_bbx->w = bg->bbx.w;	
+	target_bbx->x = bg->bbx.x;	
+	target_bbx->x = 0;
+	if ( bg->bbx.x < 0 )
+	{
+	  /* e.g. "j" */
+	  target_bbx->w -= bg->bbx.x;
+	  bg->shift_x = bg->bbx.x;
+	}
+	else
+	{
+	  /* e.g. "B" */
+	  target_bbx->w += bg->bbx.x;
+	  //bg->shift_x = bg->bbx.x;
+	}
+	if ( target_bbx->w < bg->dwidth_x )
+	  target_bbx->w = bg->dwidth_x;
+      }
+}
+
 void bf_CalculateMaxBitFieldSize(bf_t *bf)
 {
   int i;
@@ -361,6 +414,8 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
     if ( bg->map_to >= 0 )
     {
       
+      bf_copy_bbx_and_update_shift(bf, &local_bbx, bg);
+#ifdef OLD_CLODE      
       /* modifing the following code requires update ind bdf_rle.c also */
       if ( bf->bbx_mode == BDF_BBX_MODE_MINIMAL )
       {
@@ -410,7 +465,7 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
 	if ( local_bbx.w < bg->dwidth_x )
 	  local_bbx.w = bg->dwidth_x;
       }
-      
+#endif
       bs = get_unsigned_bit_size(local_bbx.w);
       if ( bf->bbx_w_max_bit_size < bs )
 	bf->bbx_w_max_bit_size = bs;
