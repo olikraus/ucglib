@@ -552,14 +552,15 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
 
 unsigned bf_RLE_get_glyph_data(bf_t *bf, uint8_t encoding)
 {
-  int i;
   uint8_t *font = bf->target_data;
   font += BDF_RLE_FONT_GLYPH_START;
-  for( i = 0; i < bf->selected_glyphs; i++ )
+  for(;;)
   {
+    if ( font[1] == 0 )
+      break;
     if ( font[0] == encoding )
     {
-      return font-bf->target_data;
+      return (font-bf->target_data)-BDF_RLE_FONT_GLYPH_START;
     }
     font += font[1];
   }
@@ -713,6 +714,9 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
       }
     }
   }
+  /* add empty glyph as end of font marker */
+  bf_AddTargetData(bf, 0);
+  bf_AddTargetData(bf, 0);
   
   pos = bf_RLE_get_glyph_data(bf, 'A');
   bf->target_data[17] = pos >> 8;

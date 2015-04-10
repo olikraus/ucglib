@@ -49,10 +49,21 @@ void fd_set_font(fd_t *fd, uint8_t *font)
 
 uint8_t *fd_get_glyph_data(fd_t *fd, uint8_t encoding)
 {
-  int i;
+  
   uint8_t *font = fd->font;
-  for( i = 0; i < fd->glyph_cnt; i++ )
+  if ( encoding >= 'a' )		/* assumes 'a' > 'A' */
   {
+    font += fd->small_a_pos;
+  }
+  else if ( encoding >= 'A' )
+  {
+    font += fd->capital_a_pos;
+  }
+  
+  for(;;)
+  {
+    if ( font[1] == 0 )
+      break;
     if ( font[0] == encoding )
     {
       return font;

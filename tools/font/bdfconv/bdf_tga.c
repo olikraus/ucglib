@@ -167,6 +167,7 @@ void tga_set_font(uint8_t *font)
   
 }
 
+#ifdef OLD_CODE
 uint8_t *tga_get_glyph_data(uint8_t encoding)
 {
   int i;
@@ -181,6 +182,24 @@ uint8_t *tga_get_glyph_data(uint8_t encoding)
   }
   return NULL;
 }
+#endif
+
+uint8_t *tga_get_glyph_data(uint8_t encoding)
+{
+  uint8_t *font = tga_font;
+  for(;;)
+  {
+    if ( font[1] == 0 )
+      break;
+    if ( font[0] == encoding )
+    {
+      return font;
+    }
+    font += font[1];
+  }
+  return NULL;
+}
+
 
 /* font decode */
 struct tga_fd_struct
@@ -332,7 +351,7 @@ void tga_fd_decode_len(tga_fd_t *f, unsigned len, unsigned is_foreground)
 unsigned tga_fd_decode(tga_fd_t *f, uint8_t *glyph_data)
 {
   unsigned a, b;
-  unsigned cnt, rem;
+  //unsigned cnt, rem;
   int x, y;
   unsigned d = 0;
     
