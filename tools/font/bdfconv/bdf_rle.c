@@ -56,6 +56,7 @@
 #define BDF_RLE_FONT_GLYPH_START 21
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "bdf_font.h"
 
@@ -736,6 +737,13 @@ void bf_RLECompressAllGlyphs(bf_t *bf)
     {
       if ( bg->target_data != NULL )
       {
+	
+	if ( bg->target_cnt >= 255 )
+	{
+	  bf_Error(bf, "RLE Compress: Error, glyph too large, encoding=", bg->encoding);
+	  exit(1);
+	}
+
 	for( j = 0; j < bg->target_cnt; j++ )
 	{
 	  bf_AddTargetData(bf, bg->target_data[j]);

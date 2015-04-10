@@ -336,7 +336,7 @@ int main(int argc, char **argv)
     exit(1);
   }
   
-  tga_init(800, 600);
+  tga_init(1024, 600);
   y = tga_draw_font(0, bdf_filename, bf_desc_font, bf);
   
   if ( runtime_test != 0 )
