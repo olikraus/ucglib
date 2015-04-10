@@ -4,6 +4,27 @@
   
   run length glyph encoding
   
+  
+  size comparison with old and new font format
+  4x6		1500	1469
+  4x6r		734		726
+  6x10		1866	2009
+  6x10r		889		971
+  7x13B		2172	2253
+  7x13Br		1041	1017
+  9x15		2959	2649
+  9x15r		1427	1242
+  10x20		3453	3053
+  10x20r		1667	1417
+  courB12		3959	3312
+  courB12r	1857	1538
+  courB24		10502      6661
+  courB24r	4775	3015
+  helvB24		10931	6904
+  helvB24r	4992	3166
+  logisoso50r	14375	5248
+  
+  
 */
 
 /* font information */
@@ -501,10 +522,15 @@ unsigned long bf_RLECompressAllGlyphsWithFieldSize(bf_t *bf, int rle_0, int rle_
 	local_bbx.x = 0;
 	if ( bg->bbx.x < 0 )
 	  bg->shift_x = bg->bbx.x;
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
       }
       else if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
       {
-	local_bbx.w = (bf->max.w+7) & ~7;
+	local_bbx.w = bf->max.w;
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
+	local_bbx.w = (local_bbx.w+7) & ~7;
 	local_bbx.h = (bf->max.h+7) & ~7;
 	local_bbx.x = bf->max.x;
 	local_bbx.y = bf->max.y;

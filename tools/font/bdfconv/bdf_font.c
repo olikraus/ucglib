@@ -372,10 +372,15 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
 	local_bbx.x = 0;
 	if ( bg->bbx.x < 0 )
 	  bg->shift_x = bg->bbx.x;
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
       }
       else if ( bf->bbx_mode == BDF_BBX_MODE_M8 )
       {
-	local_bbx.w = (bf->max.w+7) & ~7;
+	local_bbx.w = bf->max.w;
+	if ( local_bbx.w < bg->dwidth_x )
+	  local_bbx.w = bg->dwidth_x;
+	local_bbx.w = (local_bbx.w+7) & ~7;
 	local_bbx.h = (bf->max.h+7) & ~7;
 	local_bbx.x = bf->max.x;
 	local_bbx.y = bf->max.y;
