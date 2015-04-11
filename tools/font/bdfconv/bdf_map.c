@@ -141,9 +141,9 @@ static void map_cmd(const char **s)
   }
   else 
   {
-    map_to = 0;
     is_exclude = 0;
     get_range(s);
+    map_to = range_from;
     if ( **s == '>')
     {
       (*s)++;

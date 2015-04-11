@@ -91,7 +91,7 @@ void help(void)
   printf("default := \"*\"\n");
   printf("maprange := <range> [  \">\" <num> ]        Move specified glyph <range> to target code <num>\n");
   printf("exclude := \"~\" <range> \n");
-  printf("range := <num> [ \"-\" <num> ]\n");
+  printf("range := <num> [ \"-\" <num> ]              Select glyphs within specified range\n");
   printf("num := <hexnum> | <decnum>\n");
   printf("hexnum := \"$\" <hexdigit> { <hexdigit> }\n");
   printf("decnum := <decdigit> { <decdigit> }\n");
@@ -101,7 +101,12 @@ void help(void)
   printf("{ }: zero, one ore more\n");
   printf("[ ]: zero or once\n");
   printf("|: alternative\n");
-  
+
+  printf("example:\n");
+  printf("  -m '32-255'     select gylphs from encoding 32 to 255\n");
+  printf("  -m '32-255,~64' select gylphs from encoding 32 to 255, exclude '@'\n");
+  printf("  -m '32,48-57'   select space, '1', '2', ... '9'\n");
+
 }
 
 /*================================================*/
