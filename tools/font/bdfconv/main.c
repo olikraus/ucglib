@@ -89,9 +89,11 @@ void help(void)
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
   printf("mapcmd := <default> | <maprange> | <exclude>\n");
   printf("default := \"*\"\n");
-  printf("maprange := <range> [  \">\" <num> ]        Move specified glyph <range> to target code <num>\n");
+  printf("maprange := <range> [  \">\" <addexpr> ]        Move specified glyph <range> to target code <num>\n");
   printf("exclude := \"~\" <range> \n");
-  printf("range := <num> [ \"-\" <num> ]              Select glyphs within specified range\n");
+  printf("range := <addexpr> [ \"-\" <addexpr> ]          Select glyphs within specified range\n");
+  printf("addexpr := <mulexpr> [ \"+\" <mulexpr> ]\n");
+  printf("mulexpr := <num> [ \"*\" <num> ]\n");
   printf("num := <hexnum> | <decnum>\n");
   printf("hexnum := \"$\" <hexdigit> { <hexdigit> }\n");
   printf("decnum := <decdigit> { <decdigit> }\n");

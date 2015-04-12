@@ -102,9 +102,35 @@ static long get_num(const char **s)
   return get_hex(s);
 }
 
+static long get_mul(const char **s)
+{
+  long v;
+  v = get_num(s);
+  if ( (**s) == '*' )
+  {
+    (*s)++;
+    skip_space(s);
+    v *= get_num(s);
+  }
+  return v;
+}
+
+static long get_add(const char **s)
+{
+  long v;
+  v = get_mul(s);
+  if ( (**s) == '+' )
+  {
+    (*s)++;
+    skip_space(s);
+    v += get_mul(s);
+  }
+  return v;
+}
+
 static void get_range(const char **s)
 {
-  range_from = get_num(s);
+  range_from = get_add(s);
   if ( **s != '-' )
   {
     range_to = range_from;
@@ -113,7 +139,7 @@ static void get_range(const char **s)
   {
     (*s)++;
     skip_space(s);
-    range_to = get_num(s);
+    range_to = get_add(s);
   }
 }
 
@@ -148,7 +174,7 @@ static void map_cmd(const char **s)
     {
       (*s)++;
       skip_space(s);
-      map_to = get_num(s);
+      map_to = get_add(s);
     }
   }
 }

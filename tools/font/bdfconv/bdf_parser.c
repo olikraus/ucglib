@@ -149,6 +149,35 @@ static long bf_get_long(bf_t *bf)
   return v*sign;
 }
 
+/*
+static long bf_get_mul(bf_t *bf)
+{
+  long v;
+  v = bf_get_long(bf);
+  if ( bf_curr(bf) == '*' )
+  {
+    bf_next(bf);
+    bf_skipspace(bf);
+    v *= bf_get_long(bf);    
+  }
+  return v;
+}
+
+static long bf_get_add(bf_t *bf)
+{
+  long v;
+  v = bf_get_mul(bf);
+  if ( bf_curr(bf) == '+' )
+  {
+    bf_next(bf);
+    bf_skipspace(bf);
+    v += bf_get_mul(bf);    
+  }
+  return v;
+}
+*/
+
+
 static int bf_add_glyph_to_list(bf_t *bf)
 {
   bg_t *bg;
