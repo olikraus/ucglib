@@ -342,24 +342,26 @@ int main(int argc, char **argv)
   {
     exit(1);
   }
-  
-  tga_init(1024, 600);
-  y = tga_draw_font(0, bdf_filename, bf_desc_font, bf);
-  
-  if ( runtime_test != 0 )
-  {
-    long i;
-    clock_t c = clock();
-    fd_t fd;
-    fd_init(&fd);
-    fd_set_font(&fd, bf->target_data);
-    for( i = 0; i < 10000; i++ )
-      fd_draw_string(&fd, left_margin, y, "Woven silk pyjamas exchanged for blue quartz.");
-    bf_Log(bf, "Runtime test: %.2lf sec", (double)(clock()-c)/(double)CLOCKS_PER_SEC);
-  }
-  
-  tga_save("bdf.tga");
 
+  if ( bf_desc_font != NULL )
+  {
+    tga_init(1024, 600);
+    y = tga_draw_font(0, bdf_filename, bf_desc_font, bf);
+    
+    if ( runtime_test != 0 )
+    {
+      long i;
+      clock_t c = clock();
+      fd_t fd;
+      fd_init(&fd);
+      fd_set_font(&fd, bf->target_data);
+      for( i = 0; i < 10000; i++ )
+	fd_draw_string(&fd, left_margin, y, "Woven silk pyjamas exchanged for blue quartz.");
+      bf_Log(bf, "Runtime test: %.2lf sec", (double)(clock()-c)/(double)CLOCKS_PER_SEC);
+    }
+    
+    tga_save("bdf.tga");
+  }
   if ( c_filename != NULL )
   {
     bf_WriteUCGCByFilename(bf, c_filename, target_fontname, "  ");
