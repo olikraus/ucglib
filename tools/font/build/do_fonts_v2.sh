@@ -308,25 +308,25 @@ echo "contributed"
 
 
 echo "fontstruct"
-./do_fontsize_pixel.sh 8 ../ttf/pixel/p01type.ttf p01type
-./do_fontsize_pixel.sh 8 ../ttf/pixel/lucasfont_alternate.ttf lucasfont_alternate
-./do_fontsize_pixel.sh 8 ../ttf/pixel/chikita.ttf chikita
-./do_fontsize_pixel.sh 8 ../ttf/pixel/pixelle_micro.ttf pixelle_micro
-./do_fontsize_pixel.sh 8 ../ttf/pixel/trixel_square.ttf trixel_square
-./do_fontsize_pixel.sh 16 ../ttf/pixel/robot_de_niro.ttf robot_de_niro
-./do_fontsize_pixel.sh 8 ../ttf/pixel/baby.ttf baby
-./do_fontsize_pixel.sh 8 ../ttf/pixel/blipfest_07.ttf blipfest_07
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/p01type.ttf p01type
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/lucasfont_alternate.ttf lucasfont_alternate
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/chikita.ttf chikita
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/pixelle_micro.ttf pixelle_micro
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/trixel_square.ttf trixel_square
+./do_fontsize_pixel_v2.sh 16 ../ttf/pixel/robot_de_niro.ttf robot_de_niro
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/baby.ttf baby
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/blipfest_07.ttf blipfest_07
 
 echo "04B"
-./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_03B_.TTF 04b_03b 
-./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_03__.TTF 04b_03 
-./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/04B_24__.TTF 04b_24 
+./do_fontsize_pixel_f1_v2.sh 8 ../ttf/pixel/04B_03B_.TTF 04b_03b 
+./do_fontsize_pixel_f1_v2.sh 8 ../ttf/pixel/04B_03__.TTF 04b_03 
+./do_fontsize_pixel_f1_v2.sh 8 ../ttf/pixel/04B_24__.TTF 04b_24 
 
 echo "orgdot"
-./do_fontsize_pixel.sh 8 ../ttf/pixel/TEACPSS_.TTF tpss 
-./do_fontsize_pixel.sh 8 ../ttf/pixel/TEACPSSB.TTF tpssb 
-./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/ORG_V01_.TTF orgv01 
-./do_fontsize_pixel_f1.sh 8 ../ttf/pixel/FIXED_V0.TTF fixed_v0 
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/TEACPSS_.TTF tpss 
+./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/TEACPSSB.TTF tpssb 
+./do_fontsize_pixel_f1_v2.sh 8 ../ttf/pixel/ORG_V01_.TTF orgv01 
+./do_fontsize_pixel_f1_v2.sh 8 ../ttf/pixel/FIXED_V0.TTF fixed_v0 
 
 
 
@@ -350,58 +350,58 @@ echo "various ttf"
 #./do_fontsize.sh 40 ../ttf/GenBasB.ttf gdb25
 #./do_fontsize.sh 48 ../ttf/GenBasB.ttf gdb30
 
-./do_fontsize_a.sh 16 ../ttf/fu/FreeUniversal-Bold.ttf fub11
-./do_fontsize_a.sh 20 ../ttf/fu/FreeUniversal-Bold.ttf fub14
-./do_fontsize_a.sh 23 ../ttf/fu/FreeUniversal-Bold.ttf fub17
-./do_fontsize_a.sh 27 ../ttf/fu/FreeUniversal-Bold.ttf fub20
-./do_fontsize_a.sh 34 ../ttf/fu/FreeUniversal-Bold.ttf fub25
-./do_fontsize_a.sh 40 ../ttf/fu/FreeUniversal-Bold.ttf fub30
-./do_fontsize_a_n.sh 49 ../ttf/fu/FreeUniversal-Bold.ttf fub35n
-./do_fontsize_a_n.sh 58 ../ttf/fu/FreeUniversal-Bold.ttf fub42n
-./do_fontsize_a_n.sh 68 ../ttf/fu/FreeUniversal-Bold.ttf fub49n
+./do_fontsize_a_v2.sh 16 ../ttf/fu/FreeUniversal-Bold.ttf fub11
+./do_fontsize_a_v2.sh 20 ../ttf/fu/FreeUniversal-Bold.ttf fub14
+./do_fontsize_a_v2.sh 23 ../ttf/fu/FreeUniversal-Bold.ttf fub17
+./do_fontsize_a_v2.sh 27 ../ttf/fu/FreeUniversal-Bold.ttf fub20
+./do_fontsize_a_v2.sh 34 ../ttf/fu/FreeUniversal-Bold.ttf fub25
+./do_fontsize_a_v2.sh 40 ../ttf/fu/FreeUniversal-Bold.ttf fub30
+./do_fontsize_a_n_v2.sh 49 ../ttf/fu/FreeUniversal-Bold.ttf fub35n
+./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Bold.ttf fub42n
+./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Bold.ttf fub49n
   
-./do_fontsize_a.sh 15 ../ttf/fu/FreeUniversal-Regular.ttf fur11
-./do_fontsize_a.sh 19 ../ttf/fu/FreeUniversal-Regular.ttf fur14
-./do_fontsize_a.sh 23 ../ttf/fu/FreeUniversal-Regular.ttf fur17
-./do_fontsize_a.sh 28 ../ttf/fu/FreeUniversal-Regular.ttf fur20
-./do_fontsize_a.sh 34 ../ttf/fu/FreeUniversal-Regular.ttf fur25
-./do_fontsize_a.sh 40 ../ttf/fu/FreeUniversal-Regular.ttf fur30
-./do_fontsize_a_n.sh 48 ../ttf/fu/FreeUniversal-Regular.ttf fur35n
-./do_fontsize_a_n.sh 58 ../ttf/fu/FreeUniversal-Regular.ttf fur42n
-./do_fontsize_a_n.sh 68 ../ttf/fu/FreeUniversal-Regular.ttf fur49n
+./do_fontsize_a_v2.sh 15 ../ttf/fu/FreeUniversal-Regular.ttf fur11
+./do_fontsize_a_v2.sh 19 ../ttf/fu/FreeUniversal-Regular.ttf fur14
+./do_fontsize_a_v2.sh 23 ../ttf/fu/FreeUniversal-Regular.ttf fur17
+./do_fontsize_a_v2.sh 28 ../ttf/fu/FreeUniversal-Regular.ttf fur20
+./do_fontsize_a_v2.sh 34 ../ttf/fu/FreeUniversal-Regular.ttf fur25
+./do_fontsize_a_v2.sh 40 ../ttf/fu/FreeUniversal-Regular.ttf fur30
+./do_fontsize_a_n_v2.sh 48 ../ttf/fu/FreeUniversal-Regular.ttf fur35n
+./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Regular.ttf fur42n
+./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Regular.ttf fur49n
 
-./do_fontsize_a.sh 25 ../ttf/os/OldStandard-Bold.ttf osb18
-./do_fontsize_a.sh 28 ../ttf/os/OldStandard-Bold.ttf osb21
-./do_fontsize_a.sh 34 ../ttf/os/OldStandard-Bold.ttf osb26
-./do_fontsize_a.sh 38 ../ttf/os/OldStandard-Bold.ttf osb29
-./do_fontsize_a.sh 48 ../ttf/os/OldStandard-Bold.ttf osb35
-#./do_fontsize_a.sh 55 ../ttf/os/OldStandard-Bold.ttf osb41
+./do_fontsize_a_v2.sh 25 ../ttf/os/OldStandard-Bold.ttf osb18
+./do_fontsize_a_v2.sh 28 ../ttf/os/OldStandard-Bold.ttf osb21
+./do_fontsize_a_v2.sh 34 ../ttf/os/OldStandard-Bold.ttf osb26
+./do_fontsize_a_v2.sh 38 ../ttf/os/OldStandard-Bold.ttf osb29
+./do_fontsize_a_v2.sh 48 ../ttf/os/OldStandard-Bold.ttf osb35
+#./do_fontsize_a_v2.sh 55 ../ttf/os/OldStandard-Bold.ttf osb41
 
-./do_fontsize_a.sh 26 ../ttf/os/OldStandard-Regular.ttf osr18
-./do_fontsize_a.sh 29 ../ttf/os/OldStandard-Regular.ttf osr21
-./do_fontsize_a.sh 36 ../ttf/os/OldStandard-Regular.ttf osr26
-./do_fontsize_a.sh 41 ../ttf/os/OldStandard-Regular.ttf osr29
-./do_fontsize_a.sh 49 ../ttf/os/OldStandard-Regular.ttf osr35
-#./do_fontsize_a.sh 57 ../ttf/os/OldStandard-Reglar.ttf osr41
+./do_fontsize_a_v2.sh 26 ../ttf/os/OldStandard-Regular.ttf osr18
+./do_fontsize_a_v2.sh 29 ../ttf/os/OldStandard-Regular.ttf osr21
+./do_fontsize_a_v2.sh 36 ../ttf/os/OldStandard-Regular.ttf osr26
+./do_fontsize_a_v2.sh 41 ../ttf/os/OldStandard-Regular.ttf osr29
+./do_fontsize_a_v2.sh 49 ../ttf/os/OldStandard-Regular.ttf osr35
+#./do_fontsize_a_v2.sh 57 ../ttf/os/OldStandard-Reglar.ttf osr41
 
 echo "logisoso"
 
-./do_fontsize_a.sh 23 ../ttf/log/Logisoso.ttf logisoso16
-./do_fontsize_a.sh 27 ../ttf/log/Logisoso.ttf logisoso18
-./do_fontsize_a.sh 30 ../ttf/log/Logisoso.ttf logisoso20
-./do_fontsize_a.sh 32 ../ttf/log/Logisoso.ttf logisoso22
-./do_fontsize_a.sh 34 ../ttf/log/Logisoso.ttf logisoso24
-./do_fontsize_a.sh 38 ../ttf/log/Logisoso.ttf logisoso26
-./do_fontsize_a.sh 40 ../ttf/log/Logisoso.ttf logisoso28
-./do_fontsize_a_no_64.sh 43 ../ttf/log/Logisoso.ttf logisoso30
-./do_fontsize_a_no_64.sh 45 ../ttf/log/Logisoso.ttf logisoso32
-./do_fontsize_a_no_64.sh 49 ../ttf/log/Logisoso.ttf logisoso34
-./do_fontsize_a_no_64.sh 54 ../ttf/log/Logisoso.ttf logisoso38
-./do_fontsize_a_no_64.sh 60 ../ttf/log/Logisoso.ttf logisoso42
-./do_fontsize_a_no_64.sh 66 ../ttf/log/Logisoso.ttf logisoso46
-./do_fontsize_a_no_64.sh 71 ../ttf/log/Logisoso.ttf logisoso50
-./do_fontsize_a_n.sh  77 ../ttf/log/Logisoso.ttf logisoso54n
-./do_fontsize_a_n.sh  83 ../ttf/log/Logisoso.ttf logisoso58n
-./do_fontsize_a_n.sh  89 ../ttf/log/Logisoso.ttf logisoso62n
+./do_fontsize_a_v2.sh 23 ../ttf/log/Logisoso.ttf logisoso16
+./do_fontsize_a_v2.sh 27 ../ttf/log/Logisoso.ttf logisoso18
+./do_fontsize_a_v2.sh 30 ../ttf/log/Logisoso.ttf logisoso20
+./do_fontsize_a_v2.sh 32 ../ttf/log/Logisoso.ttf logisoso22
+./do_fontsize_a_v2.sh 34 ../ttf/log/Logisoso.ttf logisoso24
+./do_fontsize_a_v2.sh 38 ../ttf/log/Logisoso.ttf logisoso26
+./do_fontsize_a_v2.sh 40 ../ttf/log/Logisoso.ttf logisoso28
+./do_fontsize_a_no_64_v2.sh 43 ../ttf/log/Logisoso.ttf logisoso30
+./do_fontsize_a_no_64_v2.sh 45 ../ttf/log/Logisoso.ttf logisoso32
+./do_fontsize_a_no_64_v2.sh 49 ../ttf/log/Logisoso.ttf logisoso34
+./do_fontsize_a_no_64_v2.sh 54 ../ttf/log/Logisoso.ttf logisoso38
+./do_fontsize_a_no_64_v2.sh 60 ../ttf/log/Logisoso.ttf logisoso42
+./do_fontsize_a_no_64_v2.sh 66 ../ttf/log/Logisoso.ttf logisoso46
+./do_fontsize_a_no_64_v2.sh 71 ../ttf/log/Logisoso.ttf logisoso50
+./do_fontsize_a_n_v2.sh  77 ../ttf/log/Logisoso.ttf logisoso54n
+./do_fontsize_a_n_v2.sh  83 ../ttf/log/Logisoso.ttf logisoso58n
+./do_fontsize_a_n_v2.sh  89 ../ttf/log/Logisoso.ttf logisoso62n
 
 echo "execute do_combine.sh after executing this script"
