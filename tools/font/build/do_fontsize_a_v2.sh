@@ -15,7 +15,7 @@ echo $2  ... ${CFILE}
 ../otf2bdf/otf2bdf -a -p $1 -r 72 $2 -o ${BDF}
 # replace BDF if it exists
 if test -r ../ttfbdfupdate/${BDF}; then echo ${BDF} "manual update" &&  cp ../ttfbdfupdate/${BDF} .; fi
-../bdfconv/bdfconv -b 0 ${BDF} -o ${IDENTIFIER} -o ${CFILE} >/dev/null
-../bdfconv/bdfconv -b 0 -m '32-127>32' ${BDF} -n ${IDENTIFIER}r -o ${CFILER} >/dev/null
-../bdfconv/bdfconv -b 0 -m '32,42-58>42' ${BDF} -n ${IDENTIFIER}n -o ${CFILEN} >/dev/null
+../bdfconv/bdfconv -b 0 ${BDF} -n ${IDENTIFIER}_tf -o ${CFILE} >/dev/null
+../bdfconv/bdfconv -b 0 -m '32-127>32' ${BDF} -n ${IDENTIFIER}_tr -o ${CFILER} >/dev/null
+../bdfconv/bdfconv -b 0 -m '32,42-58>42' ${BDF} -n ${IDENTIFIER}_tn -o ${CFILEN} >/dev/null
 #cp ${CFILE} ../../../src/.

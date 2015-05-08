@@ -24,6 +24,9 @@
 #  -m '65-104>65' --> -m '65-104>65'
 #  -m '32,42-58>42'
 
+mkdir pixel
+mkdir ttf
+
 
 echo u8glib_4
 ../bdfconv/bdfconv -b 0 ../bdf/u8glib_4.bdf -n ucg_font_u8glib_4_tf -o ./pixel/ucg_font_u8glib_4_tf.c 
@@ -197,109 +200,109 @@ echo "adobe courR"
 ../bdfconv/bdfconv -b 0   -m '42-58>42,32' ../bdf/courR24.bdf -n ucg_font_courR24_tn -o ./pixel/ucg_font_courr24_tn.c 
 
 echo "adobe helvB"
-../bdfconv/bdfconv -b 0  ../bdf/helvB08.bdf -n ucg_font_helvB08 -o ./pixel/ucg_font_helvb08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB08.bdf -n ucg_font_helvB08r -o ./pixel/ucg_font_helvb08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvB10.bdf -n ucg_font_helvB10 -o ./pixel/ucg_font_helvb10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB10.bdf -n ucg_font_helvB10r -o ./pixel/ucg_font_helvb10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvB12.bdf -n ucg_font_helvB12 -o ./pixel/ucg_font_helvb12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB12.bdf -n ucg_font_helvB12r -o ./pixel/ucg_font_helvb12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvB14.bdf -n ucg_font_helvB14 -o ./pixel/ucg_font_helvb14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB14.bdf -n ucg_font_helvB14r -o ./pixel/ucg_font_helvb14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvB18.bdf -n ucg_font_helvB18 -o ./pixel/ucg_font_helvb18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB18.bdf -n ucg_font_helvB18r -o ./pixel/ucg_font_helvb18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvB24.bdf -n ucg_font_helvB24 -o ./pixel/ucg_font_helvb24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB24.bdf -n ucg_font_helvB24r -o ./pixel/ucg_font_helvb24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/helvB24.bdf -n ucg_font_helvB24n -o ./pixel/ucg_font_helvb24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB08.bdf -n ucg_font_helvB08_tf -o ./pixel/ucg_font_helvb08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB08.bdf -n ucg_font_helvB08_tr -o ./pixel/ucg_font_helvb08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB10.bdf -n ucg_font_helvB10_tf -o ./pixel/ucg_font_helvb10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB10.bdf -n ucg_font_helvB10_tr -o ./pixel/ucg_font_helvb10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB12.bdf -n ucg_font_helvB12_tf -o ./pixel/ucg_font_helvb12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB12.bdf -n ucg_font_helvB12_tr -o ./pixel/ucg_font_helvb12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB14.bdf -n ucg_font_helvB14_tf -o ./pixel/ucg_font_helvb14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB14.bdf -n ucg_font_helvB14_tr -o ./pixel/ucg_font_helvb14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB18.bdf -n ucg_font_helvB18_tf -o ./pixel/ucg_font_helvb18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB18.bdf -n ucg_font_helvB18_tr -o ./pixel/ucg_font_helvb18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvB24.bdf -n ucg_font_helvB24_tf -o ./pixel/ucg_font_helvb24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvB24.bdf -n ucg_font_helvB24_tr -o ./pixel/ucg_font_helvb24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/helvB24.bdf -n ucg_font_helvB24_tn -o ./pixel/ucg_font_helvb24_tn.c 
 
 echo "adobe helvR"
-../bdfconv/bdfconv -b 0  ../bdf/helvR08.bdf -n ucg_font_helvR08 -o ./pixel/ucg_font_helvr08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR08.bdf -n ucg_font_helvR08r -o ./pixel/ucg_font_helvr08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvR10.bdf -n ucg_font_helvR10 -o ./pixel/ucg_font_helvr10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR10.bdf -n ucg_font_helvR10r -o ./pixel/ucg_font_helvr10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvR12.bdf -n ucg_font_helvR12 -o ./pixel/ucg_font_helvr12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR12.bdf -n ucg_font_helvR12r -o ./pixel/ucg_font_helvr12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvR14.bdf -n ucg_font_helvR14 -o ./pixel/ucg_font_helvr14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR14.bdf -n ucg_font_helvR14r -o ./pixel/ucg_font_helvr14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvR18.bdf -n ucg_font_helvR18 -o ./pixel/ucg_font_helvr18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR18.bdf -n ucg_font_helvR18r -o ./pixel/ucg_font_helvr18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/helvR24.bdf -n ucg_font_helvR24 -o ./pixel/ucg_font_helvr24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR24.bdf -n ucg_font_helvR24r -o ./pixel/ucg_font_helvr24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/helvR24.bdf -n ucg_font_helvR24n -o ./pixel/ucg_font_helvr24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR08.bdf -n ucg_font_helvR08_tf -o ./pixel/ucg_font_helvr08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR08.bdf -n ucg_font_helvR08_tr -o ./pixel/ucg_font_helvr08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR10.bdf -n ucg_font_helvR10_tf -o ./pixel/ucg_font_helvr10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR10.bdf -n ucg_font_helvR10_tr -o ./pixel/ucg_font_helvr10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR12.bdf -n ucg_font_helvR12_tf -o ./pixel/ucg_font_helvr12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR12.bdf -n ucg_font_helvR12_tr -o ./pixel/ucg_font_helvr12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR14.bdf -n ucg_font_helvR14_tf -o ./pixel/ucg_font_helvr14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR14.bdf -n ucg_font_helvR14_tr -o ./pixel/ucg_font_helvr14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR18.bdf -n ucg_font_helvR18_tf -o ./pixel/ucg_font_helvr18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR18.bdf -n ucg_font_helvR18_tr -o ./pixel/ucg_font_helvr18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/helvR24.bdf -n ucg_font_helvR24_tf -o ./pixel/ucg_font_helvr24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR24.bdf -n ucg_font_helvR24_tr -o ./pixel/ucg_font_helvr24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/helvR24.bdf -n ucg_font_helvR24_tn -o ./pixel/ucg_font_helvr24_tn.c 
 
 echo "adobe ncenB"
-../bdfconv/bdfconv -b 0  ../bdf/ncenB08.bdf -n ucg_font_ncenB08 -o ./pixel/ucg_font_ncenb08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB08.bdf -n ucg_font_ncenB08r -o ./pixel/ucg_font_ncenb08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenB10.bdf -n ucg_font_ncenB10 -o ./pixel/ucg_font_ncenb10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB10.bdf -n ucg_font_ncenB10r -o ./pixel/ucg_font_ncenb10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenB12.bdf -n ucg_font_ncenB12 -o ./pixel/ucg_font_ncenb12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB12.bdf -n ucg_font_ncenB12r -o ./pixel/ucg_font_ncenb12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenB14.bdf -n ucg_font_ncenB14 -o ./pixel/ucg_font_ncenb14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB14.bdf -n ucg_font_ncenB14r -o ./pixel/ucg_font_ncenb14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenB18.bdf -n ucg_font_ncenB18 -o ./pixel/ucg_font_ncenb18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB18.bdf -n ucg_font_ncenB18r -o ./pixel/ucg_font_ncenb18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenB24.bdf -n ucg_font_ncenB24 -o ./pixel/ucg_font_ncenb24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB24.bdf -n ucg_font_ncenB24r -o ./pixel/ucg_font_ncenb24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenB24.bdf -n ucg_font_ncenB24n -o ./pixel/ucg_font_ncenb24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB08.bdf -n ucg_font_ncenB08_tf -o ./pixel/ucg_font_ncenb08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB08.bdf -n ucg_font_ncenB08_tr -o ./pixel/ucg_font_ncenb08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB10.bdf -n ucg_font_ncenB10_tf -o ./pixel/ucg_font_ncenb10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB10.bdf -n ucg_font_ncenB10_tr -o ./pixel/ucg_font_ncenb10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB12.bdf -n ucg_font_ncenB12_tf -o ./pixel/ucg_font_ncenb12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB12.bdf -n ucg_font_ncenB12_tr -o ./pixel/ucg_font_ncenb12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB14.bdf -n ucg_font_ncenB14_tf -o ./pixel/ucg_font_ncenb14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB14.bdf -n ucg_font_ncenB14_tr -o ./pixel/ucg_font_ncenb14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB18.bdf -n ucg_font_ncenB18_tf -o ./pixel/ucg_font_ncenb18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB18.bdf -n ucg_font_ncenB18_tr -o ./pixel/ucg_font_ncenb18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenB24.bdf -n ucg_font_ncenB24_tf -o ./pixel/ucg_font_ncenb24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB24.bdf -n ucg_font_ncenB24_tr -o ./pixel/ucg_font_ncenb24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenB24.bdf -n ucg_font_ncenB24_tn -o ./pixel/ucg_font_ncenb24_tn.c 
 
 echo "adobe ncenR"
-../bdfconv/bdfconv -b 0  ../bdf/ncenR08.bdf -n ucg_font_ncenR08 -o ./pixel/ucg_font_ncenr08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR08.bdf -n ucg_font_ncenR08r -o ./pixel/ucg_font_ncenr08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenR10.bdf -n ucg_font_ncenR10 -o ./pixel/ucg_font_ncenr10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR10.bdf -n ucg_font_ncenR10r -o ./pixel/ucg_font_ncenr10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenR12.bdf -n ucg_font_ncenR12 -o ./pixel/ucg_font_ncenr12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR12.bdf -n ucg_font_ncenR12r -o ./pixel/ucg_font_ncenr12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenR14.bdf -n ucg_font_ncenR14 -o ./pixel/ucg_font_ncenr14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR14.bdf -n ucg_font_ncenR14r -o ./pixel/ucg_font_ncenr14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenR18.bdf -n ucg_font_ncenR18 -o ./pixel/ucg_font_ncenr18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR18.bdf -n ucg_font_ncenR18r -o ./pixel/ucg_font_ncenr18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/ncenR24.bdf -n ucg_font_ncenR24 -o ./pixel/ucg_font_ncenr24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR24.bdf -n ucg_font_ncenR24r -o ./pixel/ucg_font_ncenr24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenR24.bdf -n ucg_font_ncenR24n -o ./pixel/ucg_font_ncenr24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR08.bdf -n ucg_font_ncenR08_tf -o ./pixel/ucg_font_ncenr08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR08.bdf -n ucg_font_ncenR08_tr -o ./pixel/ucg_font_ncenr08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR10.bdf -n ucg_font_ncenR10_tf -o ./pixel/ucg_font_ncenr10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR10.bdf -n ucg_font_ncenR10_tr -o ./pixel/ucg_font_ncenr10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR12.bdf -n ucg_font_ncenR12_tf -o ./pixel/ucg_font_ncenr12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR12.bdf -n ucg_font_ncenR12_tr -o ./pixel/ucg_font_ncenr12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR14.bdf -n ucg_font_ncenR14_tf -o ./pixel/ucg_font_ncenr14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR14.bdf -n ucg_font_ncenR14_tr -o ./pixel/ucg_font_ncenr14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR18.bdf -n ucg_font_ncenR18_tf -o ./pixel/ucg_font_ncenr18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR18.bdf -n ucg_font_ncenR18_tr -o ./pixel/ucg_font_ncenr18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tf -o ./pixel/ucg_font_ncenr24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tr -o ./pixel/ucg_font_ncenr24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tn -o ./pixel/ucg_font_ncenr24_tn.c 
 
 
 echo "adobe timB"
-../bdfconv/bdfconv -b 0  ../bdf/timB08.bdf -n ucg_font_timB08 -o ./pixel/ucg_font_timb08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB08.bdf -n ucg_font_timB08r -o ./pixel/ucg_font_timb08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timB10.bdf -n ucg_font_timB10 -o ./pixel/ucg_font_timb10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB10.bdf -n ucg_font_timB10r -o ./pixel/ucg_font_timb10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timB12.bdf -n ucg_font_timB12 -o ./pixel/ucg_font_timb12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB12.bdf -n ucg_font_timB12r -o ./pixel/ucg_font_timb12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timB14.bdf -n ucg_font_timB14 -o ./pixel/ucg_font_timb14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB14.bdf -n ucg_font_timB14r -o ./pixel/ucg_font_timb14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timB18.bdf -n ucg_font_timB18 -o ./pixel/ucg_font_timb18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB18.bdf -n ucg_font_timB18r -o ./pixel/ucg_font_timb18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timB24.bdf -n ucg_font_timB24 -o ./pixel/ucg_font_timb24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB24.bdf -n ucg_font_timB24r -o ./pixel/ucg_font_timb24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/timB24.bdf -n ucg_font_timB24n -o ./pixel/ucg_font_timb24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB08.bdf -n ucg_font_timB08_tf -o ./pixel/ucg_font_timb08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB08.bdf -n ucg_font_timB08_tr -o ./pixel/ucg_font_timb08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB10.bdf -n ucg_font_timB10_tf -o ./pixel/ucg_font_timb10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB10.bdf -n ucg_font_timB10_tr -o ./pixel/ucg_font_timb10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB12.bdf -n ucg_font_timB12_tf -o ./pixel/ucg_font_timb12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB12.bdf -n ucg_font_timB12_tr -o ./pixel/ucg_font_timb12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB14.bdf -n ucg_font_timB14_tf -o ./pixel/ucg_font_timb14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB14.bdf -n ucg_font_timB14_tr -o ./pixel/ucg_font_timb14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB18.bdf -n ucg_font_timB18_tf -o ./pixel/ucg_font_timb18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB18.bdf -n ucg_font_timB18_tr -o ./pixel/ucg_font_timb18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timB24.bdf -n ucg_font_timB24_tf -o ./pixel/ucg_font_timb24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timB24.bdf -n ucg_font_timB24_tr -o ./pixel/ucg_font_timb24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/timB24.bdf -n ucg_font_timB24_tn -o ./pixel/ucg_font_timb24_tn.c 
 
 echo "adobe timR"
-../bdfconv/bdfconv -b 0  ../bdf/timR08.bdf -n ucg_font_timR08 -o ./pixel/ucg_font_timr08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR08.bdf -n ucg_font_timR08r -o ./pixel/ucg_font_timr08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timR10.bdf -n ucg_font_timR10 -o ./pixel/ucg_font_timr10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR10.bdf -n ucg_font_timR10r -o ./pixel/ucg_font_timr10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timR12.bdf -n ucg_font_timR12 -o ./pixel/ucg_font_timr12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR12.bdf -n ucg_font_timR12r -o ./pixel/ucg_font_timr12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timR14.bdf -n ucg_font_timR14 -o ./pixel/ucg_font_timr14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR14.bdf -n ucg_font_timR14r -o ./pixel/ucg_font_timr14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timR18.bdf -n ucg_font_timR18 -o ./pixel/ucg_font_timr18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR18.bdf -n ucg_font_timR18r -o ./pixel/ucg_font_timr18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/timR24.bdf -n ucg_font_timR24 -o ./pixel/ucg_font_timr24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR24.bdf -n ucg_font_timR24r -o ./pixel/ucg_font_timr24r.c 
-../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/timR24.bdf -n ucg_font_timR24n -o ./pixel/ucg_font_timr24n.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR08.bdf -n ucg_font_timR08_tf -o ./pixel/ucg_font_timr08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR08.bdf -n ucg_font_timR08_tr -o ./pixel/ucg_font_timr08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR10.bdf -n ucg_font_timR10_tf -o ./pixel/ucg_font_timr10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR10.bdf -n ucg_font_timR10_tr -o ./pixel/ucg_font_timr10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR12.bdf -n ucg_font_timR12_tf -o ./pixel/ucg_font_timr12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR12.bdf -n ucg_font_timR12_tr -o ./pixel/ucg_font_timr12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR14.bdf -n ucg_font_timR14_tf -o ./pixel/ucg_font_timr14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR14.bdf -n ucg_font_timR14_tr -o ./pixel/ucg_font_timr14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR18.bdf -n ucg_font_timR18_tf -o ./pixel/ucg_font_timr18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR18.bdf -n ucg_font_timR18_tr -o ./pixel/ucg_font_timr18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/timR24.bdf -n ucg_font_timR24_tf -o ./pixel/ucg_font_timr24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/timR24.bdf -n ucg_font_timR24_tr -o ./pixel/ucg_font_timr24_tr.c 
+../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/timR24.bdf -n ucg_font_timR24_tn -o ./pixel/ucg_font_timr24_tn.c 
 
 echo "adobe symb"
-../bdfconv/bdfconv -b 0  ../bdf/symb08.bdf -n ucg_font_symb08 -o ./pixel/ucg_font_symb08.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb08.bdf -n ucg_font_symb08r -o ./pixel/ucg_font_symb08r.c 
-../bdfconv/bdfconv -b 0  ../bdf/symb10.bdf -n ucg_font_symb10 -o ./pixel/ucg_font_symb10.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb10.bdf -n ucg_font_symb10r -o ./pixel/ucg_font_symb10r.c 
-../bdfconv/bdfconv -b 0  ../bdf/symb12.bdf -n ucg_font_symb12 -o ./pixel/ucg_font_symb12.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb12.bdf -n ucg_font_symb12r -o ./pixel/ucg_font_symb12r.c 
-../bdfconv/bdfconv -b 0  ../bdf/symb14.bdf -n ucg_font_symb14 -o ./pixel/ucg_font_symb14.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb14.bdf -n ucg_font_symb14r -o ./pixel/ucg_font_symb14r.c 
-../bdfconv/bdfconv -b 0  ../bdf/symb18.bdf -n ucg_font_symb18 -o ./pixel/ucg_font_symb18.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb18.bdf -n ucg_font_symb18r -o ./pixel/ucg_font_symb18r.c 
-../bdfconv/bdfconv -b 0  ../bdf/symb24.bdf -n ucg_font_symb24 -o ./pixel/ucg_font_symb24.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb24.bdf -n ucg_font_symb24r -o ./pixel/ucg_font_symb24r.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb08.bdf -n ucg_font_symb08_tf -o ./pixel/ucg_font_symb08_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb08.bdf -n ucg_font_symb08_tr -o ./pixel/ucg_font_symb08_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb10.bdf -n ucg_font_symb10_tf -o ./pixel/ucg_font_symb10_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb10.bdf -n ucg_font_symb10_tr -o ./pixel/ucg_font_symb10_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb12.bdf -n ucg_font_symb12_tf -o ./pixel/ucg_font_symb12_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb12.bdf -n ucg_font_symb12_tr -o ./pixel/ucg_font_symb12_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb14.bdf -n ucg_font_symb14_tf -o ./pixel/ucg_font_symb14_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb14.bdf -n ucg_font_symb14_tr -o ./pixel/ucg_font_symb14_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb18.bdf -n ucg_font_symb18_tf -o ./pixel/ucg_font_symb18_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb18.bdf -n ucg_font_symb18_tr -o ./pixel/ucg_font_symb18_tr.c 
+../bdfconv/bdfconv -b 0  ../bdf/symb24.bdf -n ucg_font_symb24_tf -o ./pixel/ucg_font_symb24_tf.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/symb24.bdf -n ucg_font_symb24_tr -o ./pixel/ucg_font_symb24_tr.c 
 
 
 echo "contributed"

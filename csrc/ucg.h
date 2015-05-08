@@ -1153,6 +1153,8 @@ extern const ucg_fntpgm_uint8_t ucg_font_osr35n[] UCG_FONT_SECTION("ucg_font_osr
 extern const ucg_fntpgm_uint8_t ucg_font_osr35r[] UCG_FONT_SECTION("ucg_font_osr35r");
 
 
+
+
 #ifdef __cplusplus
 }
 #endif
