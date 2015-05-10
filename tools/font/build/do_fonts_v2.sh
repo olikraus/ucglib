@@ -306,8 +306,8 @@ echo "adobe symb"
 
 
 echo "contributed"
-../bdfconv/bdfconv -b 0   -m '32-127>32'  ../bdf/freedoomr25n.bdf -n ucg_font_freedoomr25n -o ./pixel/ucg_font_freedoomr25n.c 
-../bdfconv/bdfconv -b 0   -m '32-127>32'  ../bdf/freedoomr10r.bdf -n ucg_font_freedoomr10r -o ./pixel/ucg_font_freedoomr10r.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32'  ../bdf/freedoomr25n.bdf -n ucg_font_freedoomr25_tn -o ./pixel/ucg_font_freedoomr25_tn.c 
+../bdfconv/bdfconv -b 0   -m '32-127>32'  ../bdf/freedoomr10r.bdf -n ucg_font_freedoomr10_tr -o ./pixel/ucg_font_freedoomr10_tr.c 
 
 
 echo "fontstruct"
@@ -359,9 +359,9 @@ echo "various ttf"
 ./do_fontsize_a_v2.sh 27 ../ttf/fu/FreeUniversal-Bold.ttf fub20
 ./do_fontsize_a_v2.sh 34 ../ttf/fu/FreeUniversal-Bold.ttf fub25
 ./do_fontsize_a_v2.sh 40 ../ttf/fu/FreeUniversal-Bold.ttf fub30
-./do_fontsize_a_n_v2.sh 49 ../ttf/fu/FreeUniversal-Bold.ttf fub35n
-./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Bold.ttf fub42n
-./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Bold.ttf fub49n
+./do_fontsize_a_n_v2.sh 49 ../ttf/fu/FreeUniversal-Bold.ttf fub35
+./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Bold.ttf fub42
+./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Bold.ttf fub49
   
 ./do_fontsize_a_v2.sh 15 ../ttf/fu/FreeUniversal-Regular.ttf fur11
 ./do_fontsize_a_v2.sh 19 ../ttf/fu/FreeUniversal-Regular.ttf fur14
@@ -369,9 +369,9 @@ echo "various ttf"
 ./do_fontsize_a_v2.sh 28 ../ttf/fu/FreeUniversal-Regular.ttf fur20
 ./do_fontsize_a_v2.sh 34 ../ttf/fu/FreeUniversal-Regular.ttf fur25
 ./do_fontsize_a_v2.sh 40 ../ttf/fu/FreeUniversal-Regular.ttf fur30
-./do_fontsize_a_n_v2.sh 48 ../ttf/fu/FreeUniversal-Regular.ttf fur35n
-./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Regular.ttf fur42n
-./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Regular.ttf fur49n
+./do_fontsize_a_n_v2.sh 48 ../ttf/fu/FreeUniversal-Regular.ttf fur35
+./do_fontsize_a_n_v2.sh 58 ../ttf/fu/FreeUniversal-Regular.ttf fur42
+./do_fontsize_a_n_v2.sh 68 ../ttf/fu/FreeUniversal-Regular.ttf fur49
 
 ./do_fontsize_a_v2.sh 25 ../ttf/os/OldStandard-Bold.ttf osb18
 ./do_fontsize_a_v2.sh 28 ../ttf/os/OldStandard-Bold.ttf osb21
@@ -403,8 +403,8 @@ echo "logisoso"
 ./do_fontsize_a_no_64_v2.sh 60 ../ttf/log/Logisoso.ttf logisoso42
 ./do_fontsize_a_no_64_v2.sh 66 ../ttf/log/Logisoso.ttf logisoso46
 ./do_fontsize_a_no_64_v2.sh 71 ../ttf/log/Logisoso.ttf logisoso50
-./do_fontsize_a_n_v2.sh  77 ../ttf/log/Logisoso.ttf logisoso54n
-./do_fontsize_a_n_v2.sh  83 ../ttf/log/Logisoso.ttf logisoso58n
-./do_fontsize_a_n_v2.sh  89 ../ttf/log/Logisoso.ttf logisoso62n
+./do_fontsize_a_n_v2.sh  77 ../ttf/log/Logisoso.ttf logisoso54
+./do_fontsize_a_n_v2.sh  83 ../ttf/log/Logisoso.ttf logisoso58
+./do_fontsize_a_n_v2.sh  89 ../ttf/log/Logisoso.ttf logisoso62
 
 echo "execute do_combine.sh after executing this script"

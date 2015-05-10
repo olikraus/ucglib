@@ -30,7 +30,7 @@ void pic_gen_short_desc(const ucg_pgm_uint8_t *font, const char *fname)
 
   dx = ucg_DrawString(&ucg, 0, 2, 0, s);
 
-  ucg_SetFont(&ucg, ucg_font_7x13);    
+  ucg_SetFont(&ucg, ucg_font_7x13_tf);    
   ucg_DrawString(&ucg, dx+7, 2, 0, fname);
   
   
@@ -60,7 +60,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   tga_init(1200,1200);
   ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   
-  disp_font = ucg_font_7x13;
+  disp_font = ucg_font_7x13_tf;
   
   disp_line_height = 14;
   disp_line_indent = 75;
