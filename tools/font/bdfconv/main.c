@@ -108,6 +108,12 @@ void help(void)
   printf("  -m '32-255'     select gylphs from encoding 32 to 255\n");
   printf("  -m '32-255,~64' select gylphs from encoding 32 to 255, exclude '@'\n");
   printf("  -m '32,48-57'   select space, '1', '2', ... '9'\n");
+  printf("build modes:\n");
+  printf(" -b 0: Most compact, glyph bitmap is minimal\n");
+  printf(" -b 1: Like -b 0, but glyph bitmap is extended to the height of the largest glyph within the selected glyph list.\n");
+  printf("       Also the width of the gylphs is extended to cover the delta x advance.\n");
+  printf(" -b 2: Like -b 1, but glyph width is set to the width of the largest glyph within the selected gylph list.\n");
+  printf(" -b 3: Like -b 2, but width and height are foreced to be a multiple of 8.\n");
 
 }
 

@@ -80,6 +80,32 @@ void ic_body(ucg_t *ucg, ucg_int_t x, ucg_int_t y)
   
 }
 
+  /* offset 9 */
+  int8_t max_char_width;
+  int8_t max_char_height;
+  int8_t x_offset;
+  int8_t y_offset;
+  
+  /* offset 13 */
+  int8_t  ascent_A;
+  int8_t  descent_g;
+  int8_t  ascent_para;
+  int8_t  descent_para;
+
+void show_font_info(ucg_t *ucg)
+{
+  printf("ucg->font_info.max_char_width = %d\n", ucg->font_info.max_char_width);
+  printf("ucg->font_info.max_char_height = %d\n", ucg->font_info.max_char_height);
+  printf("ucg->font_info.x_offset = %d\n", ucg->font_info.x_offset);
+  printf("ucg->font_info.y_offset = %d\n", ucg->font_info.y_offset);
+
+  printf("ucg->font_info.ascent_A = %d\n", ucg->font_info.ascent_A);
+  printf("ucg->font_info.descent_g = %d\n", ucg->font_info.descent_g);
+  printf("ucg->font_info.ascent_para = %d\n", ucg->font_info.ascent_para);
+  printf("ucg->font_info.descent_para = %d\n", ucg->font_info.descent_para);
+
+}
+
 
 int main(void)
 {
@@ -104,9 +130,24 @@ int main(void)
   ucg_SetColor(&ucg, 0, 	85*a/b,26*a/b,139*a/b);
   ucg_DrawGradientBox(&ucg, 0, 0, ucg_GetWidth(&ucg), ucg_GetHeight(&ucg));
   
+  ucg_SetFont(&ucg, ucg_font_ncenB14_tf);  
+  show_font_info(&ucg);
   ucg_SetColor(&ucg, 0, 255, 255, 0);
   ucg_SetColor(&ucg, 1, 0, 0, 0);
-  ucg_DrawString(&ucg, 0, 30, 0, "Ucglib");
+  ucg_DrawString(&ucg, 0, 20, 0, "Ucglib");
+
+  ucg_SetFont(&ucg, ucg_font_ncenB14_hf);  
+  show_font_info(&ucg);
+  ucg_SetColor(&ucg, 0, 255, 255, 0);
+  ucg_SetColor(&ucg, 1, 0, 0, 0);
+  ucg_DrawString(&ucg, 0, 50, 0, "Ucglib");
+
+  ucg_SetFont(&ucg, ucg_font_ncenB14_hr);  
+  show_font_info(&ucg);
+  ucg_SetColor(&ucg, 0, 255, 255, 0);
+  ucg_SetColor(&ucg, 1, 0, 0, 0);
+  ucg_DrawString(&ucg, 64, 50, 0, "Ucglib");
+
 
   while( ucg_sdl_get_key() < 0 )
     ;

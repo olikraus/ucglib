@@ -395,6 +395,8 @@ void bf_copy_bbx_and_update_shift(bf_t *bf, bbx_t *target_bbx, bg_t *bg)
 	if ( target_bbx->w < bg->dwidth_x )
 	  target_bbx->w = bg->dwidth_x;
       }
+  
+  bg->width_deviation = target_bbx->w - bg->bbx.w;
 }
 
 void bf_CalculateMaxBitFieldSize(bf_t *bf)
@@ -506,6 +508,49 @@ void bf_CalculateMaxBitFieldSize(bf_t *bf)
   
 }
 
+void bf_ShowMonospaceStatistics(bf_t *bf)
+{
+  int i;
+  bg_t *bg;
+  long cnt = 0;
+  long max = 0;
+  long sum = 0;
+  for( i = 0; i < bf->glyph_cnt; i++ )
+  {
+    bg = bf->glyph_list[i];
+    if ( bg->map_to >= 0 )
+    {
+      if ( max < bg->width_deviation )
+	max = bg->width_deviation;
+      sum += bg->width_deviation;
+      cnt++;
+    }
+  }
+  if ( cnt == 0 )
+    cnt++;
+  bf_Log(bf, "Monospace Statistics: Max width extention %ld, average width extention %ld.%ld", max, sum/cnt, (sum*10/cnt) % 10 );
+  /*
+    Monospaced font: average width extention does not differ much between -b 1 and --b 2
+    Variable width font: big difference for the average width extention between modes 1 and 2.
+  
+    Examples:
+  
+      ./bdfconv -b 1 -v ../bdf/profont12.bdf
+	Monospace Statistics: Max width extention 6, average width extention 1.7
+      ./bdfconv -b 2 -v ../bdf/profont12.bdf
+	Monospace Statistics: Max width extention 6, average width extention 1.7
+      --> profont12.bdf is a monospaced font  
+  
+      ./bdfconv -b 1 -v ../bdf/helvR12.bdf
+	Monospace Statistics: Max width extention 6, average width extention 1.9
+      ./bdfconv -b 2 -v ../bdf/helvR12.bdf
+	Monospace Statistics: Max width extention 15, average width extention 8.0
+      --> helvR12.bdf is not a monospaced font  
+  
+  */
+}
+
+
 int bf_WriteUCGCByFP(bf_t *bf, FILE *out_fp, const char *fontname, const char *indent)
 {
   int i;
@@ -573,6 +618,9 @@ bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, co
       
       bf_CalculateMaxBitFieldSize(bf);  
       bf_RLECompressAllGlyphs(bf);
+      
+      if ( bf->bbx_mode != BDF_BBX_MODE_MINIMAL )
+	bf_ShowMonospaceStatistics(bf);	/* Show stats only for none minimal mode. For minimal mode it will always be zero */
     
       return bf;
     }

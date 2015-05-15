@@ -54,6 +54,8 @@ struct _bdf_glyph_struct
   unsigned rle_last_0;
   unsigned rle_last_1;
   
+  long width_deviation;  /* filled by bf_copy_bbx_and_update_shift for statistics */
+  
 };
 typedef struct _bdf_glyph_struct bg_t;
 

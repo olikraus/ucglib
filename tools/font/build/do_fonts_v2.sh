@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # "execute do_combine.sh after executing this script"
-# t - transparent, o - opaque, m - monospace+opaque
+# b0:t - transparent, b1:h - common height, b2:m - monospace+common height
 # f - full font (32-255), r - reduced char set (32-127),  n - numeric (32, 42-58) 
 # 2*128 = 256
 # 3*128 = 384
@@ -229,7 +229,7 @@ echo "adobe helvR"
 ../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/helvR24.bdf -n ucg_font_helvR24_tr -o ./pixel/ucg_font_helvr24_tr.c 
 ../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/helvR24.bdf -n ucg_font_helvR24_tn -o ./pixel/ucg_font_helvr24_tn.c 
 
-echo "adobe ncenB"
+echo "adobe ncenB b0"
 ../bdfconv/bdfconv -b 0  ../bdf/ncenB08.bdf -n ucg_font_ncenB08_tf -o ./pixel/ucg_font_ncenb08_tf.c 
 ../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB08.bdf -n ucg_font_ncenB08_tr -o ./pixel/ucg_font_ncenb08_tr.c 
 ../bdfconv/bdfconv -b 0  ../bdf/ncenB10.bdf -n ucg_font_ncenB10_tf -o ./pixel/ucg_font_ncenb10_tf.c 
@@ -244,7 +244,22 @@ echo "adobe ncenB"
 ../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenB24.bdf -n ucg_font_ncenB24_tr -o ./pixel/ucg_font_ncenb24_tr.c 
 ../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenB24.bdf -n ucg_font_ncenB24_tn -o ./pixel/ucg_font_ncenb24_tn.c 
 
-echo "adobe ncenR"
+echo "adobe ncenB b1"
+../bdfconv/bdfconv -b 1  ../bdf/ncenB08.bdf -n ucg_font_ncenB08_hf -o ./pixel/ucg_font_ncenb08_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB08.bdf -n ucg_font_ncenB08_hr -o ./pixel/ucg_font_ncenb08_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenB10.bdf -n ucg_font_ncenB10_hf -o ./pixel/ucg_font_ncenb10_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB10.bdf -n ucg_font_ncenB10_hr -o ./pixel/ucg_font_ncenb10_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenB12.bdf -n ucg_font_ncenB12_hf -o ./pixel/ucg_font_ncenb12_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB12.bdf -n ucg_font_ncenB12_hr -o ./pixel/ucg_font_ncenb12_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenB14.bdf -n ucg_font_ncenB14_hf -o ./pixel/ucg_font_ncenb14_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB14.bdf -n ucg_font_ncenB14_hr -o ./pixel/ucg_font_ncenb14_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenB18.bdf -n ucg_font_ncenB18_hf -o ./pixel/ucg_font_ncenb18_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB18.bdf -n ucg_font_ncenB18_hr -o ./pixel/ucg_font_ncenb18_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenB24.bdf -n ucg_font_ncenB24_hf -o ./pixel/ucg_font_ncenb24_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenB24.bdf -n ucg_font_ncenB24_hr -o ./pixel/ucg_font_ncenb24_hr.c 
+../bdfconv/bdfconv -b 1   -b 42 -e 58  ../bdf/ncenB24.bdf -n ucg_font_ncenB24_hn -o ./pixel/ucg_font_ncenb24_hn.c 
+
+echo "adobe ncenR b0"
 ../bdfconv/bdfconv -b 0  ../bdf/ncenR08.bdf -n ucg_font_ncenR08_tf -o ./pixel/ucg_font_ncenr08_tf.c 
 ../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR08.bdf -n ucg_font_ncenR08_tr -o ./pixel/ucg_font_ncenr08_tr.c 
 ../bdfconv/bdfconv -b 0  ../bdf/ncenR10.bdf -n ucg_font_ncenR10_tf -o ./pixel/ucg_font_ncenr10_tf.c 
@@ -258,6 +273,21 @@ echo "adobe ncenR"
 ../bdfconv/bdfconv -b 0  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tf -o ./pixel/ucg_font_ncenr24_tf.c 
 ../bdfconv/bdfconv -b 0   -m '32-127>32' ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tr -o ./pixel/ucg_font_ncenr24_tr.c 
 ../bdfconv/bdfconv -b 0   -b 42 -e 58  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_tn -o ./pixel/ucg_font_ncenr24_tn.c 
+
+echo "adobe ncenR b1"
+../bdfconv/bdfconv -b 1  ../bdf/ncenR08.bdf -n ucg_font_ncenR08_hf -o ./pixel/ucg_font_ncenr08_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR08.bdf -n ucg_font_ncenR08_hr -o ./pixel/ucg_font_ncenr08_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenR10.bdf -n ucg_font_ncenR10_hf -o ./pixel/ucg_font_ncenr10_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR10.bdf -n ucg_font_ncenR10_hr -o ./pixel/ucg_font_ncenr10_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenR12.bdf -n ucg_font_ncenR12_hf -o ./pixel/ucg_font_ncenr12_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR12.bdf -n ucg_font_ncenR12_hr -o ./pixel/ucg_font_ncenr12_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenR14.bdf -n ucg_font_ncenR14_hf -o ./pixel/ucg_font_ncenr14_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR14.bdf -n ucg_font_ncenR14_hr -o ./pixel/ucg_font_ncenr14_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenR18.bdf -n ucg_font_ncenR18_hf -o ./pixel/ucg_font_ncenr18_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR18.bdf -n ucg_font_ncenR18_hr -o ./pixel/ucg_font_ncenr18_hr.c 
+../bdfconv/bdfconv -b 1  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_hf -o ./pixel/ucg_font_ncenr24_hf.c 
+../bdfconv/bdfconv -b 1   -m '32-127>32' ../bdf/ncenR24.bdf -n ucg_font_ncenR24_hr -o ./pixel/ucg_font_ncenr24_hr.c 
+../bdfconv/bdfconv -b 1   -b 42 -e 58  ../bdf/ncenR24.bdf -n ucg_font_ncenR24_hn -o ./pixel/ucg_font_ncenr24_hn.c 
 
 
 echo "adobe timB"

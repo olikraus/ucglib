@@ -100,6 +100,20 @@ typedef void * ucg_glyph_t;
   19		1		start pos 'a' high byte
   20		1		start pos 'a' low byte
 
+  Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8
+
+  Font build mode 0:		
+    - "t"
+    - Ref height mode: UCG_FONT_HEIGHT_MODE_TEXT, UCG_FONT_HEIGHT_MODE_XTEXT or UCG_FONT_HEIGHT_MODE_ALL
+    - use in transparent mode only (does not look good in solid mode)
+    - most compact format
+    - different font heights possible
+    
+  Font build mode 1:		
+    - "h"
+    - Ref height mode: UCG_FONT_HEIGHT_MODE_ALL
+    - transparent or solid mode
+    - The height of the glyphs depend on the largest glyph in the font. This means font height depends on postfix "r", "f" and "n".
 
 */
 
@@ -439,10 +453,14 @@ void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
       /* dir */ 0, 
       /* col_idx */ 0);   
   }
-  else
+  else if ( ucg->font_decode.is_transparent == 0 )    
   {
-    // TODO
-    //tga_fd_draw_bg_pixel(f, cnt);
+    ucg_Draw90Line(ucg, 
+      ucg->font_decode.target_x + ucg->font_decode.x, 
+      ucg->font_decode.target_y + ucg->font_decode.y, 
+      cnt, 
+      /* dir */ 0, 
+      /* col_idx */ 1);   
   }
 }
 
@@ -982,7 +1000,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       break;
   }
   //return ucg->font_mode(ucg, x, y, dir, encoding);
-  return ucg_font_draw_glyph(ucg, x, y, encoding, /* is_transparent */ 1);
+  return ucg_font_draw_glyph(ucg, x, y, encoding, /* is_transparent */ 0);
 }
 
 ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
