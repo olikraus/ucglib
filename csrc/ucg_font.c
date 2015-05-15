@@ -482,7 +482,7 @@ void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground)
   ucg->font_decode.x += cnt;
 }
 
-static void ucg_font_setup_decode(ucg_t *ucg, uint8_t *glyph_data)
+static void ucg_font_setup_decode(ucg_t *ucg, const uint8_t *glyph_data)
 {
   ucg->font_decode.decode_ptr = glyph_data;
   ucg->font_decode.decode_bit_pos = 0;
@@ -508,7 +508,7 @@ static void ucg_font_setup_decode(ucg_t *ucg, uint8_t *glyph_data)
   Calls:
     ucg_font_decode_len()
 */
-unsigned ucg_font_decode_glyph(ucg_t *ucg, uint8_t *glyph_data)
+unsigned ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
 {
   ucg_int_t a, b;
   //unsigned cnt, rem;
@@ -558,9 +558,9 @@ unsigned ucg_font_decode_glyph(ucg_t *ucg, uint8_t *glyph_data)
   Return:
     Address of the glyph data or NULL, if the encoding is not avialable in the font.
 */
-uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
+const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
 {
-  uint8_t *font = ucg->font;
+  const uint8_t *font = ucg->font;
   font += UCG_FONT_DATA_STRUCT_SIZE;
   
   for(;;)
@@ -582,7 +582,7 @@ ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t enco
   ucg->font_decode.target_x = x;
   ucg->font_decode.target_y = y;
   ucg->font_decode.is_transparent = is_transparent;
-  uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, encoding);
+  const uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, encoding);
   if ( glyph_data != NULL )
   {
     dx = ucg_font_decode_glyph(ucg, glyph_data);
@@ -760,7 +760,7 @@ int8_t ucg_GetGlyphDeltaX(ucg_t *ucg, uint8_t requested_encoding)
 
 int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
 {
-  uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, requested_encoding);
+  const uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, requested_encoding);
   if ( glyph_data == NULL )
     return 0; 
   
@@ -964,8 +964,8 @@ void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode)
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
-  if ( ucg->font_mode == UCG_FONT_MODE_NONE )
-    return 0;
+  // OBSOLETE if ( ucg->font_mode == UCG_FONT_MODE_NONE )
+  // OBSOLETE   return 0;
   switch(dir)
   {
     case 0:
@@ -1023,20 +1023,24 @@ void ucg_UpdateRefHeight(ucg_t *ucg)
 {
   if ( ucg->font == NULL )
     return;
+  ucg->font_ref_ascent = ucg->font_info.ascent_A;
+  ucg->font_ref_descent = ucg->font_info.descent_g;
   if ( ucg->font_height_mode == UCG_FONT_HEIGHT_MODE_TEXT )
   {
-    ucg->font_ref_ascent = ucg_font_GetCapitalAHeight(ucg->font);
-    ucg->font_ref_descent = ucg_font_GetLowerGDescent(ucg->font);
   }
   else if ( ucg->font_height_mode == UCG_FONT_HEIGHT_MODE_XTEXT )
   {
-    ucg->font_ref_ascent = ucg_font_GetFontXAscent(ucg->font);
-    ucg->font_ref_descent = ucg_font_GetFontXDescent(ucg->font);
+    if ( ucg->font_ref_ascent < ucg->font_info.ascent_para )
+      ucg->font_ref_ascent = ucg->font_info.ascent_para;
+    if ( ucg->font_ref_descent > ucg->font_info.descent_para )
+      ucg->font_ref_descent = ucg->font_info.descent_para;
   }
   else
   {
-    ucg->font_ref_ascent = ucg_font_GetFontAscent(ucg->font);
-    ucg->font_ref_descent = ucg_font_GetFontDescent(ucg->font);
+    if ( ucg->font_ref_ascent < ucg->font_info.max_char_height )
+      ucg->font_ref_ascent = ucg->font_info.max_char_height;
+    if ( ucg->font_ref_descent > ucg->font_info.y_offset )
+      ucg->font_ref_descent = ucg->font_info.y_offset;
   }  
 }
 
@@ -1141,8 +1145,11 @@ ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s)
       break;
 
     /* load glyph information */
-    ucg_GetGlyph(ucg, encoding);
-    w += ucg->glyph_dx;    
+    // OBSOLETE ucg_GetGlyph(ucg, encoding);
+    // OBSOLETE w += ucg->glyph_dx;    
+    
+    // replaced by this:
+    w += ucg_GetGlyphWidth(ucg, encoding);
     
     /* goto next char */
     s++;
