@@ -315,6 +315,7 @@ struct _ucg_font_decode_t
   const uint8_t *decode_ptr;			/* pointer to the compressed data */
   uint8_t decode_bit_pos;			/* bitpos inside a byte of the compressed data */
   uint8_t is_transparent;
+  uint8_t dir;				/* direction */
 };
 typedef struct _ucg_font_decode_t ucg_font_decode_t;
 

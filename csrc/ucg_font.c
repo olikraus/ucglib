@@ -424,6 +424,29 @@ int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
   return (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt) - ((1<<cnt)>>1);
 }
 
+static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, ucg_int_t x, ucg_int_t y, uint8_t dir)
+{
+  switch(dir)
+  {
+    case 0:
+      *dest_x += x;
+      *dest_y += y;
+      break;
+    case 1:
+      *dest_y += x;
+      *dest_x -= y;
+      break;
+    case 2:
+      *dest_x -= x;
+      *dest_y -= y;
+      break;
+    default:
+      *dest_y -= x;
+      *dest_x += y;
+      break;      
+  }
+}
+
 /*
   Description:
     Draw a line with "cnt" pixel as fore- or background color.
@@ -442,24 +465,52 @@ int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
 */
 void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
 {
+  ucg_int_t x, y;
+  x = ucg->font_decode.target_x;
+  y = ucg->font_decode.target_y;
+  
+  ucg_add_vector(&x, &y, ucg->font_decode.x, ucg->font_decode.y, ucg->font_decode.dir);
+
+    /*
+  switch(ucg->font_decode.dir)
+  {
+    case 0:
+      x += ucg->font_decode.x;
+      y += ucg->font_decode.y;
+      break;
+    case 1:
+      y += ucg->font_decode.x;
+      x -= ucg->font_decode.y;
+      break;
+    case 2:
+      x -= ucg->font_decode.x;
+      y -= ucg->font_decode.y;
+      break;
+    default:
+      y -= ucg->font_decode.x;
+      x += ucg->font_decode.y;
+      break;      
+  }
+  */
+  
   if ( is_foreground )
   {
     // TODO
     //tga_fd_draw_fg_pixel(f, cnt);
     ucg_Draw90Line(ucg, 
-      ucg->font_decode.target_x + ucg->font_decode.x, 
-      ucg->font_decode.target_y + ucg->font_decode.y, 
+      x, 
+      y, 
       cnt, 
-      /* dir */ 0, 
+      /* dir */ ucg->font_decode.dir, 
       /* col_idx */ 0);   
   }
   else if ( ucg->font_decode.is_transparent == 0 )    
   {
     ucg_Draw90Line(ucg, 
-      ucg->font_decode.target_x + ucg->font_decode.x, 
-      ucg->font_decode.target_y + ucg->font_decode.y, 
+      x, 
+      y, 
       cnt, 
-      /* dir */ 0, 
+      /* dir */ ucg->font_decode.dir, 
       /* col_idx */ 1);   
   }
 }
@@ -541,11 +592,32 @@ unsigned ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
   
   if ( ucg->font_decode.glyph_width > 0 )
   {
-    
-    ucg->font_decode.target_x += x;
-    ucg->font_decode.target_y -= ucg->font_decode.glyph_height ;
-    ucg->font_decode.target_y -=y ;
-        
+    ucg_add_vector(&(ucg->font_decode.target_x), &(ucg->font_decode.target_y), x, -(ucg->font_decode.glyph_height+y), ucg->font_decode.dir);
+    /*
+    switch(ucg->font_decode.dir)
+    {
+      case 0:
+	ucg->font_decode.target_x += x;
+	ucg->font_decode.target_y -= ucg->font_decode.glyph_height ;
+	ucg->font_decode.target_y -=y ;
+	break;
+      case 1:
+	ucg->font_decode.target_y += x;
+	ucg->font_decode.target_x += ucg->font_decode.glyph_height ;
+	ucg->font_decode.target_x +=y ;
+	break;
+      case 2:
+	ucg->font_decode.target_x -= x;
+	ucg->font_decode.target_y += ucg->font_decode.glyph_height ;
+	ucg->font_decode.target_y +=y ;
+      break;
+    default:
+	ucg->font_decode.target_y -= x;
+	ucg->font_decode.target_x -= ucg->font_decode.glyph_height ;
+	ucg->font_decode.target_x -=y ;
+      break;      
+    }
+    */
     /* reset local x/y position */
     ucg->font_decode.x = 0;
     ucg->font_decode.y = 0;
@@ -594,12 +666,13 @@ const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
   return NULL;
 }
 
-ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t encoding, uint8_t is_transparent)
+ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t encoding, uint8_t dir, uint8_t is_transparent)
 {
   ucg_int_t dx = 0;
   ucg->font_decode.target_x = x;
   ucg->font_decode.target_y = y;
   ucg->font_decode.is_transparent = is_transparent;
+  ucg->font_decode.dir = dir;
   const uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, encoding);
   if ( glyph_data != NULL )
   {
@@ -984,6 +1057,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
 {
   // OBSOLETE if ( ucg->font_mode == UCG_FONT_MODE_NONE )
   // OBSOLETE   return 0;
+  /*
   switch(dir)
   {
     case 0:
@@ -999,8 +1073,9 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
+  */
   //return ucg->font_mode(ucg, x, y, dir, encoding);
-  return ucg_font_draw_glyph(ucg, x, y, encoding, /* is_transparent */ 0);
+  return ucg_font_draw_glyph(ucg, x, y, encoding, dir, /* is_transparent */ 0);
 }
 
 ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)
@@ -1010,7 +1085,9 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
   while( *str != '\0' )
   {
     delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
-    
+    ucg_add_vector(&x, &y, delta, 0, dir);
+
+    /*
     switch(dir)
     {
       case 0:
@@ -1026,6 +1103,7 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
 	y -= delta;
 	break;
     }
+    */
     sum += delta;    
     str++;
   }
