@@ -136,6 +136,39 @@ void tga_save(const char *name)
   }
 }
 
+/*
+  font data:
+
+  offset	bytes	description
+  0		1		glyph_cnt		number of glyphs
+  1		1		bbx_mode	0: proportional, 1: common height, 2: monospace, 3: multiple of 8
+  2		1		bits_per_0	glyph rle parameter
+  3		1		bits_per_1	glyph rle parameter
+
+  4		1		bits_per_char_width		glyph rle parameter
+  5		1		bits_per_char_height	glyph rle parameter
+  6		1		bits_per_char_x		glyph rle parameter
+  7		1		bits_per_char_y		glyph rle parameter
+  8		1		bits_per_delta_x		glyph rle parameter
+
+  9		1		max_char_width
+  10		1		max_char_height
+  11		1		x offset
+  12		1		y offset (descent)
+  
+  13		1		ascent (capital A)
+  14		1		descent (lower g)
+  15		1		ascent '('
+  16		1		descent ')'
+  
+  17		1		start pos 'A' high byte
+  18		1		start pos 'A' low byte
+
+  19		1		start pos 'a' high byte
+  20		1		start pos 'a' low byte
+
+*/
+
 void tga_set_font(uint8_t *font)
 {
     glyph_cnt = *font++;
@@ -227,6 +260,7 @@ struct tga_fd_struct
 typedef struct tga_fd_struct tga_fd_t;
 
 /* increment x and consider line wrap (inc y)*/
+/* old procedure */
 void tga_fd_inc(tga_fd_t *f)
 {
   unsigned x = f->x;

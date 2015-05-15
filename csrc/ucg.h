@@ -45,6 +45,37 @@
     [calls to COM API]
   com callback
 
+
+  font data:
+  offset	bytes	description
+  0		1		glyph_cnt		number of glyphs
+  1		1		bbx_mode	0: proportional, 1: common height, 2: monospace, 3: multiple of 8
+  2		1		bits_per_0	glyph rle parameter
+  3		1		bits_per_1	glyph rle parameter
+
+  4		1		bits_per_char_width		glyph rle parameter
+  5		1		bits_per_char_height	glyph rle parameter
+  6		1		bits_per_char_x		glyph rle parameter
+  7		1		bits_per_char_y		glyph rle parameter
+  8		1		bits_per_delta_x		glyph rle parameter
+
+  9		1		max_char_width
+  10		1		max_char_height
+  11		1		x offset
+  12		1		y offset (descent)
+  
+  13		1		ascent (capital A)
+  14		1		descent (lower g)
+  15		1		ascent '('
+  16		1		descent ')'
+  
+  17		1		start pos 'A' high byte
+  18		1		start pos 'A' low byte
+
+  19		1		start pos 'a' high byte
+  20		1		start pos 'a' low byte
+
+
 */
 
 #ifndef _UCG_H
@@ -237,6 +268,58 @@ struct _ucg_com_info_t
   uint16_t parallel_clk_speed;
 };
 
+
+struct _ucg_font_info_t
+{
+  /* offset 0 */
+  uint8_t glyph_cnt;
+  uint8_t bbx_mode;
+  uint8_t bits_per_0;
+  uint8_t bits_per_1;
+  
+  /* offset 4 */
+  uint8_t bits_per_char_width;
+  uint8_t bits_per_char_height;
+  uint8_t bits_per_char_x;
+  uint8_t bits_per_char_y;
+  uint8_t bits_per_delta_x;
+  
+  /* offset 9 */
+  int8_t max_char_width;
+  int8_t max_char_height;
+  int8_t x_offset;
+  int8_t y_offset;
+  
+  /* offset 13 */
+  int8_t  ascent_A;
+  int8_t  descent_g;
+  int8_t  ascent_para;
+  int8_t  descent_para;
+  
+  /* offset 17 */
+  uint16_t start_pos_upper_A;
+  uint16_t start_pos_lower_a;  
+};
+typedef struct _ucg_font_info_t ucg_font_info_t;
+
+struct _ucg_font_decode_t
+{
+  ucg_int_t target_x;
+  ucg_int_t target_y;
+  
+  ucg_int_t x;						/* local coordinates, (0,0) is upper left */
+  ucg_int_t y;
+  ucg_int_t glyph_width;	
+  ucg_int_t glyph_height;
+
+  const uint8_t *decode_ptr;			/* pointer to the compressed data */
+  uint8_t decode_bit_pos;			/* bitpos inside a byte of the compressed data */
+  uint8_t is_transparent;
+};
+typedef struct _ucg_font_decode_t ucg_font_decode_t;
+
+
+
 #ifdef USE_PIN_LIST
 #define UCG_PIN_RST 0
 #define UCG_PIN_CD 1
@@ -296,13 +379,16 @@ struct _ucg_t
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
   ucg_font_calc_vref_fnptr font_calc_vref;
-  ucg_font_mode_fnptr font_mode;		/* UCG_FONT_MODE_TRANSPARENT, UCG_FONT_MODE_SOLID, UCG_FONT_MODE_NONE */
-  
-  int8_t glyph_dx;
-  int8_t glyph_x;
-  int8_t glyph_y;
-  uint8_t glyph_width;
-  uint8_t glyph_height;
+  ucg_font_mode_fnptr font_mode;		/* OBSOLETE?? UCG_FONT_MODE_TRANSPARENT, UCG_FONT_MODE_SOLID, UCG_FONT_MODE_NONE */
+
+  ucg_font_decode_t font_decode;		/* new font decode structure */
+  ucg_font_info_t font_info;			/* new font info structure */
+
+  int8_t glyph_dx;			/* OBSOLETE */
+  int8_t glyph_x;			/* OBSOLETE */
+  int8_t glyph_y;			/* OBSOLETE */
+  uint8_t glyph_width;		/* OBSOLETE */
+  uint8_t glyph_height;		/* OBSOLETE */
   
   uint8_t font_height_mode;
   int8_t font_ref_ascent;
