@@ -83,7 +83,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   if ( w < ucg_GetGlyphWidth(&ucg, ' ') + 3 )
     w = ucg_GetGlyphWidth(&ucg, ' ') + 3;
   
-  printf("%s w=%d\n", fname, w);
+  printf("%s w=%d encoding: %d..%d\n", fname, w, (int)start, (int)end);
  
   //w = width;
   h = ucg_GetFontBBXHeight(&ucg);
@@ -106,7 +106,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   ucg_DrawString(&ucg, 0, disp_line_height*2, 0, s);
 
   
-  sprintf(s, "Font data size: %d", ucg_font_GetSize(font));
+  sprintf(s, "Font data size %d, build mode %d", ucg_font_GetSize(font), ucg.font_info.bbx_mode );
   ucg_DrawString(&ucg, 0, disp_line_height*3, 0, s);
 
   hcnt = 16;
@@ -130,6 +130,8 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
       }
     }
   }
+
+  ucg_DrawString(&ucg, 0, (y+1)*h+disp_line_height*3+h, 0, "Woven silk pyjamas exchanged for blue quartz.");
 
   tga_save("ucg_font.tga");
 
@@ -161,7 +163,7 @@ int main(int argc, char **argv)
       break;
     }
     
-    printf("Processing Font '%s'\n", ucg_font_name[i]);
+    printf("Processing Font %d '%s'\n", i, ucg_font_name[i]);
     pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
     
     i++;

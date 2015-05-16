@@ -1,12 +1,17 @@
+/*
+  
+  this will generate a picture of a single font.
+  not required with the new font format
 
+*/
 
 #include "ucg.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 
-extern const ucg_fntpgm_uint8_t ucg_font_7x13[2157] UCG_FONT_SECTION("ucg_font_7x13") ;
-extern const ucg_fntpgm_uint8_t ucg_font[2157] UCG_FONT_SECTION("ucg_font") ;
+extern const ucg_fntpgm_uint8_t ucg_font_7x13_tf[] UCG_FONT_SECTION("ucg_font_7x13") ;
+extern const ucg_fntpgm_uint8_t ucg_font[] UCG_FONT_SECTION("ucg_font") ;
 
 /*
 void pic_gen_short_desc(const u8g_pgm_uint8_t *font, const char *name, u8g_uint_t width, const char *real_name)
@@ -54,7 +59,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name )
   tga_init(1024,800);
   ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
   
-  disp_font = ucg_font_7x13;
+  disp_font = ucg_font_7x13_tf;
   
   disp_line_height = 14;
   disp_line_indent = 75;

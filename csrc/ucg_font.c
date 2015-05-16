@@ -230,11 +230,13 @@ void ucg_read_font_info(ucg_font_info_t *font_info, const ucg_fntpgm_uint8_t *fo
 //   return ucg_font_get_byte(font, 4);
 // }
 
+
 uint8_t ucg_font_GetCapitalAHeight(const void *font)
 {
-  return ucg_font_get_byte(font, 5);
+  return ucg_font_get_byte(font, 13);
 }
 
+/*
 uint16_t ucg_font_GetEncoding65Pos(const void *font) UCG_NOINLINE;
 uint16_t ucg_font_GetEncoding65Pos(const void *font)
 {
@@ -246,22 +248,38 @@ uint16_t ucg_font_GetEncoding97Pos(const void *font)
 {
     return ucg_font_get_word(font, 8);
 }
+*/
 
-uint8_t ucg_font_GetFontStartEncoding(const void *font)
+uint8_t ucg_font_GetFontStartEncoding(const void *font_arg)
 {
-  return ucg_font_get_byte(font, 10);
+  const uint8_t *font = font_arg;
+  font += UCG_FONT_DATA_STRUCT_SIZE;
+  return ucg_pgm_read( ((ucg_pgm_uint8_t *)font) );
 }
 
-uint8_t ucg_font_GetFontEndEncoding(const void *font)
+uint8_t ucg_font_GetFontEndEncoding(const void *font_arg)
 {
-  return ucg_font_get_byte(font, 11);
+  uint8_t encoding = 0;
+  const uint8_t *font = font_arg;
+  font += UCG_FONT_DATA_STRUCT_SIZE;
+  
+  for(;;)
+  {
+    if ( ucg_pgm_read( ((ucg_pgm_uint8_t *)font) + 1 ) == 0 )
+      break;
+    encoding = ucg_pgm_read( ((ucg_pgm_uint8_t *)font)  );
+    font += ucg_pgm_read( ((ucg_pgm_uint8_t *)font) + 1 );
+  }
+  
+  return encoding;  
 }
 
 int8_t ucg_font_GetLowerGDescent(const void *font)
 {
-  return ucg_font_get_byte(font, 12);
+  return ucg_font_get_byte(font, 14);
 }
 
+/*
 int8_t ucg_font_GetFontAscent(const void *font)
 {
   return ucg_font_get_byte(font, 13);
@@ -281,7 +299,7 @@ int8_t ucg_font_GetFontXDescent(const void *font)
 {
   return ucg_font_get_byte(font, 16);
 }
-
+*/
 
 /* return the data start for a font and the glyph pointer */
 // static uint8_t *ucg_font_GetGlyphDataStart(const void *font, ucg_glyph_t g)
@@ -728,7 +746,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
 {
   // OBSOLETE if ( ucg->font_mode == UCG_FONT_MODE_NONE )
   // OBSOLETE   return 0;
-  /*
+  
   switch(dir)
   {
     case 0:
@@ -744,7 +762,6 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
-  */
   //return ucg->font_mode(ucg, x, y, dir, encoding);
   return ucg_font_draw_glyph(ucg, x, y, dir, encoding);
 }
@@ -804,8 +821,8 @@ void ucg_UpdateRefHeight(ucg_t *ucg)
   }
   else
   {
-    if ( ucg->font_ref_ascent < ucg->font_info.max_char_height )
-      ucg->font_ref_ascent = ucg->font_info.max_char_height;
+    if ( ucg->font_ref_ascent < ucg->font_info.max_char_height+ucg->font_info.y_offset )
+      ucg->font_ref_ascent = ucg->font_info.max_char_height+ucg->font_info.y_offset;
     if ( ucg->font_ref_descent > ucg->font_info.y_offset )
       ucg->font_ref_descent = ucg->font_info.y_offset;
   }  
