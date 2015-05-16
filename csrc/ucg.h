@@ -147,7 +147,7 @@ typedef struct _ucg_com_info_t ucg_com_info_t;
 typedef ucg_int_t (*ucg_dev_fnptr)(ucg_t *ucg, ucg_int_t msg, void *data); 
 typedef int16_t (*ucg_com_fnptr)(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data); 
 typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
-typedef ucg_int_t (*ucg_font_mode_fnptr)(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+//typedef ucg_int_t (*ucg_font_mode_fnptr)(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
 
 
 /*================================================*/
@@ -380,7 +380,7 @@ struct _ucg_t
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
   ucg_font_calc_vref_fnptr font_calc_vref;
-  ucg_font_mode_fnptr font_mode;		/* OBSOLETE?? UCG_FONT_MODE_TRANSPARENT, UCG_FONT_MODE_SOLID, UCG_FONT_MODE_NONE */
+  //ucg_font_mode_fnptr font_mode;		/* OBSOLETE?? UCG_FONT_MODE_TRANSPARENT, UCG_FONT_MODE_SOLID, UCG_FONT_MODE_NONE */
 
   ucg_font_decode_t font_decode;		/* new font decode structure */
   ucg_font_info_t font_info;			/* new font info structure */
@@ -678,12 +678,18 @@ void ucg_DrawTetragon(ucg_t *ucg, int16_t x0, int16_t y0, int16_t x1, int16_t y1
 /*================================================*/
 /* ucg_font.c */
 
-ucg_int_t ucg_draw_transparent_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
-ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+//ucg_int_t ucg_draw_transparent_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+//ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
 
-#define UCG_FONT_MODE_TRANSPARENT ucg_draw_transparent_glyph
-#define UCG_FONT_MODE_SOLID ucg_draw_solid_glyph
-#define UCG_FONT_MODE_NONE ((ucg_font_mode_fnptr)0)
+// old font procedures
+//#define UCG_FONT_MODE_TRANSPARENT ucg_draw_transparent_glyph
+//#define UCG_FONT_MODE_SOLID ucg_draw_solid_glyph
+//#define UCG_FONT_MODE_NONE ((ucg_font_mode_fnptr)0)
+
+// new font procedures
+#define UCG_FONT_MODE_TRANSPARENT 1
+#define UCG_FONT_MODE_SOLID 0
+#define UCG_FONT_MODE_NONE 1
 
 
 /* Information on a specific given font */
@@ -728,8 +734,8 @@ void ucg_SetFontPosTop(ucg_t *ucg);
 void ucg_SetFontPosCenter(ucg_t *ucg);
 
 void ucg_SetFont(ucg_t *ucg, const ucg_fntpgm_uint8_t  *font);
-void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode);
-
+//void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode);
+void ucg_SetFontMode(ucg_t *ucg, uint8_t is_transparent);
 
 ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s);
 

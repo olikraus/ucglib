@@ -666,12 +666,12 @@ const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
   return NULL;
 }
 
-ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t encoding, uint8_t dir, uint8_t is_transparent)
+ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
   ucg_int_t dx = 0;
   ucg->font_decode.target_x = x;
   ucg->font_decode.target_y = y;
-  ucg->font_decode.is_transparent = is_transparent;
+  //ucg->font_decode.is_transparent = is_transparent; this is already set
   ucg->font_decode.dir = dir;
   const uint8_t *glyph_data = ucg_font_get_glyph_data(ucg, encoding);
   if ( glyph_data != NULL )
@@ -682,155 +682,6 @@ ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t enco
 }
 
 
-#ifdef OLD_CODE
-static void ucg_CopyGlyphDataToCache(ucg_t *ucg, ucg_glyph_t g)
-{
-  uint8_t tmp;
-  switch( ucg_font_GetFormat(ucg->font) )
-  {
-    case 0:
-    case 2:
-  /*
-    format 0
-    glyph information 
-    offset
-    0             BBX width                                       unsigned
-    1             BBX height                                      unsigned
-    2             data size                                          unsigned    (BBX width + 7)/8 * BBX height
-    3             DWIDTH                                          signed
-    4             BBX xoffset                                    signed
-    5             BBX yoffset                                    signed
-  byte 0 == 255 indicates empty glyph
-  */
-      ucg->glyph_width =  ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 0 );
-      ucg->glyph_height =  ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 1 );
-      ucg->glyph_dx =  ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 3 );
-      ucg->glyph_x =  ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 4 );
-      ucg->glyph_y =  ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 5 );
-      break;
-    case 1:
-    default:
-      /*
-format 1
-  0             BBX xoffset                                    signed   --> upper 4 Bit
-  0             BBX yoffset                                    signed --> lower 4 Bit
-  1             BBX width                                       unsigned --> upper 4 Bit
-  1             BBX height                                      unsigned --> lower 4 Bit
-  2             data size                                           unsigned -(BBX width + 7)/8 * BBX height  --> lower 4 Bit
-  2             DWIDTH                                          signed --> upper  4 Bit
-  byte 0 == 255 indicates empty glyph
-      */
-    
-      tmp = ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 0 );
-      ucg->glyph_y =  tmp & 15;
-      ucg->glyph_y-=2;
-      tmp >>= 4;
-      ucg->glyph_x =  tmp;
-    
-      tmp = ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 1 );
-      ucg->glyph_height =  tmp & 15;
-      tmp >>= 4;
-      ucg->glyph_width =  tmp;
-      
-      tmp = ucg_pgm_read( ((ucg_pgm_uint8_t *)g) + 2 );
-      tmp >>= 4;
-      ucg->glyph_dx = tmp;
-    
-      
-      break;
-  }
-}
-
-//void ucg_FillEmptyGlyphCache(u8g_t *ucg) UCG_NOINLINE;
-static void ucg_FillEmptyGlyphCache(ucg_t *ucg)
-{
-  ucg->glyph_dx = 0;
-  ucg->glyph_width = 0;
-  ucg->glyph_height = 0;
-  ucg->glyph_x = 0;
-  ucg->glyph_y = 0;
-}
-
-/*
-  Find (with some speed optimization) and return a pointer to the glyph data structure
-  Also uncompress (format 1) and copy the content of the data structure to the u8g structure
-*/
-ucg_glyph_t ucg_GetGlyph(ucg_t *ucg, uint8_t requested_encoding)
-{
-  uint8_t *p = (uint8_t *)(ucg->font);
-  uint8_t font_format;
-  uint8_t data_structure_size;
-  uint8_t start, end;
-  uint16_t pos;
-  uint8_t i;
-  uint8_t mask = 255;
-  
-  if ( p == NULL )
-    return NULL;
-  
-  font_format = ucg_font_GetFormat(ucg->font);
-  data_structure_size = ucg_font_GetFontGlyphStructureSize(ucg->font);
-
-  if ( font_format == 1 )
-    mask = 15;
-  
-  start = ucg_font_GetFontStartEncoding(ucg->font);
-  end = ucg_font_GetFontEndEncoding(ucg->font);
-
-  pos = ucg_font_GetEncoding97Pos(ucg->font);
-  if ( requested_encoding >= 97 && pos > 0 )
-  {
-    p+= pos;
-    start = 97;
-  }
-  else 
-  {
-    pos = ucg_font_GetEncoding65Pos(ucg->font);
-    if ( requested_encoding >= 65 && pos > 0 )
-    {
-      p+= pos;
-      start = 65;
-    }
-    else
-      p += UCG_FONT_DATA_STRUCT_SIZE;       /* skip font general information */  
-  }
-  
-  if ( requested_encoding > end )
-  {
-    ucg_FillEmptyGlyphCache(ucg);
-    return NULL;                      /* not found */
-  }
-  
-  i = start;
-  if ( i <= end )
-  {
-    for(;;)
-    {
-      if ( ucg_pgm_read((ucg_pgm_uint8_t *)(p)) == 255 )
-      {
-        p += 1;
-      }
-      else
-      {
-        if ( i == requested_encoding )
-        {
-          ucg_CopyGlyphDataToCache(ucg, p);
-          return p;
-        }
-        p += ucg_pgm_read( ((ucg_pgm_uint8_t *)(p)) + 2 ) & mask;
-        p += data_structure_size;
-      }
-      if ( i == end )
-        break;
-      i++;
-    }
-  }
-  
-  ucg_FillEmptyGlyphCache(ucg);
-    
-  return NULL;
-}
-#endif /* OLD_CODE */
 
 uint8_t ucg_IsGlyph(ucg_t *ucg, uint8_t requested_encoding)
 {
@@ -859,197 +710,17 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
   return ucg->font_decode.glyph_width;
 }
 
-#ifdef OLD_CODE
-ucg_int_t ucg_draw_transparent_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
-{
-  const ucg_pgm_uint8_t *data;
-  uint8_t j;
-  ucg_int_t dx, dy;
-  uint8_t bytes_per_line;
-
-  {
-    ucg_glyph_t g = ucg_GetGlyph(ucg, encoding);
-    if ( g == NULL  )
-      return 0;
-    data = ucg_font_GetGlyphDataStart(ucg->font, g);
-  }
-  
-  bytes_per_line = ucg->glyph_width;
-  bytes_per_line += 7;
-  bytes_per_line /= 8;
-    
-  dx = 0;
-  dy = 0;
-  switch(dir)
-  {
-    case 0:
-      x += ucg->glyph_x;
-      y -= ucg->glyph_y;
-      y -= ucg->glyph_height;
-      dy = 1;
-      break;
-    case 1:
-      x += ucg->glyph_y;
-      y += ucg->glyph_x;
-      x += ucg->glyph_height;
-      dx = -1;
-      break;
-    case 2:
-      x -= ucg->glyph_x;
-      y += ucg->glyph_y;
-      y += ucg->glyph_height;
-      dy = -1;
-      break;
-    case 3:
-      x -= ucg->glyph_y;
-      y -= ucg->glyph_x;
-      x -= ucg->glyph_height;
-      dx = 1;
-      break;
-  }
-
-  for( j = 0; j < ucg->glyph_height; j++ )
-  {
-    //ucg_DrawPixel(ucg, x,y);
-    ucg_DrawTransparentBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
-    data += bytes_per_line;
-    y+=dy;
-    x+=dx;
-  }
-  
-  return ucg->glyph_dx;
-}
-
-ucg_int_t ucg_draw_solid_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
-{
-  const ucg_pgm_uint8_t *data;
-  uint8_t j;
-  ucg_int_t dx, dy;
-  uint8_t bytes_per_line;
-  ucg_int_t above;
-  ucg_int_t below;
-  ucg_int_t right;
-  ucg_int_t left;
-
-  {
-    ucg_glyph_t g = ucg_GetGlyph(ucg, encoding);
-    if ( g == NULL  )
-      return 0;
-    data = ucg_font_GetGlyphDataStart(ucg->font, g);
-  }
-  
-  above = ucg->font_ref_ascent;
-  above -= ucg->glyph_height;
-  above -= ucg->glyph_y;
-  if ( above < 0 )
-    above = 0;
-  
-  below = ucg->font_ref_descent; 
-  below -= ucg->glyph_y;
-  if ( below > 0 )
-    below = 0;
-  
-  right = ucg->glyph_dx;
-  right -= ucg->glyph_width;
-  right -= ucg->glyph_x;
-  if ( right < 0 )
-    right = 0;
-  
-  left = ucg->glyph_x;
-  if ( left < 0 )
-    left = 0;
-  
-  bytes_per_line = ucg->glyph_width;
-  bytes_per_line += 7;
-  bytes_per_line /= 8;
-    
-  dx = 0;
-  dy = 0;
-  switch(dir)
-  {
-    case 0:
-      x += ucg->glyph_x;
-      y -= ucg->glyph_y;
-      y -= ucg->glyph_height;
-      y -= above;		/* solid */
-      dy = 1;
-      break;
-    case 1:
-      x += ucg->glyph_y;
-      y += ucg->glyph_x;
-      x += ucg->glyph_height;
-      x += above;		/* solid */
-      dx = -1;
-      break;
-    case 2:
-      x -= ucg->glyph_x;
-      y += ucg->glyph_y;
-      y += ucg->glyph_height;
-      y += above;		/* solid */
-      dy = -1;
-      break;
-    case 3:
-      x -= ucg->glyph_y;
-      y -= ucg->glyph_x;
-      x -= ucg->glyph_height;
-      x -= above;		/* solid */
-      dx = 1;
-      break;
-  }
-
-  while( above > 0 )
-  {
-    ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
-    y+=dy;
-    x+=dx;
-    above--;
-  }
-  for( j = 0; j < ucg->glyph_height; j++ )
-  {
-    ucg_DrawBitmapLine(ucg, x, y, dir, ucg->glyph_width, data);
-    data += bytes_per_line;
-    y+=dy;
-    x+=dx;
-  }
-  while( below < 0 )
-  {
-    ucg_Draw90Line(ucg, x, y, ucg->glyph_width, dir, 1);
-    y+=dy;
-    x+=dx;
-    below++;
-  }
-  y-=dy;
-  x-=dx;
-  
-  for( j = 0; j < left; j++ )
-  {
-    x-=dy;
-    y-=dx;
-    ucg_Draw90Line(ucg, x, y, ucg->font_ref_ascent-ucg->font_ref_descent, (dir+3)&3, 1);
-  }
-  x+=dy*(ucg->glyph_width+left);
-  y+=dx*(ucg->glyph_width+left);      
-  while( right > 0 )
-  {
-    ucg_Draw90Line(ucg, x, y, ucg->font_ref_ascent-ucg->font_ref_descent, (dir+3)&3, 1);
-    x+=dy;
-    y+=dx;
-    right--;
-  }
-  
-  return ucg->glyph_dx;
-}
-
-#endif /* OLD_CODE */
 
 /*
   set one of:
     UCG_FONT_MODE_TRANSPARENT
     UCG_FONT_MODE_SOLID
     UCG_FONT_MODE_NONE
+  This has been changed for the new font procedures  
 */
-void ucg_SetFontMode(ucg_t *ucg, ucg_font_mode_fnptr font_mode)
+void ucg_SetFontMode(ucg_t *ucg, uint8_t is_transparent)
 {
+  ucg->font_decode.is_transparent = is_transparent;		// new font procedures
   //ucg->font_mode = font_mode;
 }
 
@@ -1075,7 +746,7 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
   }
   */
   //return ucg->font_mode(ucg, x, y, dir, encoding);
-  return ucg_font_draw_glyph(ucg, x, y, encoding, dir, /* is_transparent */ 0);
+  return ucg_font_draw_glyph(ucg, x, y, dir, encoding);
 }
 
 ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, const char *str)

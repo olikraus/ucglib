@@ -51,7 +51,9 @@ void ucg_init_struct(ucg_t *ucg)
   //ucg->display_offset.x = 0;
   //ucg->display_offset.y = 0;
   ucg->font = 0;
-  ucg->font_mode = UCG_FONT_MODE_NONE;
+  //ucg->font_mode = UCG_FONT_MODE_NONE;   Old font procedures
+  ucg->font_decode.is_transparent = 1;  // new font procedures
+  
   ucg->com_initial_change_sent = 0;
   ucg->com_status = 0;
   ucg->com_cfg_cd = 0;
