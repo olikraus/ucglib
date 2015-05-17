@@ -320,44 +320,8 @@ size_t ucg_font_GetSize(const void *font_arg)
     font += ucg_pgm_read( ((ucg_pgm_uint8_t *)font) + 1 );
   }
   
-  return font - (const uint8_t *)font_arg;
+  return (font - (const uint8_t *)font_arg) + 2;
   
-#ifdef OLD_CODE
-  
-  uint8_t *p = (uint8_t *)(font);
-  uint8_t font_format = ucg_font_GetFormat(font);
-  uint8_t data_structure_size = ucg_font_GetFontGlyphStructureSize(font);
-  uint8_t start, end;
-  uint8_t i;
-  uint8_t mask = 255;
-  
-  start = ucg_font_GetFontStartEncoding(font);
-  end = ucg_font_GetFontEndEncoding(font);
-
-  if ( font_format == 1 )
-    mask = 15;
-
-  p += UCG_FONT_DATA_STRUCT_SIZE;       /* skip font general information */  
-
-  i = start;  
-  for(;;)
-  {
-    if ( ucg_pgm_read((ucg_pgm_uint8_t *)(p)) == 255 )
-    {
-      p += 1;
-    }
-    else
-    {
-      p += ucg_pgm_read( ((ucg_pgm_uint8_t *)(p)) + 2 ) & mask;
-      p += data_structure_size;
-    }
-    if ( i == end )
-      break;
-    i++;
-  }
-    
-  return p - (uint8_t *)font;
-#endif
 }
 
 /*========================================================================*/

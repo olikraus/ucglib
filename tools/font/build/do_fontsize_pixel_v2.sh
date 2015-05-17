@@ -18,4 +18,7 @@ if test -r ../ttfbdfupdate/${BDF}; then echo ${BDF} "manual update" &&  cp ../tt
 ../bdfconv/bdfconv -b 0 ${BDF} -n ${IDENTIFIER}_tf -o ${CFILE} >/dev/null
 ../bdfconv/bdfconv -b 0 -m '32-127>32'  ${BDF} -n ${IDENTIFIER}_tr -o ${CFILER} >/dev/null
 ../bdfconv/bdfconv -b 0 -m '32,42-58>42' ${BDF} -n ${IDENTIFIER}_tn -o ${CFILEN} >/dev/null
+../bdfconv/bdfconv -b 1 ${BDF} -n ${IDENTIFIER}_hf -o ${CFILE} >/dev/null
+../bdfconv/bdfconv -b 1 -m '32-127>32'  ${BDF} -n ${IDENTIFIER}_hr -o ${CFILER} >/dev/null
+../bdfconv/bdfconv -b 1 -m '32,42-58>42' ${BDF} -n ${IDENTIFIER}_hn -o ${CFILEN} >/dev/null
 #cp ${CFILE} ../../../src/.

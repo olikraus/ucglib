@@ -3,6 +3,7 @@
 #include "ucg.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 extern const ucg_fntpgm_uint8_t *ucg_font_array[];
@@ -50,6 +51,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   const ucg_pgm_uint8_t *disp_font;
   uint16_t i;
   ucg_int_t x,y,w,h, hcnt, disp_line_height, disp_line_indent;
+  ucg_int_t  last_y;
   uint8_t start, end;
   //ucg_int_t indent;
   ucg_t ucg;
@@ -111,6 +113,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
 
   hcnt = 16;
   i = start - start % hcnt;
+  last_y = 0;
   for( y = 0; y < 16; y++ )
   {
     ucg_SetFont(&ucg, disp_font);
@@ -118,6 +121,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
     {
       sprintf(s, "%3d/0x%02x", i, i);
       ucg_DrawString(&ucg, 0, y*h+disp_line_height*3+h, 0, s);
+      last_y = y;
     }
     
     for( x = 0; x < hcnt; x++ )
@@ -131,8 +135,11 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
     }
   }
 
-  ucg_DrawString(&ucg, 0, (y+1)*h+disp_line_height*3+h, 0, "Woven silk pyjamas exchanged for blue quartz.");
-
+  if ( start <= 'A' && end >= 'z' )
+  {
+    ucg_SetFont(&ucg, font);
+    ucg_DrawString(&ucg, 0, (last_y+1)*h+disp_line_height*3+h, 0, "Woven silk pyjamas exchanged for blue quartz.");
+  }
   tga_save("ucg_font.tga");
 
   {
@@ -143,11 +150,63 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
 }
 
 
+const char *get_grp_name(const char *fontname)
+{
+  if ( strstr(fontname, "p01t") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "baby") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "blip") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "cpc") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "chik") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "pixel") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "trix") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "robot") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "lucas") != NULL ) return "fontgroupfontstruct";
+  if ( strstr(fontname, "u8glib_4") != NULL ) return "fontgroupu8g";
+  if ( strstr(fontname, "m2i") != NULL ) return "fontgroupu8g";
+  if ( strstr(fontname, "04b") != NULL ) return "fontgroup04";
+  if ( strstr(fontname, "4x6") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "micro") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "5x7") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "5x8") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "6x10") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "6x12") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "6x13") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "7x13") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "7x14") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "8x13") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "9x15") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "9x18") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "10x20") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "cursor") != NULL ) return "fontgroupx11";
+  if ( strstr(fontname, "org") != NULL ) return "fontgrouporgdot";
+  if ( strstr(fontname, "tps") != NULL ) return "fontgrouporgdot";
+  if ( strstr(fontname, "fixed_v0") != NULL ) return "fontgrouporgdot";
+  if ( strstr(fontname, "profont") != NULL ) return "fontgroupprofont";
+  if ( strstr(fontname, "_cour") != NULL ) return "fontgroupadobex11";
+  if ( strstr(fontname, "_sym") != NULL ) return "fontgroupadobex11";
+  if ( strstr(fontname, "_tim") != NULL ) return "fontgroupadobex11";
+  if ( strstr(fontname, "_helv") != NULL ) return "fontgroupadobex11";
+  if ( strstr(fontname, "_ncen") != NULL ) return "fontgroupadobex11";
+  if ( strstr(fontname, "_freed") != NULL ) return "fontgroupcontributed";
+  if ( strstr(fontname, "_unifont") != NULL ) return "fontgroupunifont";
+  if ( strstr(fontname, "_cu12") != NULL ) return "fontgroupcu12";
+  if ( strstr(fontname, "_fub") != NULL ) return "fontgroupfreeuniversal";
+  if ( strstr(fontname, "_fur") != NULL ) return "fontgroupfreeuniversal";
+  if ( strstr(fontname, "_logi") != NULL ) return "fontgrouplogisoso";
+  if ( strstr(fontname, "_osr") != NULL ) return "fontgroupoldstandard";
+  if ( strstr(fontname, "_osb") != NULL ) return "fontgroupoldstandard";
+  if ( strstr(fontname, "_inr") != NULL ) return "fontgroupoldstandard";
+  if ( strstr(fontname, "_inb") != NULL ) return "fontgroupinconsolata";
+  
+  return "<unknown>";
+}
+
 
 unsigned char bitmap[2] = { 0x0f0, 0x0f0 };
 
 int main(int argc, char **argv)
 {
+  const char *grp_name;
   int i, a;
   FILE *wiki;
   i = 0;
@@ -169,7 +228,8 @@ int main(int argc, char **argv)
     i++;
   }
   
-  wiki = fopen("font_array.wiki", "w");
+  wiki = fopen("fontsize.md", "w");
+  fprintf(wiki, "# All Ucglib Fonts, Captial A Height\n\n");
   for( a = 4;  a < 65; a++ )
   {
     ucg_t ucg;
@@ -205,13 +265,67 @@ int main(int argc, char **argv)
 	ucg_SetFont(&ucg, ucg_font_array[i]);
 	if ( ucg_GetFontCapitalAHeight(&ucg) == a )
 	{
-	  fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s_short.png]\n",ucg_font_name[i]); 
+	  //fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s_short.png]\n",ucg_font_name[i]); 
+	  fprintf(wiki, "![font/%s_short.png](font/%s_short.png)\n",ucg_font_name[i],ucg_font_name[i]);
+	  grp_name = get_grp_name(ucg_font_name[i]);
+	  fprintf(wiki, "[%s](%s)\n\n",grp_name, grp_name);
+	  
 	}
 	i++;
       }
     }
   }
   fclose(wiki);
+  
+  wiki = fopen("fontmono.md", "w");
+  fprintf(wiki, "# Ucglib Monospace Fonts, Captial A Height\n\n");
+  for( a = 4;  a < 65; a++ )
+  {
+    ucg_t ucg;
+    int cnt;
+    tga_init(100, 100);
+    ucg_Init(&ucg, ucg_dev_tga, ucg_ext_none, (ucg_com_fnptr)0);
+    
+    i = 0;
+    cnt = 0;
+    for(;;)
+    {
+      if ( ucg_font_array[i] == NULL )
+      {
+	break;
+      }
+      ucg_SetFont(&ucg, ucg_font_array[i]);
+      if ( ucg_GetFontCapitalAHeight(&ucg) == a && ucg.font_info.bbx_mode >= 2 )
+	cnt++;
+      i++;
+    }
+    printf("a=%d cnt=%d\n", a, cnt);
+
+    if ( cnt > 0 )
+    {
+      i = 0;
+      fprintf(wiki, "## %d Pixel Height\n",a); 
+      for(;;)
+      {
+	if ( ucg_font_array[i] == NULL )
+	{
+	  break;
+	}
+	ucg_SetFont(&ucg, ucg_font_array[i]);
+	if ( ucg_GetFontCapitalAHeight(&ucg) == a && ucg.font_info.bbx_mode >= 2 )
+	{
+	  //fprintf(wiki, "[http://wiki.ucglib.googlecode.com/hg/font/%s_short.png]\n",ucg_font_name[i]); 
+	  fprintf(wiki, "![font/%s_short.png](font/%s_short.png)\n",ucg_font_name[i],ucg_font_name[i]);
+	  grp_name = get_grp_name(ucg_font_name[i]);
+	  fprintf(wiki, "[%s](%s)\n\n",grp_name, grp_name);
+	  
+	}
+	i++;
+      }
+    }
+  }
+  fclose(wiki);
+  
   return 0;
 }
 
