@@ -170,7 +170,9 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->arg.len = len;
       ucg->arg.dir = dir;
       return 1;
+#ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90TC:
+#endif /* UCG_MSG_DRAW_L90TC */
     case UCG_MSG_DRAW_L90BF:
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;

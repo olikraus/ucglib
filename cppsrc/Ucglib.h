@@ -101,8 +101,8 @@ class Ucglib : public Print
     
     void setFont(const ucg_fntpgm_uint8_t  *font)
       { ucg_SetFont(&ucg, font); }
-    void setFontMode(ucg_font_mode_fnptr font_mode) 
-      { ucg_SetFontMode(&ucg, font_mode); }
+    void setFontMode(uint8_t is_transparent) 
+      { ucg_SetFontMode(&ucg, is_transparent); }
     ucg_int_t getFontAscent(void)
       { return ucg_GetFontAscent(&ucg); }
     ucg_int_t getFontDescent(void)
@@ -175,7 +175,7 @@ class Ucglib4WireSWSPI : public Ucglib
 	  //ucg.data_port[UCG_PIN_CS] =  portOutputRegister(digitalPinToPort(cs));
 	  //ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 class Ucglib3WireILI9325SWSPI : public Ucglib
@@ -188,7 +188,7 @@ class Ucglib3WireILI9325SWSPI : public Ucglib
 	  ucg.pin_list[UCG_PIN_SDA] = sda; 
 	  ucg.pin_list[UCG_PIN_RST] = reset; 
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 class Ucglib3Wire9bitSWSPI : public Ucglib
@@ -201,7 +201,7 @@ class Ucglib3Wire9bitSWSPI : public Ucglib
 	  ucg.pin_list[UCG_PIN_SDA] = sda; 
 	  ucg.pin_list[UCG_PIN_RST] = reset; 
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 class Ucglib4WireHWSPI : public Ucglib
@@ -223,7 +223,7 @@ class Ucglib4WireHWSPI : public Ucglib
 	  ucg.data_mask[UCG_PIN_CS] =  digitalPinToBitMask(cs);
 #endif
     }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 class Ucglib3Wire9bitHWSPI : public Ucglib
@@ -234,7 +234,7 @@ class Ucglib3Wire9bitHWSPI : public Ucglib
 
 	  ucg.pin_list[UCG_PIN_RST] = reset; 
 	  ucg.pin_list[UCG_PIN_CS] = cs; }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 
@@ -257,7 +257,7 @@ class Ucglib8BitPortD : public Ucglib
 	  ucg.data_port[UCG_PIN_WR] =  portOutputRegister(digitalPinToPort(wr));
 	  ucg.data_mask[UCG_PIN_WR] =  digitalPinToBitMask(wr);
     }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 #endif
 
@@ -286,7 +286,7 @@ class Ucglib8Bit : public Ucglib
 	  ucg.pin_list[UCG_PIN_D5] = d5;
 	  ucg.pin_list[UCG_PIN_D6] = d6;
 	  ucg.pin_list[UCG_PIN_D7] = d7; }
-    void begin(ucg_font_mode_fnptr font_mode);
+    void begin(uint8_t is_transparent);
 };
 
 class Ucglib_ST7735_18x128x160_HWSPI : public Ucglib4WireHWSPI

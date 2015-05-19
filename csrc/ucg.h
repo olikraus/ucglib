@@ -430,9 +430,9 @@ struct _ucg_t
 #define UCG_MSG_DRAW_PIXEL 20
 #define UCG_MSG_DRAW_L90FX 21
 /* draw  bit pattern, transparent and draw color (idx 0) color */
-#define UCG_MSG_DRAW_L90TC 22	
+#define UCG_MSG_DRAW_L90TC 22		/* can be commented, used by ucg_DrawTransparentBitmapLine */
 #define UCG_MSG_DRAW_L90SE 23
-#define UCG_MSG_DRAW_L90RL 24
+//#define UCG_MSG_DRAW_L90RL 24	/* not yet implemented */
 /* draw  bit pattern with foreground (idx 1) and background (idx 0) color */
 #define UCG_MSG_DRAW_L90BF 25	
 

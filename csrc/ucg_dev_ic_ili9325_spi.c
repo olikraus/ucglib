@@ -451,10 +451,12 @@ ucg_int_t ucg_dev_ic_ili9325_spi_18(ucg_t *ucg, ucg_int_t msg, void *data)
       //ucg_handle_l90fx(ucg, ucg_dev_ic_ili9325_18);
       ucg_handle_ili9325_l90fx(ucg);
       return 1;
+#ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90TC:
       //ucg_handle_l90tc(ucg, ucg_dev_ic_ili9325);
       ucg_handle_ili9325_l90tc(ucg);
       return 1;
+#endif /* UCG_MSG_DRAW_L90TC */
      case UCG_MSG_DRAW_L90BF:
       ucg_handle_l90bf(ucg, ucg_dev_ic_ili9325_18);
       return 1;

@@ -279,10 +279,10 @@ static int16_t ucg_com_arduino_generic_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t 
   return 1;
 }
 
-void Ucglib4WireSWSPI::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib4WireSWSPI::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_SW_SPI); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 
@@ -417,10 +417,10 @@ static int16_t ucg_com_arduino_illi9325_SW_SPI(ucg_t *ucg, int16_t msg, uint16_t
   return 1;
 }
 
-void Ucglib3WireILI9325SWSPI::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib3WireILI9325SWSPI::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_illi9325_SW_SPI); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 
@@ -568,10 +568,10 @@ static int16_t ucg_com_arduino_3wire_9bit_SW_SPI(ucg_t *ucg, int16_t msg, uint16
   return 1;
 }
 
-void Ucglib3Wire9bitSWSPI::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib3Wire9bitSWSPI::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_3wire_9bit_SW_SPI); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 /*=========================================================================*/
@@ -760,10 +760,10 @@ static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16
   return 1;
 }
 
-void Ucglib3Wire9bitHWSPI::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib3Wire9bitHWSPI::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_3wire_9bit_HW_SPI); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 
@@ -1028,10 +1028,10 @@ static int16_t ucg_com_arduino_generic_8bit(ucg_t *ucg, int16_t msg, uint16_t ar
   return 1;
 }
 
-void Ucglib8Bit::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib8Bit::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_generic_8bit); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 
@@ -1157,10 +1157,10 @@ static int16_t ucg_com_arduino_port_d(ucg_t *ucg, int16_t msg, uint16_t arg, uin
   return 1;
 }
 
-void Ucglib8BitPortD::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib8BitPortD::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_port_d); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 #endif /* __AVR__ */
@@ -1267,10 +1267,10 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t ar
   return 1;
 }
 
-void Ucglib4WireHWSPI::begin(ucg_font_mode_fnptr font_mode)
+void Ucglib4WireHWSPI::begin(uint8_t is_transparent)
 { 
   ucg_Init(&ucg, dev_cb, ext_cb, ucg_com_arduino_4wire_HW_SPI); 
-  ucg_SetFontMode(&ucg, font_mode);
+  ucg_SetFontMode(&ucg, is_transparent);
 }
 
 
