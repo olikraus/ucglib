@@ -363,26 +363,32 @@ uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg)
 /*========================================================================*/
 /* glyph handling */
 
-uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt)
+uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt) 
 {
   uint8_t val;
   uint8_t bit_pos = f->decode_bit_pos;
+  uint8_t bit_pos_plus_cnt;
   
   //val = *(f->decode_ptr);
   val = ucg_pgm_read( (ucg_pgm_uint8_t *)(f->decode_ptr) );  
   
   val >>= bit_pos;
-  if ( bit_pos + cnt >= 8 )
+  bit_pos_plus_cnt = bit_pos;
+  bit_pos_plus_cnt += cnt;
+  if ( bit_pos_plus_cnt >= 8 )
   {
+    uint8_t s = 8;
+    s -= bit_pos;
     f->decode_ptr++;
     //val |= *(f->decode_ptr) << (8-bit_pos);
-    val |= ucg_pgm_read( (ucg_pgm_uint8_t *)(f->decode_ptr) ) << (8-bit_pos);
-    bit_pos -= 8;
+    val |= ucg_pgm_read( (ucg_pgm_uint8_t *)(f->decode_ptr) ) << (s);
+    //bit_pos -= 8;
+    bit_pos_plus_cnt -= 8;
   }
   val &= (1U<<cnt)-1;
-  bit_pos += cnt;
+  //bit_pos += cnt;
   
-  f->decode_bit_pos = bit_pos;
+  f->decode_bit_pos = bit_pos_plus_cnt;
   return val;
 }
 

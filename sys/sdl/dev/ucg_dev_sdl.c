@@ -289,15 +289,19 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_L90FX:
       ucg_handle_l90fx(ucg, ucg_sdl_dev_cb);
       return 1;
+#ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90TC:
       ucg_handle_l90tc(ucg, ucg_sdl_dev_cb);
       return 1;
+#endif
     case UCG_MSG_DRAW_L90SE:
       ucg_handle_l90se(ucg, ucg_sdl_dev_cb);
       return 1;
+#ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90BF:
       ucg_handle_l90bf(ucg, ucg_sdl_dev_cb);
       return 1;
+#endif
 #ifdef ON_HOLD
     case UCG_MSG_DRAW_L90RL:
       ucg_handle_l90rl(ucg, ucg_sdl_dev_cb);

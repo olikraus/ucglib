@@ -372,9 +372,11 @@ ucg_int_t ucg_dev_ic_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg_handle_pcf8833_l90tc(ucg);
       return 1;	
 #endif /* UCG_MSG_DRAW_L90TC */
+#ifdef UCG_MSG_DRAW_L90BF
      case UCG_MSG_DRAW_L90BF:
       ucg_handle_l90bf(ucg, ucg_dev_ic_pcf8833_16);
       return 1;
+#endif /* UCG_MSG_DRAW_L90BF */
       
     /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
     /*

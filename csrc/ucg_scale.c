@@ -173,7 +173,11 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
 #ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90TC:
 #endif /* UCG_MSG_DRAW_L90TC */
+#ifdef UCG_MSG_DRAW_L90BF
     case UCG_MSG_DRAW_L90BF:
+#endif /* UCG_MSG_DRAW_L90BF */
+
+#if defined(UCG_MSG_DRAW_L90TC) || defined(UCG_MSG_DRAW_L90BF)
       xy = ucg->arg.pixel.pos;
       len = ucg->arg.len;
       dir = ucg->arg.dir;
@@ -206,6 +210,7 @@ ucg_int_t ucg_dev_scale2x2(ucg_t *ucg, ucg_int_t msg, void *data)
       ucg->arg.len = len;
       ucg->arg.dir = dir;
       return 1;
+#endif 
   }
   return ucg->scale_chain_device_cb(ucg, msg, data);  
 }

@@ -110,11 +110,12 @@ void ucg_DrawL90TCWithArg(ucg_t *ucg)
 }
 #endif /* UCG_MSG_DRAW_L90TC */
 
-
+#ifdef UCG_MSG_DRAW_L90BF
 void ucg_DrawL90BFWithArg(ucg_t *ucg)
 {
   ucg->device_cb(ucg, UCG_MSG_DRAW_L90BF, &(ucg->arg));
 }
+#endif /* UCG_MSG_DRAW_L90BF */
 
 void ucg_DrawL90SEWithArg(ucg_t *ucg)
 {

@@ -52,6 +52,7 @@ void ucg_DrawTransparentBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int
 }
 #endif /* UCG_MSG_DRAW_L90TC */
 
+#ifdef UCG_MSG_DRAW_L90BF
 void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg_int_t len, const unsigned char *bitmap)
 {
   /*
@@ -68,6 +69,7 @@ void ucg_DrawBitmapLine(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, ucg
   //ucg->arg.scale = 0;
   ucg_DrawL90BFWithArg(ucg);
 }
+#endif /* UCG_MSG_DRAW_L90BF */
 
 #ifdef ON_HOLD
 void ucg_DrawRLBitmap(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_t dir, const unsigned char *rl_bitmap)
