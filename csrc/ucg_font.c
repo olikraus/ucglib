@@ -363,6 +363,7 @@ uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg)
 /*========================================================================*/
 /* glyph handling */
 
+/* optimized */
 uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt) 
 {
   uint8_t val;
@@ -407,12 +408,21 @@ uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt)
 	r = bits(x)+1;
 
 */
+/* optimized */
 int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
 {
-  return (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt) - ((1<<cnt)>>1);
+  int8_t v, d;
+  v = (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt);
+  d = 1;
+  cnt--;
+  d <<= cnt;
+  v -= d;
+  return v;
+  //return (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt) - ((1<<cnt)>>1);
 }
 
-static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, ucg_int_t x, ucg_int_t y, uint8_t dir)
+static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_t y, uint8_t dir) UCG_NOINLINE;
+static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_t y, uint8_t dir)
 {
   switch(dir)
   {
@@ -459,32 +469,8 @@ void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
   
   ucg_add_vector(&x, &y, ucg->font_decode.x, ucg->font_decode.y, ucg->font_decode.dir);
 
-    /*
-  switch(ucg->font_decode.dir)
-  {
-    case 0:
-      x += ucg->font_decode.x;
-      y += ucg->font_decode.y;
-      break;
-    case 1:
-      y += ucg->font_decode.x;
-      x -= ucg->font_decode.y;
-      break;
-    case 2:
-      x -= ucg->font_decode.x;
-      y -= ucg->font_decode.y;
-      break;
-    default:
-      y -= ucg->font_decode.x;
-      x += ucg->font_decode.y;
-      break;      
-  }
-  */
-  
   if ( is_foreground )
   {
-    // TODO
-    //tga_fd_draw_fg_pixel(f, cnt);
     ucg_Draw90Line(ucg, 
       x, 
       y, 
@@ -565,63 +551,42 @@ static void ucg_font_setup_decode(ucg_t *ucg, const uint8_t *glyph_data)
   Calls:
     ucg_font_decode_len()
 */
-unsigned ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
+/* optimized */
+int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
 {
-  ucg_int_t a, b;
-  //unsigned cnt, rem;
-  ucg_int_t x, y;
-  ucg_int_t d = 0;
+  uint8_t a, b;
+  int8_t x, y;
+  int8_t d;
+  int8_t h;
+  ucg_font_decode_t *decode = &(ucg->font_decode);
     
   ucg_font_setup_decode(ucg, glyph_data);
+  h = ucg->font_decode.glyph_height;
   
-  x = ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_char_x);
-  y = ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_char_y);
-  d = ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_delta_x);
+  x = ucg_font_decode_get_signed_bits(decode, ucg->font_info.bits_per_char_x);
+  y = ucg_font_decode_get_signed_bits(decode, ucg->font_info.bits_per_char_y);
+  d = ucg_font_decode_get_signed_bits(decode, ucg->font_info.bits_per_delta_x);
   
-  if ( ucg->font_decode.glyph_width > 0 )
+  if ( decode->glyph_width > 0 )
   {
-    ucg_add_vector(&(ucg->font_decode.target_x), &(ucg->font_decode.target_y), x, -(ucg->font_decode.glyph_height+y), ucg->font_decode.dir);
-    /*
-    switch(ucg->font_decode.dir)
-    {
-      case 0:
-	ucg->font_decode.target_x += x;
-	ucg->font_decode.target_y -= ucg->font_decode.glyph_height ;
-	ucg->font_decode.target_y -=y ;
-	break;
-      case 1:
-	ucg->font_decode.target_y += x;
-	ucg->font_decode.target_x += ucg->font_decode.glyph_height ;
-	ucg->font_decode.target_x +=y ;
-	break;
-      case 2:
-	ucg->font_decode.target_x -= x;
-	ucg->font_decode.target_y += ucg->font_decode.glyph_height ;
-	ucg->font_decode.target_y +=y ;
-      break;
-    default:
-	ucg->font_decode.target_y -= x;
-	ucg->font_decode.target_x -= ucg->font_decode.glyph_height ;
-	ucg->font_decode.target_x -=y ;
-      break;      
-    }
-    */
+    ucg_add_vector(&(decode->target_x), &(decode->target_y), x, -(h+y), decode->dir);
+    
     /* reset local x/y position */
-    ucg->font_decode.x = 0;
-    ucg->font_decode.y = 0;
+    decode->x = 0;
+    decode->y = 0;
     
     /* decode glyph */
     for(;;)
     {
-      a = ucg_font_decode_get_unsigned_bits(&(ucg->font_decode), ucg->font_info.bits_per_0);
-      b = ucg_font_decode_get_unsigned_bits(&(ucg->font_decode), ucg->font_info.bits_per_1);
+      a = ucg_font_decode_get_unsigned_bits(decode, ucg->font_info.bits_per_0);
+      b = ucg_font_decode_get_unsigned_bits(decode, ucg->font_info.bits_per_1);
       do
       {
 	ucg_font_decode_len(ucg, a, 0);
 	ucg_font_decode_len(ucg, b, 1);
-      } while( ucg_font_decode_get_unsigned_bits(&(ucg->font_decode), 1) != 0 );
+      } while( ucg_font_decode_get_unsigned_bits(decode, 1) != 0 );
 
-      if ( ucg->font_decode.y >= ucg->font_decode.glyph_height )
+      if ( decode->y >= h )
 	break;
     }
   }
@@ -743,9 +708,9 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
   while( *str != '\0' )
   {
     delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
-    ucg_add_vector(&x, &y, delta, 0, dir);
+    //ucg_add_vector(&x, &y, delta, 0, dir);
 
-    /*
+    
     switch(dir)
     {
       case 0:
@@ -761,7 +726,7 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
 	y -= delta;
 	break;
     }
-    */
+    
     sum += delta;    
     str++;
   }

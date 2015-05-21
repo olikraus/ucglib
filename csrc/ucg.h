@@ -304,15 +304,16 @@ typedef struct _ucg_font_info_t ucg_font_info_t;
 
 struct _ucg_font_decode_t
 {
+  const uint8_t *decode_ptr;			/* pointer to the compressed data */
+  
   ucg_int_t target_x;
   ucg_int_t target_y;
   
-  ucg_int_t x;						/* local coordinates, (0,0) is upper left */
-  ucg_int_t y;
-  ucg_int_t glyph_width;	
-  ucg_int_t glyph_height;
+  int8_t x;						/* local coordinates, (0,0) is upper left */
+  int8_t y;
+  int8_t glyph_width;	
+  int8_t glyph_height;
 
-  const uint8_t *decode_ptr;			/* pointer to the compressed data */
   uint8_t decode_bit_pos;			/* bitpos inside a byte of the compressed data */
   uint8_t is_transparent;
   uint8_t dir;				/* direction */
