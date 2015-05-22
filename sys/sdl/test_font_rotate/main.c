@@ -17,8 +17,8 @@ int main(void)
 {
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
-  //ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
-  ucg_SetFont(&ucg, ucg_font_ncenB24_tf);
+  ucg_SetFontMode(&ucg, UCG_FONT_MODE_SOLID);
+  ucg_SetFont(&ucg, ucg_font_ncenB24_hf);
 
   
   /*
@@ -32,6 +32,7 @@ int main(void)
   ucg_DrawGlyph(&ucg, 64, 32,3, 'A');
   */
   
+  ucg_SetColor(&ucg, 1, 0, 0, 255);
   ucg_SetColor(&ucg, 0, 255, 180, 40);
   ucg_DrawString(&ucg, 64, 32,0, "AB");
   ucg_SetColor(&ucg, 0, 255, 200, 70);

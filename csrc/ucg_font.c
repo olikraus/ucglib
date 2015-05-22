@@ -421,6 +421,7 @@ int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
   //return (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt) - ((1<<cnt)>>1);
 }
 
+/* OLD CODE
 static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_t y, uint8_t dir) UCG_NOINLINE;
 static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_t y, uint8_t dir)
 {
@@ -444,7 +445,52 @@ static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_
       break;      
   }
 }
+*/
 
+static ucg_int_t ucg_add_vector_y(ucg_int_t dy, int8_t x, int8_t y, uint8_t dir) UCG_NOINLINE;
+static ucg_int_t ucg_add_vector_y(ucg_int_t dy, int8_t x, int8_t y, uint8_t dir)
+{
+  switch(dir)
+  {
+    case 0:
+      dy += y;
+      break;
+    case 1:
+      dy += x;
+      break;
+    case 2:
+      dy -= y;
+      break;
+    default:
+      dy -= x;
+      break;      
+  }
+  return dy;
+}
+
+static ucg_int_t ucg_add_vector_x(ucg_int_t dx, int8_t x, int8_t y, uint8_t dir) UCG_NOINLINE;
+static ucg_int_t ucg_add_vector_x(ucg_int_t dx, int8_t x, int8_t y, uint8_t dir)
+{
+  switch(dir)
+  {
+    case 0:
+      dx += x;
+      break;
+    case 1:
+      dx -= y;
+      break;
+    case 2:
+      dx -= x;
+      break;
+    default:
+      dx += y;
+      break;      
+  }
+  return dx;
+}
+
+
+#ifdef OBSOLETE
 /*
   Description:
     Draw a line with "cnt" pixel as fore- or background color.
@@ -461,13 +507,18 @@ static void ucg_add_vector(ucg_int_t *dest_x, ucg_int_t *dest_y, int8_t x, int8_
   Called by:
     ucg_font_decode_len()
 */
-void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
+void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t lx, uint8_t ly, uint8_t cnt, uint8_t is_foreground)
 {
   ucg_int_t x, y;
-  x = ucg->font_decode.target_x;
-  y = ucg->font_decode.target_y;
+  ucg_font_decode_t *decode = &(ucg->font_decode);
   
-  ucg_add_vector(&x, &y, ucg->font_decode.x, ucg->font_decode.y, ucg->font_decode.dir);
+  x = decode->target_x;
+  y = decode->target_y;
+
+  x = ucg_add_vector_x(x, lx, ly, decode->dir);
+  y = ucg_add_vector_y(y, lx, ly, decode->dir);
+  
+  //ucg_add_vector(&x, &y, ucg->font_decode.x, ucg->font_decode.y, ucg->font_decode.dir);
 
   if ( is_foreground )
   {
@@ -475,19 +526,20 @@ void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
       x, 
       y, 
       cnt, 
-      /* dir */ ucg->font_decode.dir, 
+      /* dir */ decode->dir, 
       /* col_idx */ 0);   
   }
-  else if ( ucg->font_decode.is_transparent == 0 )    
+  else if ( decode->is_transparent == 0 )    
   {
     ucg_Draw90Line(ucg, 
       x, 
       y, 
       cnt, 
-      /* dir */ ucg->font_decode.dir, 
+      /* dir */ decode->dir, 
       /* col_idx */ 1);   
   }
 }
+#endif
 
 /*
   Description:
@@ -502,27 +554,89 @@ void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t cnt, uint8_t is_foreground)
   Return:
     -
   Calls:
-    ucg_font_decode_draw_pixel()
+    ucg_Draw90Line()
   Called by:
     ucg_font_decode_glyph()
 */
+/* optimized */
 void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground)
 {
-  uint8_t cnt, rem;
+  uint8_t cnt;	/* total number of remaining pixels, which have to be drawn */
+  uint8_t rem; 	/* remaining pixel to the right edge of the glyph */
+  uint8_t current;	/* number of pixels, which need to be drawn for the draw procedure */
+    /* current is either equal to cnt or equal to rem */
+  
+  /* local coordinates of the glyph */
+  uint8_t lx,ly;
+  
+  /* target position on the screen */
+  ucg_int_t x, y;
+  
+  ucg_font_decode_t *decode = &(ucg->font_decode);
+  
   cnt = len;
+  
+  /* get the local position */
+  lx = decode->x;
+  ly = decode->y;
+  
   for(;;)
   {
-    rem = ucg->font_decode.glyph_width;
-    rem -= ucg->font_decode.x;
+    /* calculate the number of pixel to the right edge of the glyph */
+    rem = decode->glyph_width;
+    rem -= lx;
+    
+    /* calculate how many pixel to draw. This is either to the right edge */
+    /* or lesser, if not enough pixel are left */
+    current = rem;
+    if ( cnt < rem )
+      current = cnt;
+    
+    
+    /* now draw the line, but apply the rotation around the glyph target position */
+    //ucg_font_decode_draw_pixel(ucg, lx,ly,current, is_foreground);
+
+    /* get target position */
+    x = decode->target_x;
+    y = decode->target_y;
+
+    /* apply rotation */
+    x = ucg_add_vector_x(x, lx, ly, decode->dir);
+    y = ucg_add_vector_y(y, lx, ly, decode->dir);
+    
+    /* draw foreground and background (if required) */
+    if ( is_foreground )
+    {
+      ucg_Draw90Line(ucg, 
+	x, 
+	y, 
+	current, 
+	/* dir */ decode->dir, 
+	/* col_idx */ 0);   
+    }
+    else if ( decode->is_transparent == 0 )    
+    {
+      ucg_Draw90Line(ucg, 
+	x, 
+	y, 
+	current, 
+	/* dir */ decode->dir, 
+	/* col_idx */ 1);   
+    }
+    
+    /* check, whether the end of the run length code has been reached */
     if ( cnt < rem )
       break;
-    ucg_font_decode_draw_pixel(ucg,rem, is_foreground);
     cnt -= rem;
-    ucg->font_decode.x = 0;
-    ucg->font_decode.y++;
+    lx = 0;
+    ly++;
   }
-  ucg_font_decode_draw_pixel(ucg, cnt, is_foreground);
-  ucg->font_decode.x += cnt;
+  //ucg_font_decode_draw_pixel(ucg, x,y, cnt, is_foreground);
+  lx += cnt;
+  
+  decode->x = lx;
+  decode->y = ly;
+  
 }
 
 static void ucg_font_setup_decode(ucg_t *ucg, const uint8_t *glyph_data)
@@ -569,8 +683,10 @@ int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
   
   if ( decode->glyph_width > 0 )
   {
-    ucg_add_vector(&(decode->target_x), &(decode->target_y), x, -(h+y), decode->dir);
-    
+    decode->target_x = ucg_add_vector_x(decode->target_x, x, -(h+y), decode->dir);
+    decode->target_y = ucg_add_vector_y(decode->target_y, x, -(h+y), decode->dir);
+    //ucg_add_vector(&(decode->target_x), &(decode->target_y), x, -(h+y), decode->dir);
+   
     /* reset local x/y position */
     decode->x = 0;
     decode->y = 0;
