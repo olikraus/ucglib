@@ -60,7 +60,7 @@
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
-//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
+Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
 
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
@@ -72,7 +72,7 @@
 
 //Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ d0, /*d1 =*/ d1, /*d2 =*/ d2, /*d3 =*/ d3, /*d4 =*/ d4, /*d5 =*/ d5, /*wr=*/ wr, /*cd=*/ cd, /*cs=*/ cs, /*reset=*/ reset);
 //Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 16, /*d1 =*/ 17, /*d2 =*/ 18, /*d3 =*/ 19, /*d4 =*/ 20, /*d5 =*/ 21, /*wr=*/ 14, /*cd=*/ 15); /* Samsung 160x128 OLED with 6Bit minimal interface with Due */ 
-Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 5, /*d1 =*/ 4, /*d2 =*/ 3, /*d3 =*/ 2, /*d4 =*/ 1, /*d5 =*/ 0, /*wr=*/ 7, /*cd=*/ 6); /* Samsung 160x128 OLED with 6Bit minimal interface with Uno */ 
+//Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 5, /*d1 =*/ 4, /*d2 =*/ 3, /*d3 =*/ 2, /*d4 =*/ 1, /*d5 =*/ 0, /*wr=*/ 7, /*cd=*/ 6); /* Samsung 160x128 OLED with 6Bit minimal interface with Uno */ 
 
 
 #define T 4000
@@ -265,13 +265,13 @@ void fonts(void)
   ucg.setFontMode(UCG_FONT_MODE_TRANSPARENT);
 
   ucg.setColor(255, 200, 170);
-  ucg.setFont(ucg_font_helvB08r);
+  ucg.setFont(ucg_font_helvB08_hr);
   ucg.setPrintPos(2,30+d);
   ucg.print("ABC abc 123");
-  ucg.setFont(ucg_font_helvB10r);
+  ucg.setFont(ucg_font_helvB10_hr);
   ucg.setPrintPos(2,45+d);
   ucg.print("ABC abc 123");
-  ucg.setFont(ucg_font_helvB12r);
+  ucg.setFont(ucg_font_helvB12_hr);
   //ucg.setPrintPos(2,62+d);
   //ucg.print("ABC abc 123");
   ucg.drawString(2,62+d, 0, "ABC abc 123"); // test drawString
@@ -280,13 +280,13 @@ void fonts(void)
 
   ucg.setColor(255, 200, 170);
   ucg.setColor(1, 0, 100, 120);		// background color in solid mode
-  ucg.setFont(ucg_font_helvB08r);
+  ucg.setFont(ucg_font_helvB08_hr);
   ucg.setPrintPos(2,75+30+d);
   ucg.print("ABC abc 123");
-  ucg.setFont(ucg_font_helvB10r);
+  ucg.setFont(ucg_font_helvB10_hr);
   ucg.setPrintPos(2,75+45+d);
   ucg.print("ABC abc 123");
-  ucg.setFont(ucg_font_helvB12r);
+  ucg.setFont(ucg_font_helvB12_hr);
   ucg.setPrintPos(2,75+62+d);
   ucg.print("ABC abc 123");
 
@@ -294,15 +294,15 @@ void fonts(void)
 
   /* big fonts removed, some trouble with the Arduino IDE */
   /*
-  ucg.setFont(ucg_font_helvB14r);
+  ucg.setFont(ucg_font_helvB14_hr);
   ucg.setPrintPos(2,79+d);
   ucg.print("ABC abc 123");
-  ucg.setFont(ucg_font_helvB18r);
+  ucg.setFont(ucg_font_helvB18_hr);
   ucg.setPrintPos(2,79+22+d);
   ucg.print("ABC abc 123");
   */
   
-  ucg.setFont(ucg_font_ncenR14r);
+  ucg.setFont(ucg_font_ncenR14_hr);
   DLY();
 }
 
@@ -322,7 +322,7 @@ void clip(void)
   
   ucg.setColor(0xd1, 0x00, 0x073);
   
-  ucg.setFont(ucg_font_helvB18r);
+  ucg.setFont(ucg_font_helvB18_hr);
   
   ucg.setPrintPos(25,45);
   ucg.setPrintDir(0);
@@ -381,7 +381,7 @@ void clip(void)
   ucg.setPrintDir(3);
   ucg.print("Ucg");
 
-  ucg.setFont(ucg_font_ncenR14r);
+  ucg.setFont(ucg_font_ncenR14_hr);
   ucg.setMaxClipRange();
   DLY();
   
@@ -391,7 +391,7 @@ void setup(void)
 {
   delay(1000);
   ucg.begin(UCG_FONT_MODE_TRANSPARENT);
-  ucg.setFont(ucg_font_ncenR14r);
+  ucg.setFont(ucg_font_ncenR14_hr);
   ucg.clearScreen();
 }
 

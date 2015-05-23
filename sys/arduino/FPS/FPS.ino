@@ -66,6 +66,9 @@
   1 mar 2015
   LD50T6160, Arduino Due, 6Bit	Text: 6.4		Box: 13.1		Gradient: 10.5
 
+  23 May 2015, new font procedures
+  ILI9341, Arduino Uno, SW SPI		Text:  1.9  	Box: 3.4		Gradient:  2.4
+
 */
 
 #include <SPI.h>
@@ -89,7 +92,7 @@
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 76, /*data=*/ 75, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
-//Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
+Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 4, /*data=*/ 3, /*cd=*/ 6 , /*cs=*/ 7, /*reset=*/ 5);	/* Elec Freaks Shield */
 
 //Ucglib_SSD1351_18x128x128_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_SSD1351_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
@@ -100,7 +103,7 @@
 //Ucglib_PCF8833_16x132x132_HWSPI ucg(/*cs=*/ 9, /*reset=*/ 8);	/* linksprite board */
 
 //Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ d0, /*d1 =*/ d1, /*d2 =*/ d2, /*d3 =*/ d3, /*d4 =*/ d4, /*d5 =*/ d5, /*wr=*/ wr, /*cd=*/ cd, /*cs=*/ cs, /*reset=*/ reset);
-Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 16, /*d1 =*/ 17, /*d2 =*/ 18, /*d3 =*/ 19, /*d4 =*/ 20, /*d5 =*/ 21, /*wr=*/ 14, /*cd=*/ 15); /* Samsung 160x128 OLED with 6Bit minimal interface with Due */ 
+//Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 16, /*d1 =*/ 17, /*d2 =*/ 18, /*d3 =*/ 19, /*d4 =*/ 20, /*d5 =*/ 21, /*wr=*/ 14, /*cd=*/ 15); /* Samsung 160x128 OLED with 6Bit minimal interface with Due */ 
 
 void setup(void) {
   delay(1000);
@@ -134,7 +137,7 @@ uint8_t lcg_rnd(void) {
 
 
 void draw_text(void) {
-  ucg.setFont(ucg_font_ncenR14r);
+  ucg.setFont(ucg_font_ncenR14_tr);
   //ucg.setColor(255, 255, 255);
   ucg.setColor(lcg_rnd(),lcg_rnd(),lcg_rnd());
   ucg.setPrintPos(0,20);
@@ -235,7 +238,7 @@ const char *convert_FPS(uint16_t fps) {
 
 void show_result(const char *s, uint16_t fps)  {
   ucg.clearScreen();
-  ucg.setFont(ucg_font_helvR18r);
+  ucg.setFont(ucg_font_helvR18_tr);
   ucg.setColor(255, 255, 255);
   ucg.setPrintPos(0,25);
   ucg.print(s);
