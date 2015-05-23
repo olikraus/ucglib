@@ -723,6 +723,15 @@ const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
   const uint8_t *font = ucg->font;
   font += UCG_FONT_DATA_STRUCT_SIZE;
   
+  if ( encoding >= 'a' )
+  {
+    font += ucg->font_info.start_pos_lower_a;
+  }
+  else if ( encoding >= 'A' )
+  {
+    font += ucg->font_info.start_pos_upper_A;
+  }
+  
   for(;;)
   {
     if ( ucg_pgm_read( ((ucg_pgm_uint8_t *)font) + 1 ) == 0 )
