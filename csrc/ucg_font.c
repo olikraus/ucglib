@@ -641,14 +641,15 @@ void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground)
 
 static void ucg_font_setup_decode(ucg_t *ucg, const uint8_t *glyph_data)
 {
-  ucg->font_decode.decode_ptr = glyph_data;
-  ucg->font_decode.decode_bit_pos = 0;
+  ucg_font_decode_t *decode = &(ucg->font_decode);
+  decode->decode_ptr = glyph_data;
+  decode->decode_bit_pos = 0;
   
-  ucg->font_decode.decode_ptr += 1;
-  ucg->font_decode.decode_ptr += 1;
+  decode->decode_ptr += 1;
+  decode->decode_ptr += 1;
   
-  ucg->font_decode.glyph_width = ucg_font_decode_get_unsigned_bits(&(ucg->font_decode), ucg->font_info.bits_per_char_width);
-  ucg->font_decode.glyph_height = ucg_font_decode_get_unsigned_bits(&(ucg->font_decode),ucg->font_info. bits_per_char_height);
+  decode->glyph_width = ucg_font_decode_get_unsigned_bits(decode, ucg->font_info.bits_per_char_width);
+  decode->glyph_height = ucg_font_decode_get_unsigned_bits(decode,ucg->font_info.bits_per_char_height);
 }
 
 
@@ -776,7 +777,11 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
     return 0; 
   
   ucg_font_setup_decode(ucg, glyph_data);
-  return ucg->font_decode.glyph_width;
+  ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_char_x);
+  ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_char_y);
+
+  //return ucg->font_decode.glyph_width;
+  return ucg_font_decode_get_signed_bits(&(ucg->font_decode), ucg->font_info.bits_per_delta_x);
 }
 
 
@@ -790,14 +795,10 @@ int8_t ucg_GetGlyphWidth(ucg_t *ucg, uint8_t requested_encoding)
 void ucg_SetFontMode(ucg_t *ucg, uint8_t is_transparent)
 {
   ucg->font_decode.is_transparent = is_transparent;		// new font procedures
-  //ucg->font_mode = font_mode;
 }
 
 ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
-  // OBSOLETE if ( ucg->font_mode == UCG_FONT_MODE_NONE )
-  // OBSOLETE   return 0;
-  
   switch(dir)
   {
     case 0:
@@ -813,7 +814,6 @@ ucg_int_t ucg_DrawGlyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8
       x += ucg->font_calc_vref(ucg);
       break;
   }
-  //return ucg->font_mode(ucg, x, y, dir, encoding);
   return ucg_font_draw_glyph(ucg, x, y, dir, encoding);
 }
 
@@ -824,8 +824,6 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
   while( *str != '\0' )
   {
     delta = ucg_DrawGlyph(ucg, x, y, dir, (uint8_t)*str);
-    //ucg_add_vector(&x, &y, delta, 0, dir);
-
     
     switch(dir)
     {
@@ -989,6 +987,5 @@ ucg_int_t ucg_GetStrWidth(ucg_t *ucg, const char *s)
     /* goto next char */
     s++;
   }
-  
   return w;  
 }

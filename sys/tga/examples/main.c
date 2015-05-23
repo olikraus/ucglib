@@ -1,3 +1,11 @@
+/*
+  
+  main.c
+  
+  Create example pictures for Ucglib
+
+*/
+
 
 
 #include "ucg.h"
@@ -41,7 +49,7 @@ void prepare_measure(ucg_t *ucg)
 {
   ucg_SetMaxClipRange(ucg);
   ucg_SetColor(ucg, 0, 255, 160, 63);
-  ucg_SetFont(ucg, ucg_font_6x12);
+  ucg_SetFont(ucg, ucg_font_6x12_tf);
   ucg_SetFontMode(ucg, UCG_FONT_MODE_TRANSPARENT);
 }
 
@@ -57,10 +65,12 @@ void pos(ucg_t *ucg, ucg_int_t x, ucg_int_t y, int is_right)
   if (  is_right )
   {
     ucg_DrawString(ucg, x+1, y, 0, s);
+    //ucg_DrawHLine(ucg, x+1, y, w);
   }
   else
   {
     ucg_DrawString(ucg, x+1-w, y, 0, s);
+    //ucg_DrawHLine(ucg, x+1-w, y, w);
   }
 }
 
@@ -160,7 +170,7 @@ void set_clip_range(ucg_t *ucg)
   prepare_picture(ucg);
   
   ucg_SetFontPosBaseline(ucg);
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetColor(ucg, 0, 255, 255, 255);		/* draw white A */
   ucg_DrawGlyph(ucg, 50, 40, 0, 'A');
   ucg_SetClipRange(ucg, 57, 20, 30, 15);	/* restrict area */
@@ -179,7 +189,7 @@ void draw_text_baseline(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosBaseline(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -194,7 +204,7 @@ void draw_text_bottom(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosBottom(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -209,7 +219,7 @@ void draw_text_top(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosTop(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -224,7 +234,7 @@ void draw_text_center(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosCenter(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -239,16 +249,16 @@ void draw_text_ascent_descent(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB24);
+  ucg_SetFont(ucg, ucg_font_ncenB24_tf);
   ucg_SetFontPosBaseline(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   ucg_DrawHLine(ucg, 42+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
   ucg_SetColor(ucg, 0, 255, 255, 255);		/* draw white "Ucg" */
   ucg_DrawString(ucg, 42+ox, 30, 0, "Ucg");
   pos(ucg, 42+ox, 30, 0);
-  ucg_SetFont(ucg, ucg_font_ncenB24);
+  ucg_SetFont(ucg, ucg_font_ncenB24_tf);
   vrule(ucg, 42+ox+ucg_GetStrWidth(ucg, "Ucg"), 30-ucg_GetFontAscent(ucg), ucg_GetFontAscent(ucg), 1);
-  ucg_SetFont(ucg, ucg_font_ncenB24);
+  ucg_SetFont(ucg, ucg_font_ncenB24_tf);
   vrule(ucg, 42+ox+ucg_GetStrWidth(ucg, "Ucg"), 30, -ucg_GetFontDescent(ucg), 1);
   
   save_picture(ucg, "draw_text_ascent_descent");  
@@ -258,7 +268,7 @@ void draw_text_dir1(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosBaseline(ucg);
   ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   //ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -397,7 +407,7 @@ void set_scale2x2(ucg_t *ucg)
 {
   prepare_picture(ucg);
   
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosBaseline(ucg);
   //ucg_SetColor(ucg, 0, 0, 0, 255);		/* draw blue "baseline" */
   //ucg_DrawHLine(ucg, 45+ox, 30, ucg_GetStrWidth(ucg, "Ucg"));
@@ -422,7 +432,7 @@ void set_font_mode_1(ucg_t *ucg)
   ucg_DrawGradientBox(ucg, ox+0, 0, 128, 64);
   
   ucg_SetFontMode(ucg, UCG_FONT_MODE_TRANSPARENT);
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_tf);
   ucg_SetFontPosBaseline(ucg);  
   ucg_SetColor(ucg, 0, 0, 0, 0);		/* draw black "Ucg" */
   ucg_DrawString(ucg, 40+ox, 40, 0, "Ucg");
@@ -443,7 +453,7 @@ void set_font_mode_2(ucg_t *ucg)
   ucg_DrawGradientBox(ucg, ox+0, 0, 128, 64);
   
   ucg_SetFontMode(ucg, UCG_FONT_MODE_SOLID);
-  ucg_SetFont(ucg, ucg_font_ncenB18);
+  ucg_SetFont(ucg, ucg_font_ncenB18_hr);
   ucg_SetFontPosBaseline(ucg);  
   ucg_SetColor(ucg, 0, 0, 0, 0);		/* draw black "Ucg" */
   ucg_SetColor(ucg, 1, 150, 220, 255);		/* light blue background */
@@ -466,7 +476,7 @@ int main(void)
   
   
   
-  ucg_SetFont(&ucg, ucg_font_ncenB18);
+  ucg_SetFont(&ucg, ucg_font_ncenB18_tf);
   
   ucg_SetColor(&ucg, 0, 0, 0, 255);
   ucg_DrawPixel(&ucg, 70,20);
