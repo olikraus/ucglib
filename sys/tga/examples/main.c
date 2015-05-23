@@ -463,6 +463,76 @@ void set_font_mode_2(ucg_t *ucg)
   save_picture(ucg, "set_font_mode_2");  
 }
 
+void solid_font_variants(ucg_t *ucg)
+{
+  prepare_picture(ucg);
+
+  ucg_SetColor(ucg, 0, 250, 0, 0);
+  ucg_SetColor(ucg, 1, 255, 255, 30);
+  ucg_SetColor(ucg, 2, 220, 235, 10);
+  ucg_SetColor(ucg, 3, 205, 0, 30);
+
+  ucg_DrawGradientBox(ucg, ox+0, 0, 128, 64);
+
+  ucg_SetColor(ucg, 0, 0, 0, 0);		/* draw black "Ucg" */
+  ucg_SetColor(ucg, 1, 150, 220, 255);		/* light blue background */  
+  ucg_SetFontMode(ucg, UCG_FONT_MODE_SOLID);
+  ucg_SetFontPosBaseline(ucg);  
+  
+  ucg_SetFont(ucg, ucg_font_fur11_tf);
+  ucg_DrawString(ucg, 3+ox, 20, 0, "fur11_tf");
+
+  ucg_SetFont(ucg, ucg_font_fur11_hf);
+  ucg_DrawString(ucg, 3+ox, 50, 0, "fur11_hf");
+
+  ucg_SetFont(ucg, ucg_font_fur11_hr);
+  ucg_DrawString(ucg, 68+ox, 50, 0, "fur11_hr");
+  
+  
+  //pos(ucg, 42+ox, 40, 0);
+  
+  save_picture(ucg, "solid_font_variants");  
+}
+
+void string_overwrite(ucg_t *ucg, int cnt)
+{
+  char s[40];
+  int i;
+  prepare_picture(ucg);
+
+  ucg_SetColor(ucg, 0, 250, 0, 0);
+  ucg_SetColor(ucg, 1, 255, 255, 30);
+  ucg_SetColor(ucg, 2, 220, 235, 10);
+  ucg_SetColor(ucg, 3, 205, 0, 30);
+
+  ucg_DrawGradientBox(ucg, ox+0, 0, 128, 64);
+
+  ucg_SetColor(ucg, 0, 0, 0, 0);		/* draw black "Ucg" */
+  ucg_SetColor(ucg, 1, 150, 220, 255);		/* light blue background */  
+  ucg_SetFontMode(ucg, UCG_FONT_MODE_SOLID);
+  ucg_SetFontPosBaseline(ucg);  
+  
+  for( i = 11; i < 11+cnt; i++ )
+  {
+    sprintf(s, "cu12_tf %d", i);
+    ucg_SetFont(ucg, ucg_font_cu12_tf);
+    ucg_DrawString(ucg, 1+ox, 15, 0, s);
+
+    sprintf(s, "cu12_hf %d", i);
+    ucg_SetFont(ucg, ucg_font_cu12_hf);
+    ucg_DrawString(ucg, 1+ox, 35, 0, s);
+
+    sprintf(s, "7x14_mf %d", i);
+    ucg_SetFont(ucg, ucg_font_7x14_mf);
+    ucg_DrawString(ucg, 1+ox, 55, 0, s);
+  }  
+  
+  //pos(ucg, 42+ox, 40, 0);
+  
+  sprintf(s, "string_overwrite_%d", cnt);
+  save_picture(ucg, s);  
+}
+
 
 int main(void)
 {
@@ -534,7 +604,11 @@ int main(void)
   set_scale2x2(&ucg);
   set_font_mode_1(&ucg);
   set_font_mode_2(&ucg);
-  
+  solid_font_variants(&ucg);
+  string_overwrite(&ucg, 1);
+  string_overwrite(&ucg, 5);
+  string_overwrite(&ucg, 10);
   return 0;
+  
 }
 
