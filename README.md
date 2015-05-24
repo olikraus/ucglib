@@ -6,7 +6,7 @@ Supported display controller: ST7735, ILI9341, PCF8833, SSD1351
 
 Features: Graphics primitives with 18 bit color depth, filled polygon draw, >300, landscape/portrait mode.
 
-See the [github wiki](https://github.com/olikraus/ucglib/wiki/ucglib) for reference manual and tutorials.
+See the [github wiki](https://github.com/olikraus/ucglib/wiki) for reference manual and tutorials.
 
 [![](https://api.bintray.com/packages/olikraus/Ucglib/Arduino/images/download.png)](https://bintray.com/olikraus/Ucglib/Arduino/_latestVersion)
 
