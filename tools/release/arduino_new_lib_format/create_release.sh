@@ -13,7 +13,7 @@ cp INSTALL.TXT ../../../../Ucglib_Arduino/extra/.
 cp library.properties ../../../../Ucglib_Arduino/.
 cp ../../../cppsrc/*.cpp ../../../../Ucglib_Arduino/src/.
 cp ../../../cppsrc/*.h ../../../../Ucglib_Arduino/src/.
-sed -i 's|ucg.h|utility/ucg.h|g' ../../../../Ucglib_Arduino/src/Ucglib.h
+sed -i 's|ucg.h|csrc/ucg.h|g' ../../../../Ucglib_Arduino/src/Ucglib.h
 cp ../../../csrc/*.c ../../../../Ucglib_Arduino/src/clib/.
 cp ../../../csrc/*.h ../../../../Ucglib_Arduino/src/clib/.
 cp ../../../sys/arduino/HelloWorld/*.ino ../../../../Ucglib_Arduino/examples/HelloWorld/.
@@ -23,4 +23,11 @@ cp ../../../sys/arduino/UcgLogo/*.ino ../../../../Ucglib_Arduino/examples/UcgLog
 cp ../../../sys/arduino/Scale/*.ino ../../../../Ucglib_Arduino/examples/Scale/.
 cp ../../../sys/arduino/GraphicsTest/*.ino ../../../../Ucglib_Arduino/examples/GraphicsTest/.
 
+cd ../../../../Ucglib_Arduino
+git commit -a -m `../ucglib/tools/release/print_release.sh`
+git push
 
+echo now create a release in gitub for Ucglib_Arduino, tag/namex = v1.xx
+# Relases in github:
+# Tag: 1.02pre3
+# Release  name: 1.02pre3
