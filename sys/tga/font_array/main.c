@@ -84,6 +84,12 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
     w = ucg_GetGlyphWidth(&ucg, '0') + 3;
   if ( w < ucg_GetGlyphWidth(&ucg, ' ') + 3 )
     w = ucg_GetGlyphWidth(&ucg, ' ') + 3;
+  if ( w < ucg_GetGlyphWidth(&ucg, ' ') + 3 )
+    w = ucg_GetGlyphWidth(&ucg, ' ') + 3;
+  if ( w < ucg_GetGlyphWidth(&ucg, '8') + 3 )
+    w = ucg_GetGlyphWidth(&ucg, '8') + 3;
+  if ( w < ucg_GetGlyphWidth(&ucg, 71) + 3 )
+    w = ucg_GetGlyphWidth(&ucg, 71) + 3;
   
   printf("%s w=%d encoding: %d..%d\n", fname, w, (int)start, (int)end);
  
@@ -223,6 +229,7 @@ int main(int argc, char **argv)
     }
     
     printf("Processing Font %d '%s'\n", i, ucg_font_name[i]);
+    // if ( strstr(ucg_font_name[i], "m2i") != NULL )
     pic_gen_font(ucg_font_array[i], ucg_font_name[i], ucg_font_name[i]);
     
     i++;
