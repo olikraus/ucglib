@@ -309,6 +309,14 @@ ucg_int_t ucg_handle_ili9341_l90se(ucg_t *ucg)
   return 0;
 }
 
+static const ucg_pgm_uint8_t ucg_ili9341_power_down_seq[] = {
+	UCG_CS(0),					/* enable chip */
+	UCG_C10(0x010),				/* sleep in */
+	UCG_C10(0x28), 				/* display off */	
+	UCG_CS(1),					/* disable chip */
+	UCG_END(),					/* end of sequence */
+};
+
 
 ucg_int_t ucg_dev_ic_ili9341_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
@@ -319,7 +327,7 @@ ucg_int_t ucg_dev_ic_ili9341_18(ucg_t *ucg, ucg_int_t msg, void *data)
       /* of the serial and parallel interface. Values are nanoseconds. */
       return ucg_com_PowerUp(ucg, 100, 66);
     case UCG_MSG_DEV_POWER_DOWN:
-      /* not yet implemented */
+      ucg_com_SendCmdSeq(ucg, ucg_ili9341_power_down_seq);
       return 1;
     case UCG_MSG_GET_DIMENSION:
       ((ucg_wh_t *)data)->w = 240;

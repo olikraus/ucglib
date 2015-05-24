@@ -57,6 +57,9 @@
 //Ucglib_ST7735_18x128x160_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
+//Ucglib_ILI9163_18x128x128_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
+//Ucglib_ILI9163_18x128x128_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);	/* HW SPI Adapter */
+
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 7, /*data=*/ 6, /*cd=*/ 5 , /*cs=*/ 3, /*reset=*/ 4);
 //Ucglib_ILI9341_18x240x320_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_ILI9341_18x240x320_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
@@ -177,6 +180,54 @@ void box(void)
     ucg.drawBox(x, y+20, w, h);
   }
 
+}
+
+void cross(void)
+{
+  ucg_int_t mx, my;
+  ucg.setColor(0, 250, 0, 0);
+  ucg.setColor(1, 255, 255, 30);
+  ucg.setColor(2, 220, 235, 10);
+  ucg.setColor(3, 205, 0, 30);
+  ucg.drawGradientBox(0, 0, ucg.getWidth(), ucg.getHeight());
+  mx = ucg.getWidth() / 2;
+  my = ucg.getHeight() / 2;
+
+  ucg.setColor(0, 255, 255, 255);
+  ucg.setPrintPos(2,18);
+  ucg.print("Cross");
+
+  ucg.setColor(0, 0, 0x66, 0xcc);
+  ucg.setPrintPos(mx+15,my-5);
+  ucg.print("dir0");
+  ucg.setPrintPos(mx+5,my+26);
+  ucg.print("dir1");
+  ucg.setPrintPos(mx-40,my+20);
+  ucg.print("dir2");
+  ucg.setPrintPos(mx+5,my-25);
+  ucg.print("dir3");
+
+  ucg.setColor(0, 0, 0x66, 0xff);
+  ucg.setColor(1, 0, 0x66, 0xcc);
+  ucg.setColor(2, 0, 0, 0x99);
+
+  ucg_Draw90Line(ucg.getUcg(), mx+2, my-1, 20, 0, 0);
+  ucg_Draw90Line(ucg.getUcg(), mx+2, my, 20, 0, 1);
+  ucg_Draw90Line(ucg.getUcg(), mx+2, my+1, 20, 0, 2);
+
+  ucg_Draw90Line(ucg.getUcg(), mx+1, my+2, 20, 1, 0);
+  ucg_Draw90Line(ucg.getUcg(), mx, my+2, 20, 1, 1);
+  ucg_Draw90Line(ucg.getUcg(), mx-1, my+2, 20, 1, 2);
+
+  ucg_Draw90Line(ucg.getUcg(), mx-2, my+1, 20, 2, 0);
+  ucg_Draw90Line(ucg.getUcg(), mx-2, my, 20, 2, 1);
+  ucg_Draw90Line(ucg.getUcg(), mx-2, my-1, 20, 2, 2);
+
+  ucg_Draw90Line(ucg.getUcg(), mx-1, my-2, 20, 3, 0);
+  ucg_Draw90Line(ucg.getUcg(), mx, my-2, 20, 3, 1);
+  ucg_Draw90Line(ucg.getUcg(), mx+1, my-2, 20, 3, 2);
+
+  DLY();
 }
 
 void triangle(void)
@@ -428,6 +479,7 @@ void loop(void)
   
   r++;
   ucglib_graphics_test();
+  cross();
   triangle();
   fonts();  
   text();

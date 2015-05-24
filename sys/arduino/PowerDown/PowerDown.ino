@@ -33,14 +33,6 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
 
-  18 Feb 2014:
-    ROM Size	Font Mode
-    9928		NONE
-    10942		TRANSPARENT	(1014 Bytes)
-    11650		SOLID  (1712 Bytes)
-    12214		TRANSPARENT+SOLID
-  
-  
 */
 
 #include <SPI.h>
@@ -88,26 +80,33 @@
 
 void setup(void)
 {
-  delay(1000);
-  ucg.begin(UCG_FONT_MODE_TRANSPARENT);
-  //ucg.begin(UCG_FONT_MODE_SOLID);
+  ucg.begin(UCG_FONT_MODE_SOLID);
   ucg.clearScreen();
+  //ucg.setRotate90();
 }
 
 void loop(void)
 {
-  //ucg.setRotate90();
-  ucg.setFont(ucg_font_ncenR14_tr);
+  uint8_t i;
+  ucg.setFont(ucg_font_inb27_mr);
   ucg.setColor(255, 255, 255);
-  ucg.setColor(255, 0, 0);
-  //ucg.setColor(0, 255, 0);
-  ucg.setColor(1, 255, 0,0);
+  ucg.setPrintPos(0,30);
+  ucg.print("Power");
+  ucg.setPrintPos(0,60);
+  ucg.print("Down");
+
+  for( i = 5; i >0; i-- )
+  {
+    ucg.setPrintPos(0,90);
+    ucg.print(i);
+    delay(1000);
+  }
+  ucg.powerDown();
+  ucg.setPrintPos(0,90);
+  ucg.print("fail?");
+  delay(2000);
+  ucg.clearScreen();
+  ucg.powerUp();
   
-  ucg.setPrintPos(0,25);
-  ucg.print("Hello World!");
 
-  ucg.setPrintPos(1,50);
-  ucg.print("Hello World!");
-
-  delay(500);  
 }

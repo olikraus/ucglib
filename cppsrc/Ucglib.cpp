@@ -1248,6 +1248,7 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t ar
       {
 	if ( *data != 0 )
 	{
+	  /* set the data line directly, ignore the setting from UCG_CFG_CD */
 	  if ( *data == 1 )
 	  {
 	    digitalWrite(ucg->pin_list[UCG_PIN_CD], 0);

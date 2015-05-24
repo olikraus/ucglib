@@ -124,6 +124,11 @@ class Ucglib : public Print
     void undoScale(void) { ucg_UndoScale(&ucg); }
     void setScale2x2(void) { ucg_SetScale2x2(&ucg); }
     
+    void powerDown(void) { ucg_PowerDown(&ucg); }
+    void powerUp(void) { ucg_PowerUp(&ucg); }
+    
+    
+    
     // Procedures, which are always available as part of the BASIC drawing procedure set
       
     void setClipRange(ucg_int_t x, ucg_int_t y, ucg_int_t w, ucg_int_t h) { ucg_SetClipRange(&ucg, x,y,w,h); }
@@ -322,6 +327,22 @@ class Ucglib_ILI9341_18x240x320_SWSPI : public Ucglib4WireSWSPI
   //Ucglib_ILI9341_18x240x320_SWSPI( uint8_t scl, uint8_t sda, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
   //  Ucglib4WireSWSPI(ucg_dev_ili9341_18x240x320, ucg_ext_none, /*scl=*/ scl, /*sda=*/ sda, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
   //  { }
+};
+
+class Ucglib_ILI9163_18x128x128_HWSPI : public Ucglib4WireHWSPI
+{
+  public:
+  Ucglib_ILI9163_18x128x128_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_ili9163_18x128x128, ucg_ext_ili9163_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+class Ucglib_ILI9163_18x128x128_SWSPI : public Ucglib4WireSWSPI
+{
+  public:
+  Ucglib_ILI9163_18x128x128_SWSPI( uint8_t scl, uint8_t sda, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireSWSPI(ucg_dev_ili9163_18x128x128, ucg_ext_ili9163_18, /*scl=*/ scl, /*sda=*/ sda, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
 };
 
 class Ucglib_SSD1351_18x128x128_HWSPI : public Ucglib4WireHWSPI

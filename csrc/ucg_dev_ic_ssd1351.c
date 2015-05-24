@@ -299,6 +299,15 @@ ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
 }
 
 
+static const ucg_pgm_uint8_t ucg_ssd1351_power_down_seq[] = {
+	UCG_CS(0),					/* enable chip */
+  	UCG_C11(0x0c7, 0x000),			/* Set Master Contrast (0..15), reset default: 0x05 */
+	UCG_C10(0x0ae),				/* Set Display Off */
+	UCG_CS(1),					/* disable chip */
+	UCG_END(),					/* end of sequence */  
+};
+
+
 ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
@@ -308,7 +317,7 @@ ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
       /* of the serial and parallel interface. Values are nanoseconds. */
       return ucg_com_PowerUp(ucg, 50, 300);
     case UCG_MSG_DEV_POWER_DOWN:
-      /* not yet implemented */
+      ucg_com_SendCmdSeq(ucg, ucg_ssd1351_power_down_seq);
       return 1;
     case UCG_MSG_GET_DIMENSION:
       ((ucg_wh_t *)data)->w = 128;
