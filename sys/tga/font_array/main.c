@@ -201,7 +201,7 @@ const char *get_grp_name(const char *fontname)
   if ( strstr(fontname, "_logi") != NULL ) return "fontgrouplogisoso";
   if ( strstr(fontname, "_osr") != NULL ) return "fontgroupoldstandard";
   if ( strstr(fontname, "_osb") != NULL ) return "fontgroupoldstandard";
-  if ( strstr(fontname, "_inr") != NULL ) return "fontgroupoldstandard";
+  if ( strstr(fontname, "_inr") != NULL ) return "fontgroupinconsolata";
   if ( strstr(fontname, "_inb") != NULL ) return "fontgroupinconsolata";
   
   return "<unknown>";
