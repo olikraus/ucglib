@@ -531,8 +531,9 @@ echo "fontstruct"
 ./do_fontsize_pixel_v2.sh 16 ../ttf/pixel/robot_de_niro.ttf robot_de_niro
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/baby.ttf baby
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/blipfest_07.ttf blipfest_07
-./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/CPC_amstrad_extended.ttf blipfest_07
+#./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/CPC_amstrad_extended.ttf amstrad_cpc
 ../bdfconv/bdfconv -b 3  ../bdf/amstrad_cpc.bdf -n ucg_font_amstrad_cpc_8f -o ./pixel/ucg_font_amstrad_cpc_8f.c 
+../bdfconv/bdfconv -b 3  -m '32-127>32' ../bdf/amstrad_cpc.bdf -n ucg_font_amstrad_cpc_8r -o ./pixel/ucg_font_amstrad_cpc_8r.c 
 
 echo "04B"
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/04B_03B_.TTF 04b_03b 
@@ -733,3 +734,4 @@ echo "logisoso"
 
 
 echo "execute do_combine.sh and do_copy.sh after executing this script"
+echo "copy content from ucg_font_data.h to ucg.h"
