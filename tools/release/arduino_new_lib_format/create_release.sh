@@ -4,6 +4,7 @@ mkdir ../../../../Ucglib_Arduino/examples/Box3D
 mkdir ../../../../Ucglib_Arduino/examples/UcgLogo
 mkdir ../../../../Ucglib_Arduino/examples/Scale
 mkdir ../../../../Ucglib_Arduino/examples/GraphicsTest
+mkdir ../../../../Ucglib_Arduino/examples/HowToUseFonts
 mkdir ../../../../Ucglib_Arduino/extra
 mkdir ../../../../Ucglib_Arduino/src
 mkdir ../../../../Ucglib_Arduino/src/clib
@@ -22,6 +23,7 @@ cp ../../../sys/arduino/Box3D/*.ino ../../../../Ucglib_Arduino/examples/Box3D/.
 cp ../../../sys/arduino/UcgLogo/*.ino ../../../../Ucglib_Arduino/examples/UcgLogo/.
 cp ../../../sys/arduino/Scale/*.ino ../../../../Ucglib_Arduino/examples/Scale/.
 cp ../../../sys/arduino/GraphicsTest/*.ino ../../../../Ucglib_Arduino/examples/GraphicsTest/.
+cp ../../../sys/arduino/GraphicsTest/*.ino ../../../../Ucglib_Arduino/examples/HowToUseFonts/.
 
 cd ../../../../Ucglib_Arduino
 git commit -a -m `../ucglib/tools/release/print_release.sh`
