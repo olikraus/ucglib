@@ -5,12 +5,12 @@ mkdir ../../../../Ucglib_Arduino/examples/UcgLogo
 mkdir ../../../../Ucglib_Arduino/examples/Scale
 mkdir ../../../../Ucglib_Arduino/examples/GraphicsTest
 mkdir ../../../../Ucglib_Arduino/examples/HowToUseFonts
-mkdir ../../../../Ucglib_Arduino/extra
+mkdir ../../../../Ucglib_Arduino/extras
 mkdir ../../../../Ucglib_Arduino/src
 mkdir ../../../../Ucglib_Arduino/src/clib
-cp ../../../ChangeLog ../../../../Ucglib_Arduino/extra/.
+cp ../../../ChangeLog ../../../../Ucglib_Arduino/extras/.
 # cp ../../../license.txt ../../../../Ucglib_Arduino/extra/.
-cp INSTALL.TXT ../../../../Ucglib_Arduino/extra/.
+cp INSTALL.TXT ../../../../Ucglib_Arduino/extras/.
 cp library.properties ../../../../Ucglib_Arduino/.
 cp ../../../cppsrc/*.cpp ../../../../Ucglib_Arduino/src/.
 cp ../../../cppsrc/*.h ../../../../Ucglib_Arduino/src/.
@@ -26,9 +26,9 @@ cp ../../../sys/arduino/GraphicsTest/*.ino ../../../../Ucglib_Arduino/examples/G
 cp ../../../sys/arduino/HowToUseFonts/*.ino ../../../../Ucglib_Arduino/examples/HowToUseFonts/.
 
 pushd ../../../../ucglib.wiki/
-pandoc -f markdown_github reference.md -t latex -o ../Ucglib_Arduino/extra/reference.pdf
-pandoc -f markdown_github displays.md -t latex -o ../Ucglib_Arduino/extra/displays.pdf
-pandoc -f markdown_github fontsize.md -t latex -o ../Ucglib_Arduino/extra/fontsize.pdf
+pandoc -f markdown_github reference.md -t latex -o ../Ucglib_Arduino/extras/reference.pdf
+pandoc -f markdown_github displays.md -t latex -o ../Ucglib_Arduino/extras/displays.pdf
+pandoc -f markdown_github fontsize.md -t latex -o ../Ucglib_Arduino/extras/fontsize.pdf
 popd
 
 cd ../../../../Ucglib_Arduino
