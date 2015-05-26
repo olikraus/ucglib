@@ -9,7 +9,7 @@ See also:
 Fonts are licensed under different conditions.
 Detailed information on the licensing conditions for each font
 are given on:
-http://code.google.com/p/ucglib/wiki/fontgroup
+https://github.com/olikraus/ucglib/wiki/fontgroup
 
 ============ X11 Fonts COUR, HELV, NCEN, TIM, SYMB ============
 
