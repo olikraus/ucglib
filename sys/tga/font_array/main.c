@@ -262,7 +262,7 @@ int main(int argc, char **argv)
     if ( cnt > 0 )
     {
       i = 0;
-      fprintf(wiki, "== %d Pixel Height ==\n",a); 
+      fprintf(wiki, "## %d Pixel Height\n",a); 
       for(;;)
       {
 	if ( ucg_font_array[i] == NULL )

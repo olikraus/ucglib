@@ -8,6 +8,7 @@ mkdir libraries/Ucglib/examples/Box3D
 mkdir libraries/Ucglib/examples/UcgLogo
 mkdir libraries/Ucglib/examples/Scale
 mkdir libraries/Ucglib/examples/GraphicsTest
+mkdir libraries/Ucglib/examples/HowToUseFonts
 mkdir libraries/Ucglib/utility
 cp ../../../ChangeLog ./libraries/Ucglib/.
 cp ../../../license.txt ./libraries/Ucglib/.
@@ -23,7 +24,7 @@ cp ../../../sys/arduino/Box3D/*.ino ./libraries/Ucglib/examples/Box3D/.
 cp ../../../sys/arduino/UcgLogo/*.ino ./libraries/Ucglib/examples/UcgLogo/.
 cp ../../../sys/arduino/Scale/*.ino ./libraries/Ucglib/examples/Scale/.
 cp ../../../sys/arduino/GraphicsTest/*.ino ./libraries/Ucglib/examples/GraphicsTest/.
-
+cp ../../../sys/arduino/HowToUseFonts/*.ino ./libraries/Ucglib/examples/HowToUseFonts/.
 
 chmod -R g=u libraries
 chmod -R o+r libraries
