@@ -12,4 +12,6 @@ See the [github wiki](https://github.com/olikraus/ucglib/wiki) for reference man
 
 [//]: # ([Download Ucglib Arduino Library](https://github.com/olikraus/Ucglib_Arduino/releases/latest))
 
+[Download Ucglib Arduino Library v1.02 Prerelase](https://github.com/olikraus/Ucglib_Arduino/releases/latest)
+
 <a href='http://www.youtube.com/watch?feature=player_embedded&v=GSpYY0AMtEU' target='_blank'><img src='http://img.youtube.com/vi/GSpYY0AMtEU/0.jpg' width='425' height=344 /></a>
