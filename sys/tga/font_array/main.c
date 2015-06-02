@@ -114,6 +114,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   ucg_DrawString(&ucg, 0, disp_line_height*2, 0, s);
 
   
+  ucg_SetFont(&ucg, font);  // required to get the correct bbx mode
   sprintf(s, "Font data size %d, build mode %d", ucg_font_GetSize(font), ucg.font_info.bbx_mode );
   ucg_DrawString(&ucg, 0, disp_line_height*3, 0, s);
 
