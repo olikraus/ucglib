@@ -49,6 +49,7 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
   //ucg_int_t width;
   char s[256];
   const ucg_pgm_uint8_t *disp_font;
+  int bbx_mode;
   uint16_t i;
   ucg_int_t x,y,w,h, hcnt, disp_line_height, disp_line_indent;
   ucg_int_t  last_y;
@@ -108,14 +109,13 @@ void pic_gen_font(const ucg_pgm_uint8_t *font, const char *name, const char *fna
       ucg_GetFontBBXWidth(&ucg), 
       ucg_GetFontBBXHeight(&ucg), 
       ucg_GetFontCapitalAHeight(&ucg));
-  
+  bbx_mode = ucg.font_info.bbx_mode;
   
   ucg_SetFont(&ucg, disp_font);    
   ucg_DrawString(&ucg, 0, disp_line_height*2, 0, s);
 
   
-  ucg_SetFont(&ucg, font);  // required to get the correct bbx mode
-  sprintf(s, "Font data size %d, build mode %d", ucg_font_GetSize(font), ucg.font_info.bbx_mode );
+  sprintf(s, "Font data size %d, build mode %d", ucg_font_GetSize(font), bbx_mode );
   ucg_DrawString(&ucg, 0, disp_line_height*3, 0, s);
 
   hcnt = 16;
