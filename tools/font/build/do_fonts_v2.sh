@@ -545,6 +545,8 @@ echo "orgdot"
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/TEACPSSB.TTF tpssb 
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/ORG_V01_.TTF orgv01 
 ./do_fontsize_pixel_v2.sh 8 ../ttf/pixel/FIXED_V0.TTF fixed_v0 
+../bdfconv/bdfconv -b 3  fixed_v0.bdf -n ucg_font_fixed_v0_mf -o ./ucg_font_pixel/fixed_v0_mf.c 
+../bdfconv/bdfconv -b 3  -m '32-127>32' fixed_v0.bdf -n ucg_font_fixed_v0_mr -o ./pixel/ucg_font_fixed_v0_mr.c 
 
 
 
