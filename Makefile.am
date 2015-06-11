@@ -97,7 +97,7 @@ SRC_SDL= \
     sys/sdl/dev/ucg_dev_sdl.c \
     $(NULL)
 
-include_HEADERS = \
+#include_HEADERS = \
     $(top_srcdir)/csrc/ucg.h \
     $(top_srcdir)/cppsrc/Ucglib.h \
     $(top_srcdir)/nonarduino/Printable.h \
