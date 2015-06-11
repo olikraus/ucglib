@@ -18,7 +18,7 @@ int main(void)
   
   ucg_Init(&ucg, &ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
-  ucg_SetFont(&ucg, ucg_font_ncenB12);  
+  ucg_SetFont(&ucg, ucg_font_9x15_67_75);
   ucg_SetColor(&ucg, 0, 255, 180, 40);
   
   ucg_DrawGlyph(&ucg, 20,20, 0, 'A');

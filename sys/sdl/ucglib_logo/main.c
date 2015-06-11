@@ -87,7 +87,7 @@ int main(void)
   
   ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
-  ucg_SetFont(&ucg, ucg_font_ncenB24);  
+  ucg_SetFont(&ucg, ucg_font_9x15_67_75);
   //ucg_SetRotate90(&ucg);
   
   //ucg_SetRotate270(&ucg);  
@@ -156,7 +156,7 @@ int main(void)
   ucg_DrawGradientBox(&ucg, 84, 42-6, 42, 4);
 
   ucg_SetColor(&ucg, 0, 255, 168, 0);
-  ucg_SetFont(&ucg, ucg_font_5x8);
+  ucg_SetFont(&ucg, ucg_font_5x8_8f);
   //ucg_SetFont(&ucg, ucg_font_courB08);
   ucg_DrawString(&ucg, 2, 54, 0, "http://");
   ucg_DrawString(&ucg, 1, 61, 0, "code.google.com/p/ucglib/");
