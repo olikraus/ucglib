@@ -14,7 +14,7 @@ cp INSTALL.TXT ../../../../Ucglib_Arduino/extras/.
 cp library.properties ../../../../Ucglib_Arduino/.
 cp ../../../cppsrc/*.cpp ../../../../Ucglib_Arduino/src/.
 cp ../../../cppsrc/*.h ../../../../Ucglib_Arduino/src/.
-sed -i 's|ucg.h|csrc/ucg.h|g' ../../../../Ucglib_Arduino/src/Ucglib.h
+sed -i 's|ucg.h|clib/ucg.h|g' ../../../../Ucglib_Arduino/src/Ucglib.h
 cp ../../../csrc/*.c ../../../../Ucglib_Arduino/src/clib/.
 cp ../../../csrc/*.h ../../../../Ucglib_Arduino/src/clib/.
 cp ../../../sys/arduino/HelloWorld/*.ino ../../../../Ucglib_Arduino/examples/HelloWorld/.
