@@ -159,7 +159,7 @@ static ucg_int_t ucg_handle_ld50t6160_l90fx(ucg_t *ucg)
   L2TC (Glyph Output)
 */
 
-
+#ifdef UCG_MSG_DRAW_L90TC
 static ucg_int_t ucg_handle_ld50t6160_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
@@ -221,7 +221,7 @@ static ucg_int_t ucg_handle_ld50t6160_l90tc(ucg_t *ucg)
   }
   return 0;
 }
-
+#endif /* UCG_MSG_DRAW_L90TC */
 
 ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg)
 {
