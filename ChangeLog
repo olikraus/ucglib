@@ -24,7 +24,7 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
 2014-08-24	v1.01   Oliver Kraus <olikraus@gmail.com>
   * Fixed problem with rot180/rot270 and solid font mode (issue 30)
   * drawString, drawGlyph, setFontRefXXX procedures
-2015-06-18	v1.02   Oliver Kraus <olikraus@gmail.com>
+2015-06-18	v1.2   Oliver Kraus <olikraus@gmail.com>
   * Fixed problem with slow SW SPI on Arduino Due
   * bdf2ucg replaced by bdfconv
   * Complete new font rendering subsystem
