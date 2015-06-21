@@ -38,7 +38,7 @@
 #include "ucg.h"
 
 static const ucg_pgm_uint8_t ucg_univision_ssd1331_init_seq[] = {
-	UCG_CFG_CD(0,1),				/* DC=0 for command mode, DC=1 for data and args */
+	UCG_CFG_CD(0,0),				/* DC=0 for command mode, DC=0 for data and args */
   	UCG_RST(1),					
 	UCG_CS(1),					/* disable chip */
 	UCG_DLY_MS(1),

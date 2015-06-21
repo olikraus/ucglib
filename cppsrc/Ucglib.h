@@ -409,7 +409,7 @@ class Ucglib_SSD1331_18x96x64_UNIVISION_HWSPI : public Ucglib4WireHWSPI
 {
   public:
   Ucglib_SSD1331_18x96x64_UNIVISION_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
-    Ucglib4WireHWSPI(ucg_dev_ssd1331_18x96x64_univision, ucg_ext_ssd1351_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    Ucglib4WireHWSPI(ucg_dev_ssd1331_18x96x64_univision, ucg_ext_ssd1331_18, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
     { }
 };
 
@@ -417,7 +417,7 @@ class Ucglib_SSD1331_18x96x64_UNIVISION_SWSPI : public Ucglib4WireSWSPI
 {
   public:
   Ucglib_SSD1331_18x96x64_UNIVISION_SWSPI( uint8_t scl, uint8_t sda, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
-    Ucglib4WireSWSPI(ucg_dev_ssd1331_18x96x64_univision, ucg_ext_ssd1351_18, /*scl=*/ scl, /*sda=*/ sda, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    Ucglib4WireSWSPI(ucg_dev_ssd1331_18x96x64_univision, ucg_ext_ssd1331_18, /*scl=*/ scl, /*sda=*/ sda, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
     { }
 };
 
