@@ -61,14 +61,13 @@ static const ucg_pgm_uint8_t ucg_univision_ssd1331_init_seq[] = {
   	UCG_C11(0x0b1, 0x031),		/* Set Phase Length, reset default: 0x74 */
   	UCG_C11(0x0b3, 0x0f0),			/* Display Clock Divider/Osc, reset value=0x0d0 */
 
-  	UCG_C12(0x015, 0x000, 0x07f),	/* Set Column Address */
-  	UCG_C12(0x075, 0x000, 0x07f),	/* Set Row Address */
+  	UCG_C12(0x015, 0x000, 0x05f),	/* Set Column Address */
+  	UCG_C12(0x075, 0x000, 0x03f),	/* Set Row Address */
 
   	UCG_C11(0x081, 0x080),		/* contrast red, Adafruit: 0x091, UC9664: 0x080 */
   	UCG_C11(0x082, 0x080),		/* contrast green, Adafruit: 0x050, UC9664: 0x080 */
   	UCG_C11(0x083, 0x080),		/* contrast blue, Adafruit: 0x07d, UC9664: 0x080  */
-  	//UCG_C11(0x087, 0x006),		/* master current/contrast 0x00..0x0f Adafruit: 0x06 */
-  	UCG_C11(0x087, 0x00f),			/* master current/contrast 0x00..0x0f UG-9664: 0x0f */
+  	UCG_C11(0x087, 0x00f),			/* master current/contrast 0x00..0x0f UG-9664: 0x0f, Adafruit: 0x06 */
   	UCG_C11(0x08a, 0x064),			/* second precharge speed red */
   	UCG_C11(0x08b, 0x078),		/* second precharge speed green */
   	UCG_C11(0x08c, 0x064),			/* second precharge speed blue */
@@ -88,7 +87,22 @@ static const ucg_pgm_uint8_t ucg_univision_ssd1331_init_seq[] = {
 
 	UCG_C10(0x0a4),				/* Normal display mode */
   	UCG_C10(0x0af),				/* Set Display On */
-  
+	
+	
+  	UCG_C12(0x015, 0x030, 0x05f),	/* Set Column Address */
+  	UCG_C12(0x075, 0x010, 0x03f),	/* Set Row Address */
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+	UCG_D3(0x0ff, 0, 0),
+ 
 	UCG_CS(1),					/* disable chip */
 	UCG_END(),					/* end of sequence */
 };
@@ -103,7 +117,7 @@ ucg_int_t ucg_dev_ssd1331_18x96x64_univision(ucg_t *ucg, ucg_int_t msg, void *da
 	return 0;
 
       /* 2. Send specific init sequence for this display module */
-      ucg_com_SendCmdSeq(ucg, ucg_univision_ssd1331_init_seq);
+      ucg_com_SendCmdSeq(ucg, ucg_univision_ssd1331_init_seq);      
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:

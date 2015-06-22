@@ -45,7 +45,7 @@
 const ucg_pgm_uint8_t ucg_ssd1331_set_pos_dir0_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
+  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_A1(0x07f),		/* set x position */
   UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
@@ -55,7 +55,7 @@ const ucg_pgm_uint8_t ucg_ssd1331_set_pos_dir1_seq[] =
 {
   UCG_CS(0),					/* enable chip */
   UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),		/* set x position */
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_A1(0x07f),		/* set y position */
   UCG_DATA(),								/* change to data mode */
   UCG_END()
 };
@@ -105,7 +105,7 @@ ucg_int_t ucg_handle_ssd1331_l90fx(ucg_t *ucg)
 const ucg_pgm_uint8_t ucg_ssd1331_set_pos_for_x_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
-  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
+  UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_A1(0x07f),		/* set x position */
   UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_VARY(0,0x0ff, 0),		/* set y position */
   UCG_END()
 };
@@ -114,7 +114,7 @@ const ucg_pgm_uint8_t ucg_ssd1331_set_pos_for_y_seq[] =
 {
   UCG_CS(0),					/* enable chip */
   UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),		/* set x position */
-  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
+  UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_A1(0x07f),		/* set y position */
   UCG_END()
 };
 
