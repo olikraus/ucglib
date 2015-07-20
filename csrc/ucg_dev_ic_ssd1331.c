@@ -96,7 +96,7 @@ ucg_int_t ucg_handle_ssd1331_l90fx(ucg_t *ucg)
 }
 
 /*
-  L2TC (Glyph Output)
+  L2TC (Bitmap Output)
   Because of this for vertical lines the x min and max values in
   "ucg_ssd1331_set_pos_for_y_seq" are identical to avoid changes of the x position
   

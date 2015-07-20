@@ -2,7 +2,7 @@
 
   ucg_dev_oled_96x64_univision.c
   
-  Specific code for the Univision 0.95" OLED (UG-9664, 96x94 pixel, 65536 Colors)
+  Specific code for the Univision 0.95" OLED (UG-9664, 96x94 pixel, 65536 Colors, SSD1331)
 
   Universal uC Color Graphics Library
   
@@ -38,7 +38,7 @@
 #include "ucg.h"
 
 static const ucg_pgm_uint8_t ucg_univision_ssd1331_init_seq[] = {
-	UCG_CFG_CD(0,0),				/* DC=0 for command mode, DC=0 for data and args */
+	UCG_CFG_CD(0,0),				/* First arg: level for commands, Second arg: level for command arguments */
   	UCG_RST(1),					
 	UCG_CS(1),					/* disable chip */
 	UCG_DLY_MS(1),
@@ -89,19 +89,19 @@ static const ucg_pgm_uint8_t ucg_univision_ssd1331_init_seq[] = {
   	UCG_C10(0x0af),				/* Set Display On */
 	
 	
-  	UCG_C12(0x015, 0x030, 0x05f),	/* Set Column Address */
-  	UCG_C12(0x075, 0x010, 0x03f),	/* Set Row Address */
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
-	UCG_D3(0x0ff, 0, 0),
+  	//UCG_C12(0x015, 0x030, 0x05f),	/* Set Column Address */
+  	//UCG_C12(0x075, 0x010, 0x03f),	/* Set Row Address */
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
+	//UCG_D3(0x0ff, 0, 0),
  
 	UCG_CS(1),					/* disable chip */
 	UCG_END(),					/* end of sequence */
@@ -121,7 +121,7 @@ ucg_int_t ucg_dev_ssd1331_18x96x64_univision(ucg_t *ucg, ucg_int_t msg, void *da
       return 1;
       
     case UCG_MSG_DEV_POWER_DOWN:
-      /* let do power down by the conroller procedures */
+      /* let do power down by the controller procedures */
       return ucg_dev_ic_ssd1331_18(ucg, msg, data);  
     
     case UCG_MSG_GET_DIMENSION:

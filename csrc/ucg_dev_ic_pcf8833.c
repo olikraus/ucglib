@@ -136,12 +136,12 @@ const ucg_pgm_uint8_t ucg_pcf8833_set_pos_dir3_seq[] =
   UCG_END()
 };
 
-uint8_t ucg_pcf8833_get_color_high_byte(ucg_t *ucg)
+static uint8_t ucg_pcf8833_get_color_high_byte(ucg_t *ucg)
 {
     return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5));
 }
 
-uint8_t ucg_pcf8833_get_color_low_byte(ucg_t *ucg)
+static uint8_t ucg_pcf8833_get_color_low_byte(ucg_t *ucg)
 {
     return ((((ucg->arg.pixel.rgb.color[1]))<<3)&0x0e0) | (((ucg->arg.pixel.rgb.color[2]) >>3));
 }

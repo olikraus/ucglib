@@ -77,9 +77,11 @@
 //Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 16, /*d1 =*/ 17, /*d2 =*/ 18, /*d3 =*/ 19, /*d4 =*/ 20, /*d5 =*/ 21, /*wr=*/ 14, /*cd=*/ 15); /* Samsung 160x128 OLED with 6Bit minimal interface with Due */ 
 //Ucglib_LD50T6160_18x160x128_6Bit ucg( /*d0 =*/ 5, /*d1 =*/ 4, /*d2 =*/ 3, /*d3 =*/ 2, /*d4 =*/ 1, /*d5 =*/ 0, /*wr=*/ 7, /*cd=*/ 6); /* Samsung 160x128 OLED with 6Bit minimal interface with Uno */ 
 
-Ucglib_SSD1331_18x96x64_UNIVISION_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+//Ucglib_SSD1331_18x96x64_UNIVISION_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 //Ucglib_SSD1331_18x96x64_UNIVISION_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
+//Ucglib_SEPS225_16x128x128_UNIVISION_SWSPI ucg(/*sclk=*/ 13, /*data=*/ 11, /*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
+Ucglib_SEPS225_16x128x128_UNIVISION_HWSPI ucg(/*cd=*/ 9 , /*cs=*/ 10, /*reset=*/ 8);
 
 #define T 4000
 #define DLY() delay(2000)
@@ -184,6 +186,79 @@ void box(void)
   }
 
 }
+
+void pixel_and_lines(void)
+{
+  ucg_int_t mx;
+  ucg_int_t x, xx;
+  mx = ucg.getWidth() / 2;
+  //my = ucg.getHeight() / 2;
+  
+  ucg.setColor(0, 0, 0, 150);
+  ucg.setColor(1, 0, 60, 40);
+  ucg.setColor(2, 60, 0, 40);
+  ucg.setColor(3, 120, 120, 200);  
+  ucg.drawGradientBox(0, 0, ucg.getWidth(), ucg.getHeight());
+
+  ucg.setColor(255, 255, 255);
+  ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
+  ucg.print("Pix&Line");
+
+  ucg.drawPixel(0, 0);
+  ucg.drawPixel(ucg.getWidth()-1, 0);
+  ucg.drawPixel(0, ucg.getHeight()-1);
+  ucg.drawPixel(ucg.getWidth()-1, ucg.getHeight()-1);
+
+  
+  for( x = 0; x  < mx; x++ )
+  {
+    xx = (((uint16_t)x)*255)/mx;
+    ucg.setColor(255, 255-xx/2, 255-xx);
+    ucg.drawPixel(x, 24);
+    ucg.drawVLine(x+7, 26, 13);
+  }
+
+  DLY();
+}
+
+void color_test(void)
+{
+  ucg_int_t mx;
+  uint16_t c, x;
+  mx = ucg.getWidth() / 2;
+  //my = ucg.getHeight() / 2;
+  
+  ucg.setColor(0, 0, 0, 0);
+  ucg.drawBox(0, 0, ucg.getWidth(), ucg.getHeight());
+
+  ucg.setColor(255, 255, 255);
+  ucg.setPrintPos(2,18);
+  ucg.setPrintDir(0);
+  ucg.print("Color Test");
+
+  ucg.setColor(0, 127, 127, 127);
+  ucg.drawBox(0, 20, 16*4+4, 5*8+4);
+
+  for( c = 0, x = 2; c <= 255; c+=17, x+=4 )
+  {
+    ucg.setColor(0, c, c, c);
+    ucg.drawBox(x, 22, 4, 8);
+    ucg.setColor(0, c, 0, 0);
+    ucg.drawBox(x, 22+8, 4, 8);
+    ucg.setColor(0, 0, c, 0);
+    ucg.drawBox(x, 22+2*8, 4, 8);
+    ucg.setColor(0, 0, 0, c);
+    ucg.drawBox(x, 22+3*8, 4, 8);
+    ucg.setColor(0, c, 255-c, 0);
+    ucg.drawBox(x, 22+4*8, 4, 8);
+    
+  }
+
+  DLY();
+}
+
+
 
 void cross(void)
 {
@@ -483,6 +558,8 @@ void loop(void)
   r++;
   ucglib_graphics_test();
   cross();
+  color_test();
+  pixel_and_lines();
   triangle();
   fonts();  
   text();

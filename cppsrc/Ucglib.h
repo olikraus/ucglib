@@ -421,6 +421,22 @@ class Ucglib_SSD1331_18x96x64_UNIVISION_SWSPI : public Ucglib4WireSWSPI
     { }
 };
 
+class Ucglib_SEPS225_16x128x128_UNIVISION_HWSPI : public Ucglib4WireHWSPI
+{
+  public:
+  Ucglib_SEPS225_16x128x128_UNIVISION_HWSPI( uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireHWSPI(ucg_dev_seps225_16x128x128_univision, ucg_ext_seps225_16, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
+class Ucglib_SEPS225_16x128x128_UNIVISION_SWSPI : public Ucglib4WireSWSPI
+{
+  public:
+  Ucglib_SEPS225_16x128x128_UNIVISION_SWSPI( uint8_t scl, uint8_t sda, uint8_t cd, uint8_t cs = UCG_PIN_VAL_NONE, uint8_t reset = UCG_PIN_VAL_NONE) : 
+    Ucglib4WireSWSPI(ucg_dev_seps225_16x128x128_univision, ucg_ext_seps225_16, /*scl=*/ scl, /*sda=*/ sda, /*cd=*/ cd , /*cs=*/ cs, /*reset=*/ reset)
+    { }
+};
+
 
 
 #endif /* _UCGLIB_HH */
