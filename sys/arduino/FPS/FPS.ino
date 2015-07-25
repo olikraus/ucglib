@@ -80,9 +80,9 @@
   SEPS225, Arduino Uno, HW SPI	Text:  2.5  	Box: 14.0		Gradient:  4.9
 
 
-  25 Jul 2015
+  25 Jul 2015 (improved speed for SEPS225)
   SEPS225, Arduino Uno, SW SPI	Text:  2.6  	Box: 5.0		Gradient:  2.9
-  SEPS225, Arduino Uno, HW SPI	Text:  3.8  	Box: 17.3		Gradient:  5.3
+  SEPS225, Arduino Uno, HW SPI	Text:  3.8  	Box: 17.8		Gradient:  5.3
   
 */
 

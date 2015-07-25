@@ -195,6 +195,7 @@ ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
   {
     ucg_int_t dx, dy;
     ucg_int_t i, j;
+    //uint8_t r, g, b;
     switch(ucg->arg.dir)
     {
       case 0: dx = 1; dy = 0; 
@@ -217,6 +218,20 @@ ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
     }
     for( i = 0; i < ucg->arg.len; i++ )
     {
+      /*
+      r = ucg->arg.ccs_line[0].current;
+      r &= 0x0f8;
+      g = ucg->arg.ccs_line[1].current;
+      c[0] = g;
+      c[0] >>= 5;
+      c[0] |= r;
+      g <<= 3;
+      g &= 0x0e0;
+      b = ucg->arg.ccs_line[2].current;
+      b >>= 3;
+      c[1] = g;
+      c[1] |= b;
+      */
       c[0] = (ucg->arg.ccs_line[0].current&0x0f8) | (((ucg->arg.ccs_line[1].current) >>5));
       c[1] = ((((ucg->arg.ccs_line[1].current))<<3)&0x0e0) | (((ucg->arg.ccs_line[2].current) >>3));
       ucg_com_SendRepeat2Bytes(ucg, 1, c);
