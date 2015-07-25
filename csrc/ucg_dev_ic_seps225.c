@@ -50,65 +50,106 @@ static uint8_t ucg_seps225_get_color_low_byte(ucg_t *ucg)
 }
 
 
+/*
+  Write Memory Mode 0x016
+  Bit 0: HV
+    HV= 0, data is continuously written horizontally 
+    HV= 1, data is continuously written vertically 
+  Bit 1: VC 
+    VC= 0, vertical address counter is decreased 
+    VC= 1, vertical address counter is increased 
+  Bit 2: HC 
+    HC= 0, horizontal address counter is decreased 
+    HC= 1, horizontal address counter is increased 
+  Bit 4..6: Dual Transfer, 65K Mode (Bit 4 = 0, Bit 5 = 1, Bit 6 = 1)
+*/
 
-const ucg_pgm_uint8_t ucg_seps255_set_pos_dir0_seq[] = 
+static const ucg_pgm_uint8_t ucg_seps255_pos_dir0_seq[] = 
 {
-  UCG_CS(0),					/* enable chip */
-  
-  UCG_C10(0x017),	UCG_VARX(0,0x0ff, 0), UCG_C10(0x018),	UCG_A1(0x07f),		/* set x position */
-  UCG_C10(0x019),	UCG_VARY(0,0x0ff, 0), UCG_C10(0x01a),	UCG_VARY(0,0x0ff, 0),		/* set y position */
-  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 
-  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 
-  UCG_C10(0x022),
-  UCG_DATA(),								/* change to data mode */
+  UCG_CS(0),							/* enable chip */
+  UCG_C11(0x016, 0x064),				/* Memory Mode */
+  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
+  UCG_C10(0x022),						/* prepare for data */
+  UCG_DATA(),							/* change to data mode */
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_seps255_set_pos_dir1_seq[] = 
+static const ucg_pgm_uint8_t ucg_seps255_pos_dir1_seq[] = 
 {
-  UCG_CS(0),					/* enable chip */
-  UCG_C10(0x017),	UCG_VARX(0,0x0ff, 0), UCG_C10(0x018),	UCG_VARX(0,0x0ff, 0),		/* set x position */
-  UCG_C10(0x019),	UCG_VARY(0,0x0ff, 0), UCG_C10(0x01a),	UCG_A1(0x07f),		/* set y position */
-  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 
-  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 
-  UCG_C10(0x022),
-  UCG_DATA(),								/* change to data mode */
+  UCG_CS(0),							/* enable chip */
+  UCG_C11(0x016, 0x063),				/* Memory Mode */
+  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
+  UCG_C10(0x022),						/* prepare for data */
+  UCG_DATA(),							/* change to data mode */
   UCG_END()
 };
+
+#ifdef NOT_USED
+static const ucg_pgm_uint8_t ucg_seps255_pos_dir2_seq[] = 
+{
+  UCG_CS(0),							/* enable chip */
+  UCG_C11(0x016, 0x060),				/* Memory Mode */
+  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
+  UCG_C10(0x022),						/* prepare for data */
+  UCG_DATA(),							/* change to data mode */
+  UCG_END()
+};
+
+/* it seems that this mode does not work*/
+static const ucg_pgm_uint8_t ucg_seps255_pos_dir3_seq[] = 
+{
+  UCG_CS(0),							/* enable chip */
+  UCG_C11(0x016, 0x061),				/* Memory Mode */
+  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
+  UCG_C10(0x022),						/* prepare for data */
+  UCG_DATA(),							/* change to data mode */
+  UCG_END()
+};
+#endif 
 
 ucg_int_t ucg_handle_seps225_l90fx(ucg_t *ucg)
 {
-  uint8_t c[3];
   if ( ucg_clip_l90fx(ucg) != 0 )
   {
     switch(ucg->arg.dir)
     {
       case 0: 
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir0_seq);	
 	break;
       case 1: 
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir1_seq);	
 	break;
       case 2: 
 	ucg->arg.pixel.pos.x -= ucg->arg.len;
 	ucg->arg.pixel.pos.x++;
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir0_seq);	
 	break;
       case 3: 
       default: 
 	ucg->arg.pixel.pos.y -= ucg->arg.len;
 	ucg->arg.pixel.pos.y++;
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir1_seq);	
 	break;
     }
-    c[0] = ucg_seps225_get_color_high_byte(ucg);
-    c[1] = ucg_seps225_get_color_low_byte(ucg);
-    ucg_com_SendRepeat2Bytes(ucg, ucg->arg.len, c);
+    
+    {
+      uint8_t c[2];
+      c[0] = ucg_seps225_get_color_high_byte(ucg);
+      c[1] = ucg_seps225_get_color_low_byte(ucg);
+      ucg_com_SendRepeat2Bytes(ucg, ucg->arg.len, c);
+    }
     ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
     return 1;
   }
   return 0;
 }
+
+
+
 
 /*
   L2TC (Bitmap Output)
@@ -157,20 +198,20 @@ ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
     switch(ucg->arg.dir)
     {
       case 0: dx = 1; dy = 0; 
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir0_seq);	
 	break;
       case 1: dx = 0; dy = 1; 
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir1_seq);	
 	break;
       case 2: dx = 1; dy = 0; 
 	ucg->arg.pixel.pos.x -= ucg->arg.len;
 	ucg->arg.pixel.pos.x++;
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir0_seq);	
 	break;
       case 3: dx = 0; dy = 1; 
 	ucg->arg.pixel.pos.y -= ucg->arg.len;
 	ucg->arg.pixel.pos.y++;
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir1_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir1_seq);	
 	break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
@@ -222,7 +263,7 @@ ucg_int_t ucg_dev_ic_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
 	uint8_t c[3];
-	ucg_com_SendCmdSeq(ucg, ucg_seps255_set_pos_dir0_seq);	
+	ucg_com_SendCmdSeq(ucg, ucg_seps255_pos_dir0_seq);	
 	c[0] = ucg_seps225_get_color_high_byte(ucg);
 	c[1] = ucg_seps225_get_color_low_byte(ucg);
 	ucg_com_SendRepeat2Bytes(ucg, 1, c);

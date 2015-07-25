@@ -73,8 +73,17 @@
 
   19 Jul 2015
   SSD1331, Arduino Uno, SW SPI	Text:  3.8  	Box: 6.3		Gradient:  4.2
-  SSD1331, Arduino Uno, SW SPI	Text:  6.0  	Box: 27.3		Gradient:  8.8
+  SSD1331, Arduino Uno, HW SPI	Text:  6.0  	Box: 27.3		Gradient:  8.8
 
+  21 Jul 2015
+  SEPS225, Arduino Uno, SW SPI	Text:  1.8  	Box: 4.5		Gradient:  2.7
+  SEPS225, Arduino Uno, HW SPI	Text:  2.5  	Box: 14.0		Gradient:  4.9
+
+
+  25 Jul 2015
+  SEPS225, Arduino Uno, SW SPI	Text:  2.6  	Box: 5.0		Gradient:  2.9
+  SEPS225, Arduino Uno, HW SPI	Text:  3.8  	Box: 17.3		Gradient:  5.3
+  
 */
 
 #include <SPI.h>
