@@ -1,3 +1,6 @@
+# works within ubuntu and min-gw (win7) environment
+# win7 exe uploaded on google drive
+
 CFLAGS = -g -Wall
 #CFLAGS = -O4 -Wall
 

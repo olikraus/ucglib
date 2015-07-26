@@ -33,6 +33,8 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Support for ILI9163 128x128 display
   * Initial support for LD50T6160
   * Power down mode for most controller types
+2015-xx-xx	v1.3   Oliver Kraus <olikraus@gmail.com>
+  * bdfconv.exe available on google drive
 
   
   
