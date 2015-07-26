@@ -73,17 +73,17 @@ int is_arg(char ***argv, int c)
 void help(void)
 {
   printf("bdfconv [options] filename\n");
-  printf("-h        Display this help\n");
-  printf("-v        Print log messages\n");
-  printf("-b <n>    Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
-  printf("-m 'map'  Unicode ASCII mapping\n");
-  printf("-o <file>  C output file\n");
-  printf("-n <name>  C indentifier (font name)\n");
-  printf("-l <margin>   Overview picture: Set left margin\n");
-  printf("-d <file>     Overview picture: BDF font for description\n");
-  printf("-a            Overview picture: Additional font information (background, orange&blue dot)\n");
-  printf("-t            Overview picture: Test string (Woven silk pyjamas exchanged for blue quartz.)\n");
-  printf("-r Runtime test\n");
+  printf("-h          Display this help\n");
+  printf("-v          Print log messages\n");
+  printf("-b <n>      Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
+  printf("-m 'map'    Unicode ASCII mapping\n");
+  printf("-o <file>   C output file\n");
+  printf("-n <name>   C indentifier (font name)\n");
+  printf("-d <file>   Overview picture: Enable generation of bdf.tga and assign BDF font <file> for description\n");
+  printf("-l <margin> Overview picture: Set left margin\n");
+  printf("-a          Overview picture: Additional font information (background, orange&blue dot)\n");
+  printf("-t          Overview picture: Test string (Woven silk pyjamas exchanged for blue quartz.)\n");
+  printf("-r          Runtime test\n");
   printf("\n");
 
   printf("map := <mapcmd> { \",\" <mapcmd> }\n");
