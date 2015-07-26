@@ -67,9 +67,9 @@ static uint8_t ucg_seps225_get_color_low_byte(ucg_t *ucg)
 static const ucg_pgm_uint8_t ucg_seps255_pos_dir0_seq[] = 
 {
   UCG_CS(0),							/* enable chip */
+  UCG_C10(0x020),	UCG_VARX(0,0x07f, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x07f, 0), 	/* set y position */    
   UCG_C11(0x016, 0x064),				/* Memory Mode */
-  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
-  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
   UCG_C10(0x022),						/* prepare for data */
   UCG_DATA(),							/* change to data mode */
   UCG_END()
@@ -79,8 +79,8 @@ static const ucg_pgm_uint8_t ucg_seps255_pos_dir1_seq[] =
 {
   UCG_CS(0),							/* enable chip */
   UCG_C11(0x016, 0x063),				/* Memory Mode */
-  UCG_C10(0x020),	UCG_VARX(0,0x0ff, 0), 	/* set x position */
-  UCG_C10(0x021),	UCG_VARY(0,0x0ff, 0), 	/* set y position */    
+  UCG_C10(0x020),	UCG_VARX(0,0x07f, 0), 	/* set x position */
+  UCG_C10(0x021),	UCG_VARY(0,0x07f, 0), 	/* set y position */    
   UCG_C10(0x022),						/* prepare for data */
   UCG_DATA(),							/* change to data mode */
   UCG_END()
@@ -286,7 +286,7 @@ ucg_int_t ucg_dev_ic_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      //ucg_handle_l90fx(ucg, ucg_dev_ic_seps225_18);
+      //ucg_handle_l90fx(ucg, ucg_dev_ic_seps225_16);
       ucg_handle_seps225_l90fx(ucg);
       return 1;
 #ifdef UCG_MSG_DRAW_L90TC
@@ -313,7 +313,7 @@ ucg_int_t ucg_ext_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
-      //ucg_handle_l90se(ucg, ucg_dev_ic_seps225_18);
+      //ucg_handle_l90se(ucg, ucg_dev_ic_seps225_16);
       ucg_handle_seps225_l90se(ucg);
       break;
   }

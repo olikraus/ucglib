@@ -108,6 +108,7 @@ uint32_t lcg_rnd(void) {
 
 void ucglib_graphics_test(void)
 {
+  //ucg.setMaxClipRange();
   ucg.setColor(0, 0, 40, 80);
   ucg.setColor(1, 80, 0, 40);
   ucg.setColor(2, 255, 0, 255);
@@ -206,9 +207,12 @@ void pixel_and_lines(void)
   ucg.print("Pix&Line");
 
   ucg.drawPixel(0, 0);
-  ucg.drawPixel(ucg.getWidth()-1, 0);
-  ucg.drawPixel(0, ucg.getHeight()-1);
+  ucg.drawPixel(1, 0);
+  //ucg.drawPixel(ucg.getWidth()-1, 0);
+  //ucg.drawPixel(0, ucg.getHeight()-1);
+  
   ucg.drawPixel(ucg.getWidth()-1, ucg.getHeight()-1);
+  ucg.drawPixel(ucg.getWidth()-1-1, ucg.getHeight()-1);
 
   
   for( x = 0; x  < mx; x++ )
@@ -558,8 +562,8 @@ void loop(void)
   r++;
   ucglib_graphics_test();
   cross();
-  color_test();
   pixel_and_lines();
+  color_test();
   triangle();
   fonts();  
   text();
