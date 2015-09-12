@@ -76,6 +76,7 @@ void help(void)
   printf("-h          Display this help\n");
   printf("-v          Print log messages\n");
   printf("-b <n>      Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
+  printf("-f <n>      Font format, 0: ucglib font\n");
   printf("-m 'map'    Unicode ASCII mapping\n");
   printf("-o <file>   C output file\n");
   printf("-n <name>   C indentifier (font name)\n");
@@ -121,6 +122,7 @@ void help(void)
 
 unsigned long left_margin = 1;
 unsigned long build_bbx_mode = 0;
+unsigned long font_format = 0;
 int font_picture_extra_info = 0;
 int font_picture_test_string = 0;
 int runtime_test = 0;
@@ -303,6 +305,9 @@ int main(int argc, char **argv)
     else if ( get_num_arg(&argv, 'b', &build_bbx_mode) != 0 )
     {
     }
+    else if ( get_num_arg(&argv, 'f', &font_format) != 0 )
+    {
+    }
     else if ( get_num_arg(&argv, 'l', &left_margin) != 0 )
     {
     }
@@ -342,7 +347,7 @@ int main(int argc, char **argv)
   }
 
   
-  bf = bf_OpenFromFile(bdf_filename, is_verbose, build_bbx_mode, map_str);
+  bf = bf_OpenFromFile(bdf_filename, is_verbose, build_bbx_mode, map_str, font_format);
   
   if ( bf == NULL )
   {
@@ -368,8 +373,11 @@ int main(int argc, char **argv)
     
     tga_save("bdf.tga");
   }
+  
+  
   if ( c_filename != NULL )
   {
+    /* write the encoded data in bf->target_data */
     bf_WriteUCGCByFilename(bf, c_filename, target_fontname, "  ");
   }
 

@@ -116,10 +116,12 @@ void bf_CalculateMinMaxDWidth(bf_t *bf);
 void bf_copy_bbx_and_update_shift(bf_t *bf, bbx_t *target_bbx, bg_t *bg);
 void bf_CalculateMaxBitFieldSize(bf_t *bf);
 void bf_RLECompressAllGlyphs(bf_t *bf);
+void bf_Generate8x8Font(bf_t *bf);
+
 
 int bf_WriteUCGCByFilename(bf_t *bf, const char *filename, const char *fontname, const char *indent);
 
-bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str);
+bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str, int font_format);
 
 
 /* bdf_parser.c */

@@ -598,7 +598,7 @@ int bf_WriteUCGCByFilename(bf_t *bf, const char *filename, const char *fontname,
 
 
 
-bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str)
+bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str, int font_format)
 {
   bf_t *bf;
 
@@ -617,7 +617,16 @@ bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, co
       bf_CalculateMinMaxDWidth(bf);
       
       bf_CalculateMaxBitFieldSize(bf);  
-      bf_RLECompressAllGlyphs(bf);
+      
+      
+      if ( font_format == 0 )
+      {
+	bf_RLECompressAllGlyphs(bf);
+      }
+      else
+      {
+	bf_Generate8x8Font(bf);
+      }
       
       if ( bf->bbx_mode != BDF_BBX_MODE_MINIMAL )
 	bf_ShowMonospaceStatistics(bf);	/* Show stats only for none minimal mode. For minimal mode it will always be zero */
