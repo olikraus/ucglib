@@ -76,7 +76,7 @@ void help(void)
   printf("-h          Display this help\n");
   printf("-v          Print log messages\n");
   printf("-b <n>      Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
-  printf("-f <n>      Font format, 0: ucglib font\n");
+  printf("-f <n>      Font format, 0: ucglib font, 1: u8g2 8x8 font\n");
   printf("-m 'map'    Unicode ASCII mapping\n");
   printf("-o <file>   C output file\n");
   printf("-n <name>   C indentifier (font name)\n");
@@ -339,19 +339,31 @@ int main(int argc, char **argv)
   bf_desc_font = NULL;
   if ( desc_font_str[0] != '\0' )
   {
-    bf_desc_font = bf_OpenFromFile(desc_font_str, 0, BDF_BBX_MODE_MINIMAL, "*");
+    bf_desc_font = bf_OpenFromFile(desc_font_str, 0, BDF_BBX_MODE_MINIMAL, "*", 0);	/* assume format 0 for description */
     if ( bf_desc_font == NULL )
     {
       exit(1);
     }
   }
 
+  if ( font_format == 1 )
+  {
+    build_bbx_mode = BDF_BBX_MODE_M8;
+    /* issue the following log message later, when there is a valid bf object */
+    /* bf_Log(bf, "Font mode 1: BBX mode set to 3"); */
+  }
   
   bf = bf_OpenFromFile(bdf_filename, is_verbose, build_bbx_mode, map_str, font_format);
   
   if ( bf == NULL )
   {
     exit(1);
+  }
+
+  if ( font_format == 1 )
+  {
+    /* now generate the log message */
+    bf_Log(bf, "Note: For font format 1 BBX mode has been set to 3");
   }
 
   if ( bf_desc_font != NULL )
@@ -378,7 +390,14 @@ int main(int argc, char **argv)
   if ( c_filename != NULL )
   {
     /* write the encoded data in bf->target_data */
-    bf_WriteUCGCByFilename(bf, c_filename, target_fontname, "  ");
+    if ( font_format == 0 )
+    {
+      bf_WriteUCGCByFilename(bf, c_filename, target_fontname, "  ");
+    }
+    else
+    {
+      bf_WriteU8G2CByFilename(bf, c_filename, target_fontname, "  ");
+    }
   }
 
   

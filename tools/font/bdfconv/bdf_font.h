@@ -120,6 +120,7 @@ void bf_Generate8x8Font(bf_t *bf);
 
 
 int bf_WriteUCGCByFilename(bf_t *bf, const char *filename, const char *fontname, const char *indent);
+int bf_WriteU8G2CByFilename(bf_t *bf, const char *filename, const char *fontname, const char *indent);
 
 bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, const char *map_str, int font_format);
 
