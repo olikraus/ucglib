@@ -76,7 +76,7 @@ void help(void)
   printf("-h          Display this help\n");
   printf("-v          Print log messages\n");
   printf("-b <n>      Font build mode, 0: proportional, 1: common height, 2: monospace, 3: multiple of 8\n");
-  printf("-f <n>      Font format, 0: ucglib font, 1: u8g2 8x8 font\n");
+  printf("-f <n>      Font format, 0: ucglib font, 1: u8g2 font, 2: u8g2 uncompressed 8x8 font (enforces -b 3)\n");
   printf("-m 'map'    Unicode ASCII mapping\n");
   printf("-o <file>   C output file\n");
   printf("-n <name>   C indentifier (font name)\n");
@@ -101,9 +101,7 @@ void help(void)
   printf("decdigit := \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n");
   printf("hexdigit := \"a\" | \"b\" | \"c\" | \"d\" | \"e\" | \"f\" | \"A\" | \"B\" | \"C\" | \"D\" | \"E\" | \"F\" | <decdigit>\n");
     
-  printf("{ }: zero, one ore more\n");
-  printf("[ ]: zero or once\n");
-  printf("|: alternative\n");
+  printf("{ } zero, one ore more, [ ] zero or once, | alternative\n");
 
   printf("example:\n");
   printf("  -m '32-255'     select gylphs from encoding 32 to 255\n");
@@ -346,7 +344,7 @@ int main(int argc, char **argv)
     }
   }
 
-  if ( font_format == 1 )
+  if ( font_format == 2 )
   {
     build_bbx_mode = BDF_BBX_MODE_M8;
     /* issue the following log message later, when there is a valid bf object */
@@ -360,7 +358,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  if ( font_format == 1 )
+  if ( font_format == 2 )
   {
     /* now generate the log message */
     bf_Log(bf, "Note: For font format 1 BBX mode has been set to 3");
@@ -396,6 +394,7 @@ int main(int argc, char **argv)
     }
     else
     {
+      /* font format >= 1 are for u8g2 */
       bf_WriteU8G2CByFilename(bf, c_filename, target_fontname, "  ");
     }
   }

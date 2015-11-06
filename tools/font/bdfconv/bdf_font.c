@@ -664,7 +664,7 @@ bf_t *bf_OpenFromFile(const char *bdf_filename, int is_verbose, int bbx_mode, co
       bf_CalculateMaxBitFieldSize(bf);  
       
       
-      if ( font_format == 0 )
+      if ( font_format == 0 || font_format == 1 )
       {
 	bf_RLECompressAllGlyphs(bf);
       }
