@@ -21,6 +21,7 @@
 build/
 dist/
 nbproject/private/
+private/
 .classpath
 .project
 .settings
