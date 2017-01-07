@@ -11,7 +11,6 @@ mkdir ../../../../Ucglib_Arduino/src/clib
 cp ../../../ChangeLog ../../../../Ucglib_Arduino/extras/.
 # cp ../../../license.txt ../../../../Ucglib_Arduino/extra/.
 cp INSTALL.TXT ../../../../Ucglib_Arduino/extras/.
-cp library.properties ../../../../Ucglib_Arduino/.
 cp ../../../cppsrc/*.cpp ../../../../Ucglib_Arduino/src/.
 cp ../../../cppsrc/*.h ../../../../Ucglib_Arduino/src/.
 sed -i 's|ucg.h|clib/ucg.h|g' ../../../../Ucglib_Arduino/src/Ucglib.h
@@ -31,11 +30,16 @@ pandoc -f markdown_github displays.md -t latex -o ../Ucglib_Arduino/extras/displ
 pandoc -f markdown_github fontsize.md -t latex -o ../Ucglib_Arduino/extras/fontsize.pdf
 popd
 
+ver=`../print_release.sh`
+sed -i -e "s/version=.*/version=${ver}/" library.properties
+cp library.properties ../../../../Ucglib_Arduino/.
+
 cd ../../../../Ucglib_Arduino
+
 git commit -a -m `../ucglib/tools/release/print_release.sh`
 git push
 
-echo now create a release in gitub for Ucglib_Arduino, tag/namex = v1.xx
+echo now create a release in gitub for Ucglib_Arduino, tag/namex = 1.2.3
 # Relases in github:
 # Tag: 1.02pre3
 # Release  name: 1.02pre3
