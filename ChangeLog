@@ -37,6 +37,8 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * bdfconv.exe available on google drive
   * Support for SEPS225 OLEDs
   * Support for SSD1331 OLEDs  
+2016-01-07	v1.4.0	Oliver Kraus <olikraus@gmail.com>
+  * Support for ESP8266 (issue 61)
 
   
   

@@ -771,7 +771,7 @@ void Ucglib3Wire9bitHWSPI::begin(uint8_t is_transparent)
 /* 8 Bit Parallel */
 
 
-#if defined(__PIC32MX) || defined(__arm__)
+#if defined(__PIC32MX) || defined(__arm__) || defined(ESP8266)
 /* CHIPKIT PIC32 */
 static volatile uint32_t *u8g_data_port[9];
 static uint32_t u8g_data_mask[9];
