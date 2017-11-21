@@ -25,7 +25,7 @@ int main(void)
   
   ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT) ;
-  ucg_SetFont(&ucg, ucg_font_ncenB24);
+  ucg_SetFont(&ucg, ucg_font_ncenB24_tr);
 
 
   ucg_SetColor(&ucg, 0, 0, 255, 0);
@@ -42,11 +42,11 @@ int main(void)
   ucg_DrawGlyph(&ucg, 70, 20, 3, 'A');
 
   
-  ucg_DrawBitmapLine(&ucg, 9,0, 0,16, bitmap);
-  ucg_DrawBitmapLine(&ucg, 10,1, 0,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 9,0, 0,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 10,1, 0,16, bitmap);
   
-  ucg_DrawBitmapLine(&ucg, 0,9, 1,16, bitmap);
-  ucg_DrawBitmapLine(&ucg, 1,10, 1,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 0,9, 1,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 1,10, 1,16, bitmap);
   
   for( i = 0; i < ucg_GetWidth(&ucg); i+= 2 )  
     ucg_DrawPixel(&ucg, i, 30);
@@ -85,8 +85,8 @@ int main(void)
   ucg_DrawHRLine(&ucg, 36, 19, 3);
   ucg_DrawHRLine(&ucg, 36, 20, 4);
 
-  ucg_DrawBitmapLine(&ucg, 9,22, 0,16, bitmap);
-  ucg_DrawBitmapLine(&ucg, 10,23, 0,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 9,22, 0,16, bitmap);
+//  ucg_DrawBitmapLine(&ucg, 10,23, 0,16, bitmap);
 
   ucg_SetClipRange(&ucg, 70-9, 20-9, 20, 20);
 
