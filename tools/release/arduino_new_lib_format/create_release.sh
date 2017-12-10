@@ -24,11 +24,11 @@ cp ../../../sys/arduino/Scale/*.ino ../../../../Ucglib_Arduino/examples/Scale/.
 cp ../../../sys/arduino/GraphicsTest/*.ino ../../../../Ucglib_Arduino/examples/GraphicsTest/.
 cp ../../../sys/arduino/HowToUseFonts/*.ino ../../../../Ucglib_Arduino/examples/HowToUseFonts/.
 
-pushd ../../../../ucglib.wiki/
-pandoc -f markdown_github reference.md -t latex -o ../Ucglib_Arduino/extras/reference.pdf
-pandoc -f markdown_github displays.md -t latex -o ../Ucglib_Arduino/extras/displays.pdf
-pandoc -f markdown_github fontsize.md -t latex -o ../Ucglib_Arduino/extras/fontsize.pdf
-popd
+#pushd ../../../../ucglib.wiki/
+#pandoc -f markdown_github reference.md -t latex -o ../Ucglib_Arduino/extras/reference.pdf
+#pandoc -f markdown_github displays.md -t latex -o ../Ucglib_Arduino/extras/displays.pdf
+#pandoc -f markdown_github fontsize.md -t latex -o ../Ucglib_Arduino/extras/fontsize.pdf
+#popd
 
 ver=`../print_release.sh`
 sed -i -e "s/version=.*/version=${ver}/" library.properties
