@@ -158,6 +158,8 @@ ucg_int_t ucg_dev_ssd1351_18x128x128_ft(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ili9325_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ili9325_spi_18x240x320(ucg_t *ucg, ucg_int_t msg, void *data); /*  1 May 2014: Currently, this is not working */
 ucg_int_t ucg_dev_ili9341_18x240x320(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_hx8352c_18x240x400(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ili9486_18x320x480(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ili9163_18x128x128(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_st7735_18x128x160(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_pcf8833_16x132x132(ucg_t *ucg, ucg_int_t msg, void *data);
@@ -186,6 +188,8 @@ ucg_int_t ucg_ext_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_ili9325_spi_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_ili9341_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_ext_hx8352c_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_ext_ili9486_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_ili9163_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_st7735_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_ext_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data);
@@ -201,6 +205,8 @@ ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_ili9325_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_ili9325_spi_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_ili9341_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_hx8352c_18(ucg_t *ucg, ucg_int_t msg, void *data);
+ucg_int_t ucg_dev_ic_ili9486_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_ili9163_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_st7735_18(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ic_pcf8833_16(ucg_t *ucg, ucg_int_t msg, void *data);
@@ -795,6 +801,31 @@ void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 #define UCG_C14(c0,a0,a1,a2,a3)		0x014, (c0),(a0),(a1),(a2),(a3)
 #define UCG_C24(c0,c1,a0,a1,a2,a3)	0x024, (c0),(c1),(a0),(a1),(a2),(a3)
 #define UCG_C15(c0,a0,a1,a2,a3,a4)	0x015, (c0),(a0),(a1),(a2),(a3),(a4)
+
+
+#define UCG_C25(c0,c1,a0,a1,a2,a3,a4)	0x025, (c0),(c1),(a0),(a1),(a2),(a3),(a4)
+#define UCG_C16(c0,a0,a1,a2,a3,a4,a5)	0x016, (c0),(a0),(a1),(a2),(a3),(a4),(a5)
+#define UCG_C26(c0,c1,a0,a1,a2,a3,a4,a5)	0x026, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5)
+#define UCG_C17(c0,a0,a1,a2,a3,a4,a5,a6)	0x017, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6)
+#define UCG_C27(c0,c1,a0,a1,a2,a3,a4,a5,a6)	0x027, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6)
+#define UCG_C18(c0,a0,a1,a2,a3,a4,a5,a6,a7)	0x018, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7)
+#define UCG_C28(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7)	0x028, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7)
+#define UCG_C19(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8)	0x019, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8)
+#define UCG_C29(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8)	0x029, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8)
+#define UCG_C1A(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9)
+#define UCG_C2A(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9)
+#define UCG_C1B(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa)
+#define UCG_C2B(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa)
+#define UCG_C1C(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab)
+#define UCG_C2C(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab)
+#define UCG_C1D(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac)
+#define UCG_C2D(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac)
+#define UCG_C1E(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac,ad)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac),(ad)
+#define UCG_C2E(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac,ad)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac),(ad)
+#define UCG_C1F(c0,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac,ad,ae)	0x01f, (c0),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac),(ad),(ae)
+#define UCG_C2F(c0,c1,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac,ad,ae)	0x02f, (c0),(c1),(a0),(a1),(a2),(a3),(a4),(a5),(a6),(a7),(a8),(a9),(aa),(ab),(ac),(ad),(ae)
+ 
+
 
 /* send one or more argument bytes */
 #define UCG_A1(d0)					0x061, (d0)

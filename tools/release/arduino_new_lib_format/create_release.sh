@@ -34,10 +34,21 @@ ver=`../print_release.sh`
 sed -i -e "s/version=.*/version=${ver}/" library.properties
 cp library.properties ../../../../Ucglib_Arduino/.
 
+pushd .
+
 cd ../../../../Ucglib_Arduino
 
-git commit -a -m `../ucglib/tools/release/print_release.sh`
-git push
+# git commit -a -m `../ucglib/tools/release/print_release.sh`
+# git push
+
+cd ..
+rm Ucglib_Arduino_${ver}.zip
+zip -q -r --exclude="*.git*" Ucglib_Arduino_${ver}.zip ./Ucglib_Arduino
+cp Ucglib_Arduino_${ver}.zip ~/Arduino/libraries/.
+cd ~/Arduino/libraries
+rm -rf Ucglib_Arduino
+unzip -o Ucglib_Arduino_${ver}.zip
+
 
 echo now create a release in gitub for Ucglib_Arduino, tag/namex = 1.2.3
 # Relases in github:
