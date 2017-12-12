@@ -172,7 +172,7 @@ ucg_int_t Ucglib::drawGlyph(ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encod
     * `x`, `y`: Reference position of the character.
     * `dir`: One of the values 0 (left to right), 1 (top down), 2 (right left) or 3 (bottom up)
     * `encoding`: Code number of the character.
-  * **Returns:** Width of the gylph.
+  * **Returns:** Width of the glyph.
   * **See also:** [setColor](reference#setColor.md) [print](reference#print.md)
 
 ## drawGradientBox ##
