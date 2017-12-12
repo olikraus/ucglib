@@ -279,8 +279,8 @@ struct _ucg_arg_t
 
 struct _ucg_com_info_t
 {
-  uint16_t serial_clk_speed;
-  uint16_t parallel_clk_speed;
+  uint16_t serial_clk_speed;	/* nano seconds cycle time */
+  uint16_t parallel_clk_speed;	/* nano seconds cycle time */
 };
 
 

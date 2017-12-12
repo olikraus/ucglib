@@ -161,12 +161,13 @@ static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t data)
       digitalWrite(ucg->pin_list[UCG_PIN_SDA], 0 );
     }
     // no delay required, also Arduino Due is slow enough
-    //delayMicroseconds(1);
+    // delay required for ESP32
+    delayMicroseconds(1);
     digitalWrite(ucg->pin_list[UCG_PIN_SCL], 1 );
-    //delayMicroseconds(1);
+    delayMicroseconds(1);
     i--;
     digitalWrite(ucg->pin_list[UCG_PIN_SCL], 0 );
-    //delayMicroseconds(1);
+    delayMicroseconds(1);
     data <<= 1;
   } while( i > 0 );
   
@@ -664,21 +665,29 @@ static int16_t ucg_com_arduino_3wire_9bit_HW_SPI(ucg_t *ucg, int16_t msg, uint16
 	digitalWrite(ucg->pin_list[UCG_PIN_RST], 1);
 
       /* setup Arduino SPI */
+#if ARDUINO >= 10600
       SPI.begin();
-#if defined(__AVR__)
-      SPI.setClockDivider( SPI_CLOCK_DIV2 );
-      //SPI.setClockDivider( SPI_CLOCK_DIV64  );
-      //SPI.setDataMode(SPI_MODE0);
-    
-#endif
-#if defined(__SAM3X8E__)
-      SPI.setClockDivider( (((ucg_com_info_t *)data)->serial_clk_speed * 84L + 999)/1000L );
-#endif
+      SPI.beginTransaction(SPISettings(1000000000UL/((ucg_com_info_t *)data)->serial_clk_speed, MSBFIRST, SPI_MODE0));
+#else
+      SPI.begin();
+      
+      if ( ((ucg_com_info_t *)data)->serial_clk_speed/2 < 70 )
+	SPI.setClockDivider( SPI_CLOCK_DIV2 );
+      else if ( ((ucg_com_info_t *)data)->serial_clk_speed/2 < 140 )
+	SPI.setClockDivider( SPI_CLOCK_DIV4 );
+      else
+	SPI.setClockDivider( SPI_CLOCK_DIV8 );
       SPI.setDataMode(SPI_MODE0);
       SPI.setBitOrder(MSBFIRST);
+#endif
       break;
     case UCG_COM_MSG_POWER_DOWN:
+#if ARDUINO >= 10600
+      SPI.endTransaction();
       SPI.end();
+#else
+      SPI.end();
+#endif
       break;
     case UCG_COM_MSG_DELAY:
       /* flush pending data first, then do the delay */
@@ -1189,18 +1198,32 @@ static int16_t ucg_com_arduino_4wire_HW_SPI(ucg_t *ucg, int16_t msg, uint16_t ar
 	pinMode(ucg->pin_list[UCG_PIN_CS], OUTPUT);
       
       /* setup Arduino SPI */
+
+#if ARDUINO >= 10600
       SPI.begin();
-#if defined(__AVR__)
-      SPI.setClockDivider( SPI_CLOCK_DIV2 );
-#endif
-#if defined(__SAM3X8E__)
-      SPI.setClockDivider( (((ucg_com_info_t *)data)->serial_clk_speed * 84L + 999)/1000L );
-#endif
+      SPI.beginTransaction(SPISettings(1000000000UL/((ucg_com_info_t *)data)->serial_clk_speed, MSBFIRST, SPI_MODE0));
+#else
+      SPI.begin();
+      
+      if ( ((ucg_com_info_t *)data)->serial_clk_speed/2 < 70 )
+	SPI.setClockDivider( SPI_CLOCK_DIV2 );
+      else if ( ((ucg_com_info_t *)data)->serial_clk_speed/2 < 140 )
+	SPI.setClockDivider( SPI_CLOCK_DIV4 );
+      else
+	SPI.setClockDivider( SPI_CLOCK_DIV8 );
       SPI.setDataMode(SPI_MODE0);
       SPI.setBitOrder(MSBFIRST);
+#endif
+      
+      
       break;
     case UCG_COM_MSG_POWER_DOWN:
-      SPI.end(); 
+#if ARDUINO >= 10600
+      SPI.endTransaction();
+      SPI.end();
+#else
+      SPI.end();
+#endif
       break;
     case UCG_COM_MSG_DELAY:
       delayMicroseconds(arg);
