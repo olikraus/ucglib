@@ -42,7 +42,7 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
 2017-12-16	v1.5.2	Oliver Kraus <olikraus@gmail.com>
   * Integration of HX8352C and ILI9486 support
   * Fix ESP32 errors
-
+2017-xx-xx	v1.6.x	Oliver Kraus <olikraus@gmail.com>
   
   
   
