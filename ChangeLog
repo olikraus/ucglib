@@ -39,6 +39,9 @@ Changelog Ucglib (http://code.google.com/p/ucglib/)
   * Support for SSD1331 OLEDs  
 2016-01-07	v1.4.0	Oliver Kraus <olikraus@gmail.com>
   * Support for ESP8266 (issue 61)
+2017-12-16	v1.5.2	Oliver Kraus <olikraus@gmail.com>
+  * Integration of HX8352C and ILI9486 support
+  * Fix ESP32 errors
 
   
   
