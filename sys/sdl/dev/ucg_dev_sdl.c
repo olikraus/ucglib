@@ -70,7 +70,7 @@ void ucg_sdl_set_pixel(int x, int y, int idx)
       offset = 
 	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
 	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      assert( offset < (Uint32)(ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = ucg_sdl_color[idx];
     }
@@ -108,7 +108,7 @@ void ucg_sdl_set_hicolor(int x, int y, uint8_t low, uint8_t high)
       offset = 
 	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
 	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      assert( offset < (Uint32)(ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = color;
     }
@@ -138,7 +138,7 @@ void ucg_sdl_set_fullcolor(int x, int y, unsigned int r, unsigned int g, unsigne
       offset = 
 	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
 	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      assert( offset < (Uint32)(ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = color;
     }
