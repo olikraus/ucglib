@@ -115,13 +115,13 @@ libucgsdl_la_SOURCES=$(SRC_SDL)
 
 libucgwpi_la_SOURCES=$(SRC_WPI)
 
-libucgbase_la_CFLAGS=-Icsrc -Icppsrc -Inonarduino -DUCG_16BIT `sdl-config --cflags`
+libucgbase_la_CFLAGS=-Icsrc -Icppsrc -Inonarduino -DUCG_16BIT `sdl2-config --cflags`
 libucgbase_la_CPPFLAGS=$(libucgbase_la_CFLAGS)
 libucgbase_la_LDFLAGS=
 
-libucgsdl_la_CFLAGS=-Icsrc -Icppsrc -Inonarduino -DUCG_16BIT `sdl-config --cflags`
+libucgsdl_la_CFLAGS=-Icsrc -Icppsrc -Inonarduino -DUCG_16BIT `sdl2-config --cflags`
 libucgsdl_la_CPPFLAGS=$(libucgsdl_la_CFLAGS)
-libucgsdl_la_LDFLAGS=`sdl-config --libs`
+libucgsdl_la_LDFLAGS=`sdl2-config --libs`
 libucgsdl_la_LIBADD=$(top_builddir)/libucgbase.la
 
 libucgwpi_la_CFLAGS=-Icsrc -Icppsrc -Inonarduino -DUCG_16BIT -DUCG_WITH_PINLIST -DUCG_RASPBERRY_PI

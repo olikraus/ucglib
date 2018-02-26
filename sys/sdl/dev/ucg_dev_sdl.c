@@ -39,15 +39,19 @@
 
 #include "ucg.h"
 #include "SDL.h"
-#include "SDL_video.h"
 #include <assert.h>
 
-#define HEIGHT (64)
-#define WIDTH 128
+#define W(x,w) (((x)*(w))/100)
 
+#define HEIGHT (64)
+#define WIDTH (128)
+
+SDL_Window *ucg_sdl_window;
 SDL_Surface *ucg_sdl_screen;
-int ucg_sdl_multiple = 2;
+
+int ucg_sdl_multiple = 3;
 Uint32 ucg_sdl_color[256];
+int ucg_sdl_height, ucg_sdl_width;
 
 void ucg_sdl_set_pixel(int x, int y, int idx)
 {
@@ -67,10 +71,11 @@ void ucg_sdl_set_pixel(int x, int y, int idx)
   for( i = 0; i < ucg_sdl_multiple; i++ )
     for( j = 0; j < ucg_sdl_multiple; j++ )
     {
-      offset = 
-	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
-	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      offset = (
+        ((y * ucg_sdl_multiple) + i) * (ucg_sdl_width * ucg_sdl_multiple) + 
+        ((x * ucg_sdl_multiple) + j)) * ucg_sdl_screen->format->BytesPerPixel;
+        
+      assert( offset < (Uint32)(ucg_sdl_width * ucg_sdl_multiple * ucg_sdl_height * ucg_sdl_multiple * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = ucg_sdl_color[idx];
     }
@@ -105,10 +110,11 @@ void ucg_sdl_set_hicolor(int x, int y, uint8_t low, uint8_t high)
   for( i = 0; i < ucg_sdl_multiple; i++ )
     for( j = 0; j < ucg_sdl_multiple; j++ )
     {
-      offset = 
-	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
-	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      offset = (
+        ((y * ucg_sdl_multiple) + i) * (ucg_sdl_width * ucg_sdl_multiple) + 
+        ((x * ucg_sdl_multiple) + j)) * ucg_sdl_screen->format->BytesPerPixel;
+        
+      assert( offset < (Uint32)(ucg_sdl_width * ucg_sdl_multiple * ucg_sdl_height * ucg_sdl_multiple * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = color;
     }
@@ -135,33 +141,44 @@ void ucg_sdl_set_fullcolor(int x, int y, unsigned int r, unsigned int g, unsigne
   for( i = 0; i < ucg_sdl_multiple; i++ )
     for( j = 0; j < ucg_sdl_multiple; j++ )
     {
-      offset = 
-	(y * ucg_sdl_multiple + j) * ucg_sdl_screen->w * ucg_sdl_screen->format->BytesPerPixel + 
-	(x * ucg_sdl_multiple + i) * ucg_sdl_screen->format->BytesPerPixel;
-      assert( offset < ucg_sdl_screen->w * ucg_sdl_screen->h * ucg_sdl_screen->format->BytesPerPixel );
+      offset = (
+        ((y * ucg_sdl_multiple) + i) * (ucg_sdl_width * ucg_sdl_multiple) + 
+        ((x * ucg_sdl_multiple) + j)) * ucg_sdl_screen->format->BytesPerPixel;
+        
+      assert( offset < (Uint32)(ucg_sdl_width * ucg_sdl_multiple * ucg_sdl_height * ucg_sdl_multiple * ucg_sdl_screen->format->BytesPerPixel) );
       ptr = ucg_sdl_screen->pixels + offset;
       *ptr = color;
     }
   
 }
 
-#define W(x,w) (((x)*(w))/100)
-
 void ucg_sdl_init(void)
 {
+  ucg_sdl_height = HEIGHT;
+  ucg_sdl_width = WIDTH;
+  
   if (SDL_Init(SDL_INIT_VIDEO) != 0) 
   {
     printf("Unable to initialize SDL:  %s\n", SDL_GetError());
     exit(1);
   }
   
-  /* http://www.libsdl.org/cgi/docwiki.cgi/SDL_SetVideoMode */
-  ucg_sdl_screen = SDL_SetVideoMode(WIDTH*ucg_sdl_multiple,HEIGHT*ucg_sdl_multiple,32,SDL_SWSURFACE|SDL_ANYFORMAT);
-  if ( ucg_sdl_screen == NULL ) 
+  ucg_sdl_window = SDL_CreateWindow("Ucglib", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ucg_sdl_width * ucg_sdl_multiple, ucg_sdl_height * ucg_sdl_multiple, 0);
+
+  if ( ucg_sdl_window == NULL )
   {
-    printf("Couldn't set video mode: %s\n", SDL_GetError());
+    printf("Couldn't create window: %s\n", SDL_GetError());
     exit(1);
   }
+
+  ucg_sdl_screen = SDL_GetWindowSurface(ucg_sdl_window);
+
+  if ( ucg_sdl_screen == NULL )
+  {
+    printf("Couldn't create screen: %s\n", SDL_GetError());
+    exit(1);
+  }
+
   printf("%d bits-per-pixel mode\n", ucg_sdl_screen->format->BitsPerPixel);
   printf("%d bytes-per-pixel mode\n", ucg_sdl_screen->format->BytesPerPixel);
   
@@ -177,8 +194,7 @@ void ucg_sdl_init(void)
   */
 
   /* update all */
-  /* http://www.libsdl.org/cgi/docwiki.cgi/SDL_UpdateRect */
-  SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
+  SDL_UpdateWindowSurface(ucg_sdl_window);
 
   atexit(SDL_Quit);
   return;
@@ -277,13 +293,13 @@ ucg_int_t ucg_sdl_dev_cb(ucg_t *ucg, ucg_int_t msg, void *data)
     case UCG_MSG_DRAW_PIXEL:
       if ( ucg_clip_is_pixel_visible(ucg) !=0 )
       {
-	ucg_sdl_set_fullcolor(
-	    ucg->arg.pixel.pos.x,
-	    ucg->arg.pixel.pos.y, 
-	    ucg->arg.pixel.rgb.color[0], 
-	    ucg->arg.pixel.rgb.color[1], 
-	    ucg->arg.pixel.rgb.color[2]);
-	SDL_UpdateRect(ucg_sdl_screen, 0,0,0,0);
+        ucg_sdl_set_fullcolor(
+            ucg->arg.pixel.pos.x,
+            ucg->arg.pixel.pos.y, 
+            ucg->arg.pixel.rgb.color[0], 
+            ucg->arg.pixel.rgb.color[1], 
+            ucg->arg.pixel.rgb.color[2]);
+        SDL_UpdateWindowSurface(ucg_sdl_window);
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
