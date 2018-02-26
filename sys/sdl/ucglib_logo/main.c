@@ -60,10 +60,10 @@ void ic_body(ucg_t *ucg, ucg_int_t x, ucg_int_t y)
 {
   ucg_int_t w = 4*14+4;
   ucg_int_t h = 31;
-  ucg_SetColor(ucg, 0, 60, 60, 60);
-  ucg_SetColor(ucg, 1, 40, 40, 40);
-  ucg_SetColor(ucg, 2, 48, 48, 48);
-  ucg_SetColor(ucg, 3, 30, 30, 30);
+  ucg_SetColor(ucg, 0, 60+20, 60+20, 60+20);
+  ucg_SetColor(ucg, 1, 40+20, 40+20, 40+20);
+  ucg_SetColor(ucg, 2, 48+20, 48+20, 48+20);
+  ucg_SetColor(ucg, 3, 30+20, 30+20, 30+20);
   ucg_DrawGradientBox(ucg, x, y, w, h);
   
   ucg_SetColor(ucg, 0, 255, 168, 0);
@@ -87,7 +87,8 @@ int main(void)
   
   ucg_Init(&ucg, ucg_sdl_dev_cb, ucg_ext_none, (ucg_com_fnptr)0);
   ucg_SetFontMode(&ucg, UCG_FONT_MODE_TRANSPARENT);
-  ucg_SetFont(&ucg, ucg_font_9x15_67_75);
+  //ucg_SetFont(&ucg, ucg_font_9x15_67_75);
+  ucg_SetFont(&ucg, ucg_font_ncenB24_tr);  
   //ucg_SetRotate90(&ucg);
   
   //ucg_SetRotate270(&ucg);  
