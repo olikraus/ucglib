@@ -2,6 +2,8 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define WIRING_PI_PIN_RST 3
 #define WIRING_PI_PIN_CD 4
@@ -9,6 +11,14 @@
 #define WIRING_PI_SPI_CHANNEL 0
 
 ucg_t ucg;
+int spi_fd;
+
+void spi_send(size_t len, unsigned char *data){
+  if(len != (size_t)write(spi_fd, data, len)){
+    printf("Failed to write to SPI device.\n");
+    exit(1);
+  }
+}
 
 int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
     ucg_t *ucg,
@@ -16,8 +26,6 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
     uint16_t arg,
     uint8_t *data
 ) {
-  int spi_fd;
-
   switch(msg) {
     case UCG_COM_MSG_POWER_UP:
       /* "data" is a pointer to ucg_com_info_t structure with the following information: */
@@ -39,14 +47,14 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
         WIRING_PI_SPI_CHANNEL,
         1000000000UL/((ucg_com_info_t *)data)->serial_clk_speed
       );
-      if(-1 == spi_fd)
-        return 1;
-
+      if(-1 == spi_fd){
+        printf("Failed to open SPI file descriptor.\n");
+        exit(1);
+      }
       break;
     case UCG_COM_MSG_POWER_DOWN:
       /* "data" and "arg" are not used*/
       /* This message is sent for a power down request */
-      spi_fd = wiringPiSPIGetFd(WIRING_PI_SPI_CHANNEL);
       close(spi_fd);
       break;
     case UCG_COM_MSG_DELAY:
@@ -81,7 +89,7 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
       /* "arg" contains one byte, which should be sent to the display */
       /* The current status of the CD line is available */
       /* in bit 0 of u8g->com_status */
-      wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)&arg, 1);
+      spi_send(1, (unsigned char *)&arg);
       break;
     case UCG_COM_MSG_REPEAT_1_BYTE:
       /* "data[0]" contains one byte */
@@ -89,7 +97,7 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
       /* The current status of the CD line is available */
       /* in bit 0 of u8g->com_status */
       while( arg > 0 ) {
-        wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)data, 1);
+        spi_send(1, (unsigned char *)data);
         arg--;
       }
       break;
@@ -100,7 +108,7 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
       /* The current status of the CD line is available */
       /* in bit 0 of u8g->com_status */
       while( arg > 0 ) {
-        wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)data, 2);
+        spi_send(2, (unsigned char *)data);
         arg--;
       }
       break;
@@ -112,14 +120,14 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
       /* The current status of the CD line is available */
       /* in bit 0 of u8g->com_status */
       while( arg > 0 ) {
-        wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)data, 3);
+        spi_send(3, (unsigned char *)data);
         arg--;
       }
       break;
     case UCG_COM_MSG_SEND_STR:
       /* "data" is an array with "arg" bytes */
       /* send "arg" bytes to the display */
-      wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)data, arg);
+      spi_send(arg, (unsigned char *)data);
       break;
     case UCG_COM_MSG_SEND_CD_DATA_SEQUENCE:
       /* "data" is a pointer to two bytes, which contain the cd line */
@@ -137,7 +145,7 @@ int16_t ucg_com_raspberry_pi_4wire_HW_SPI(
           }
         }
         data++;
-        wiringPiSPIDataRW(WIRING_PI_SPI_CHANNEL, (unsigned char *)data, 1);
+        spi_send(1, (unsigned char *)data);
         data++;
         arg--;
       }
