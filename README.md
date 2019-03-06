@@ -19,7 +19,7 @@ Version v1.01 for Arduino IDE 1.0.x [![](https://api.bintray.com/packages/olikra
 
 Clone in your components directory using the following command.
 
-`git submodules add https://github.com/olikraus/ucglib components/u8g2`
+`git submodule add https://github.com/olikraus/ucglib components/u8g2`
 
 
 # Screenshot
