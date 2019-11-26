@@ -1,0 +1,3 @@
+This is a reference implementation of the hardware abstraction layer (https://github.com/olikraus/ucglib/wiki/hal), that uses http://wiringpi.com/or https://www.airspayce.com/mikem/bcm2835/ for I/O operations.
+
+It should work on all Raspberry Pi versions supported either library.
