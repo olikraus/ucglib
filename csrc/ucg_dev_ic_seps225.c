@@ -294,12 +294,12 @@ ucg_int_t ucg_dev_ic_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
       return 1;
 #ifdef UCG_MSG_DRAW_L90TC
     case UCG_MSG_DRAW_L90TC:
-      ucg_handle_l90tc(ucg, ucg_dev_ic_seps225_18);
+      ucg_handle_l90tc(ucg, ucg_dev_ic_seps225_16);
       return 1;
 #endif /* UCG_MSG_DRAW_L90TC */
 #ifdef UCG_MSG_DRAW_L90BF
      case UCG_MSG_DRAW_L90BF:
-      ucg_handle_l90bf(ucg, ucg_dev_ic_seps225_18);
+      ucg_handle_l90bf(ucg, ucg_dev_ic_seps225_16);
       return 1;
 #endif /* UCG_MSG_DRAW_L90BF */
     /* msg UCG_MSG_DRAW_L90SE is handled by ucg_dev_default_cb */
