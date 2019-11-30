@@ -39,6 +39,11 @@ Code is for 128x128 display which is shifted by 32 pixel within the controller R
 
 #include "ucg.h"
 
+static ucg_int_t ucg_handle_ili9163_l90fx(ucg_t *ucg);
+#ifdef UCG_MSG_DRAW_L90TC
+static ucg_int_t ucg_handle_ili9163_l90tc(ucg_t *ucg);
+#endif
+static ucg_int_t ucg_handle_ili9163_l90se(ucg_t *ucg);
 
 const ucg_pgm_uint8_t ucg_ili9163_set_pos_seq[] = 
 {
@@ -122,7 +127,7 @@ const ucg_pgm_uint8_t ucg_ili9163_set_pos_dir3_seq[] =
   UCG_END()
 };
 
-ucg_int_t ucg_handle_ili9163_l90fx(ucg_t *ucg)
+static ucg_int_t ucg_handle_ili9163_l90fx(ucg_t *ucg)
 {
   uint8_t c[3];
   ucg_int_t tmp;
@@ -172,8 +177,9 @@ ucg_int_t ucg_handle_ili9163_l90fx(ucg_t *ucg)
   
 */
 
+#ifdef UCG_MSG_DRAW_L90TC
 /* with CmdDataSequence */ 
-ucg_int_t ucg_handle_ili9163_l90tc(ucg_t *ucg)
+static ucg_int_t ucg_handle_ili9163_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -262,9 +268,9 @@ ucg_int_t ucg_handle_ili9163_l90tc(ucg_t *ucg)
   }
   return 0;
 }
+#endif
 
-
-ucg_int_t ucg_handle_ili9163_l90se(ucg_t *ucg)
+static ucg_int_t ucg_handle_ili9163_l90se(ucg_t *ucg)
 {
   uint8_t i;
   uint8_t c[3];
@@ -281,7 +287,7 @@ ucg_int_t ucg_handle_ili9163_l90se(ucg_t *ucg)
   
   if ( ucg_clip_l90se(ucg) != 0 )
   {
-    ucg_int_t i;
+    ucg_int_t k;
     switch(ucg->arg.dir)
     {
       case 0: 
@@ -311,7 +317,7 @@ ucg_int_t ucg_handle_ili9163_l90se(ucg_t *ucg)
 	break;
     }
     
-    for( i = 0; i < ucg->arg.len; i++ )
+    for( k = 0; k < ucg->arg.len; k++ )
     {
       c[0] = ucg->arg.ccs_line[0].current;
       c[1] = ucg->arg.ccs_line[1].current; 
@@ -391,6 +397,8 @@ ucg_int_t ucg_dev_ic_ili9163_18(ucg_t *ucg, ucg_int_t msg, void *data)
 
 ucg_int_t ucg_ext_ili9163_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  (void)data;
+
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:

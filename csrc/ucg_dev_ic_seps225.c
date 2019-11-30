@@ -39,6 +39,9 @@
 
 #include "ucg.h"
 
+static ucg_int_t ucg_handle_seps225_l90fx(ucg_t *ucg);
+static ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg);
+
 static uint8_t ucg_seps225_get_color_high_byte(ucg_t *ucg)
 {
     return (ucg->arg.pixel.rgb.color[0]&0x0f8) | (((ucg->arg.pixel.rgb.color[1]) >>5));
@@ -111,7 +114,7 @@ static const ucg_pgm_uint8_t ucg_seps255_pos_dir3_seq[] =
 };
 #endif 
 
-ucg_int_t ucg_handle_seps225_l90fx(ucg_t *ucg)
+static ucg_int_t ucg_handle_seps225_l90fx(ucg_t *ucg)
 {
   if ( ucg_clip_l90fx(ucg) != 0 )
   {
@@ -165,7 +168,7 @@ ucg_int_t ucg_handle_seps225_l90fx(ucg_t *ucg)
 */
 
 
-ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
+static ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
 {
   uint8_t i;
   uint8_t c[3];
@@ -194,7 +197,7 @@ ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
   if ( ucg_clip_l90se(ucg) != 0 )
   {
     ucg_int_t dx, dy;
-    ucg_int_t i, j;
+    ucg_int_t k, j;
     //uint8_t r, g, b;
     switch(ucg->arg.dir)
     {
@@ -216,7 +219,7 @@ ucg_int_t ucg_handle_seps225_l90se(ucg_t *ucg)
 	break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
-    for( i = 0; i < ucg->arg.len; i++ )
+    for( k = 0; k < ucg->arg.len; k++ )
     {
       /*
       r = ucg->arg.ccs_line[0].current;
@@ -310,6 +313,8 @@ ucg_int_t ucg_dev_ic_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
 
 ucg_int_t ucg_ext_seps225_16(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  (void)data;
+
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:

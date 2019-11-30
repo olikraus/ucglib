@@ -38,6 +38,10 @@
 #include "ucg.h"
 #include <assert.h>
 
+static ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data);
+static ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data);
+static ucg_int_t ucg_dev_rotate270(ucg_t *ucg, ucg_int_t msg, void *data);
+
 /* Side-Effects: Update dimension and reset clip range to max */
 void ucg_UndoRotate(ucg_t *ucg)
 {
@@ -65,7 +69,7 @@ static void ucg_rotate_90_xy(ucg_xy_t *xy, ucg_int_t display_width)
   
 }
 
-ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
+static ucg_int_t ucg_dev_rotate90(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -146,7 +150,7 @@ static void ucg_rotate_180_xy(ucg_t *ucg, ucg_xy_t *xy)
   
 }
 
-ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
+static ucg_int_t ucg_dev_rotate180(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {
@@ -205,7 +209,7 @@ static void ucg_rotate_270_xy(ucg_t *ucg, ucg_xy_t *xy)
     xy->x = x;  
 }
 
-ucg_int_t ucg_dev_rotate270(ucg_t *ucg, ucg_int_t msg, void *data)
+static ucg_int_t ucg_dev_rotate270(ucg_t *ucg, ucg_int_t msg, void *data)
 {
   switch(msg)
   {

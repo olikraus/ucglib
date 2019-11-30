@@ -59,6 +59,10 @@ ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data)
 */
 ucg_int_t ucg_ext_none(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  (void)ucg;
+  (void)msg;
+  (void)data;
+
   return 1;	/* all ok */  
 }
 
@@ -217,7 +221,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
   if ( ucg_clip_l90se(ucg) != 0 )
   {
     ucg_int_t dx, dy;
-    ucg_int_t i, j;
+    ucg_int_t k, j;
     switch(ucg->arg.dir)
     {
       case 0: dx = 1; dy = 0; break;
@@ -226,7 +230,7 @@ ucg_int_t ucg_handle_l90se(ucg_t *ucg, ucg_dev_fnptr dev_cb)
       case 3: dx = 0; dy = -1; break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
-    for( i = 0; i < ucg->arg.len; i++ )
+    for( k = 0; k < ucg->arg.len; k++ )
     {
       ucg->arg.pixel.rgb.color[0] = ucg->arg.ccs_line[0].current;
       ucg->arg.pixel.rgb.color[1] = ucg->arg.ccs_line[1].current; 

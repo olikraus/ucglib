@@ -37,9 +37,11 @@
 
 #include "ucg.h"
 
-
-//ucg_int_t u8g_dev_ic_ssd1351(ucg_t *ucg, ucg_int_t msg, void *data);
-
+static ucg_int_t ucg_handle_ssd1351_l90fx(ucg_t *ucg);
+#ifdef UCG_MSG_DRAW_L90TC
+static ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg);
+#endif
+static ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg);
 
 const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir0_seq[] = 
 {
@@ -61,7 +63,7 @@ const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir1_seq[] =
   UCG_END()
 };
 
-ucg_int_t ucg_handle_ssd1351_l90fx(ucg_t *ucg)
+static ucg_int_t ucg_handle_ssd1351_l90fx(ucg_t *ucg)
 {
   uint8_t c[3];
   if ( ucg_clip_l90fx(ucg) != 0 )
@@ -119,8 +121,8 @@ const ucg_pgm_uint8_t ucg_ssd1351_set_pos_for_y_seq[] =
   UCG_END()
 };
 
-
-ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg)
+#ifdef UCG_MSG_DRAW_L90TC
+static ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg)
 {
   if ( ucg_clip_l90tc(ucg) != 0 )
   {
@@ -227,7 +229,7 @@ ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg)
   }
   return 0;
 }
-
+#endif
 
 ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
 {
@@ -258,7 +260,7 @@ ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
   if ( ucg_clip_l90se(ucg) != 0 )
   {
     ucg_int_t dx, dy;
-    ucg_int_t i, j;
+    ucg_int_t k, j;
     switch(ucg->arg.dir)
     {
       case 0: dx = 1; dy = 0; 
@@ -279,7 +281,7 @@ ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg)
 	break;
       default: dx = 1; dy = 0; break;	/* avoid compiler warning */
     }
-    for( i = 0; i < ucg->arg.len; i++ )
+    for( k = 0; k < ucg->arg.len; k++ )
     {
       c[0] = ucg->arg.ccs_line[0].current >> 2;
       c[1] = ucg->arg.ccs_line[1].current >> 2; 
@@ -361,6 +363,8 @@ ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
 
 ucg_int_t ucg_ext_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  (void)data;
+
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:

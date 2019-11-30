@@ -35,8 +35,15 @@
 
 #include "ucg.h"
 
-int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+static int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data);
+static void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_ptr);
+
+static __attribute__((unused)) int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
 {
+  (void)ucg;
+  (void)arg;
+  (void)data;
+
   switch(msg)
   {
     case UCG_COM_MSG_POWER_UP:
@@ -179,7 +186,7 @@ void ucg_com_SendString(ucg_t *ucg, uint16_t cnt, const uint8_t *byte_ptr)
   ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, cnt, (uint8_t *)byte_ptr);
 }
 
-void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_ptr)
+static void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_ptr)
 {
   uint8_t b;
   while( cnt > 0 )
