@@ -35,10 +35,9 @@
 
 #include "ucg.h"
 
-static int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data);
 static void ucg_com_SendStringP(ucg_t *ucg, uint16_t cnt, const ucg_pgm_uint8_t *byte_ptr);
 
-static __attribute__((unused)) int16_t ucg_com_template_cb(ucg_t *ucg, int16_t msg, uint32_t arg, uint8_t *data)
+int16_t ucg_com_none_cb(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data)
 {
   (void)ucg;
   (void)arg;
@@ -73,7 +72,6 @@ static __attribute__((unused)) int16_t ucg_com_template_cb(ucg_t *ucg, int16_t m
   }
   return 1;
 }
-
 
 void ucg_com_PowerDown(ucg_t *ucg)
 {

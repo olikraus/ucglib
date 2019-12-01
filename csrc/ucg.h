@@ -156,6 +156,7 @@ typedef ucg_int_t (*ucg_font_calc_vref_fnptr)(ucg_t *ucg);
 /*================================================*/
 /* list of supported display modules */
 
+ucg_int_t ucg_dev_buffer(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ssd1351_18x128x128_ilsoft(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ssd1351_18x128x128_ft(ucg_t *ucg, ucg_int_t msg, void *data);
 ucg_int_t ucg_dev_ili9325_18x240x320_itdb02(ucg_t *ucg, ucg_int_t msg, void *data);
@@ -371,8 +372,10 @@ struct _ucg_t
   //ucg_dev_fnptr display_cb;
   /* controller and device specific code, high level procedure will call this */
   ucg_dev_fnptr device_cb;
+  ucg_dev_fnptr device_cb_real;
   /* name of the extension cb. will be called by device_cb if required */
   ucg_dev_fnptr ext_cb;
+  unsigned char *frame_buffer;
   /* if rotation is applied, than this cb is called after rotation */
   ucg_dev_fnptr rotate_chain_device_cb;
   ucg_wh_t rotate_dimension;
@@ -394,7 +397,6 @@ struct _ucg_t
   /* should be modified via UCG_MSG_SET_CLIP_BOX by a device callback. */
   /* by default this is done by ucg_dev_default_cb */
   ucg_box_t clip_box;
-  
 
   /* information about the current font */
   const unsigned char *font;             /* current font for all text procedures */
@@ -465,6 +467,7 @@ struct _ucg_t
 //#define UCG_MSG_DRAW_L90RL 24	/* not yet implemented */
 /* draw  bit pattern with foreground (idx 1) and background (idx 0) color */
 //#define UCG_MSG_DRAW_L90BF 25	 /* can be commented, used by ucg_DrawBitmapLine */
+#define UCG_MSG_SEND_BUFFER 26
 
 
 #define UCG_COM_STATUS_MASK_POWER 8
@@ -579,11 +582,12 @@ void ucg_DrawL90TCWithArg(ucg_t *ucg);
 void ucg_DrawL90BFWithArg(ucg_t *ucg);
 void ucg_DrawL90SEWithArg(ucg_t *ucg);
 /* void ucg_DrawL90RLWithArg(ucg_t *ucg); */
+void ucg_SendBuffer(ucg_t *ucg);
 
 /*================================================*/
 /* ucg_init.c */
 ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, ucg_com_fnptr com_cb);
-
+ucg_int_t ucg_InitBuffer(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, ucg_com_fnptr com_cb);
 
 /*================================================*/
 /* ucg_dev_sdl.c */
@@ -879,6 +883,8 @@ void ucg_handle_l90rl(ucg_t *ucg, ucg_dev_fnptr dev_cb);
 
 /* Termination byte */
 #define UCG_END()					0x00
+
+int16_t ucg_com_none_cb(ucg_t *ucg, int16_t msg, uint16_t arg, uint8_t *data);
 
 /*
 #define ucg_com_SendByte(ucg, byte) \

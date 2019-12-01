@@ -71,6 +71,7 @@ SRC_BASE= \
     csrc/ucg_box.c \
     csrc/ucg_dev_ic_ld50t6160.c \
     csrc/ucg_pixel.c \
+    csrc/ucg_dev_buffer.c \
     csrc/ucg_dev_ic_ssd1351.c \
     csrc/ucg_dev_tft_240x320_itdb02.c \
     csrc/ucg_dev_ic_ssd1289.c \

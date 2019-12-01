@@ -43,7 +43,7 @@ static ucg_int_t ucg_handle_ssd1351_l90tc(ucg_t *ucg);
 #endif
 static ucg_int_t ucg_handle_ssd1351_l90se(ucg_t *ucg);
 
-const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir0_seq[] = 
+static const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir0_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_D1(0x07f),		/* set x position */
@@ -53,13 +53,22 @@ const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir0_seq[] =
   UCG_END()
 };
 
-const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir1_seq[] = 
+static const ucg_pgm_uint8_t ucg_ssd1351_set_pos_dir1_seq[] = 
 {
   UCG_CS(0),					/* enable chip */
   UCG_C10(0x015),	UCG_VARX(0,0x0ff, 0), UCG_VARX(0,0x0ff, 0),		/* set x position */
   UCG_C10(0x075),	UCG_VARY(0,0x0ff, 0), UCG_D1(0x07f),		/* set y position */
   UCG_C10(0x05c),							/* write to RAM */
   UCG_DATA(),								/* change to data mode */
+  UCG_END()
+};
+
+static const ucg_pgm_uint8_t ucg_ssd1351_set_send_buffer[] = {
+  UCG_CS(0),          /* enable chip */
+  UCG_C10(0x015), UCG_D1(0), UCG_D1(127),    /* set x position */
+  UCG_C10(0x075), UCG_D1(0), UCG_D1(127),   /* set y position */
+  UCG_C10(0x05c),             /* write to RAM */
+  UCG_DATA(),               /* change to data mode */
   UCG_END()
 };
 
@@ -336,6 +345,24 @@ ucg_int_t ucg_dev_ic_ssd1351_18(ucg_t *ucg, ucg_int_t msg, void *data)
 	ucg_com_SendRepeat3Bytes(ucg, 1, c);
 	ucg_com_SetCSLineStatus(ucg, 1);		/* disable chip */
       }
+      return 1;
+    case UCG_MSG_SEND_BUFFER:
+      ucg_com_SendCmdSeq(ucg, ucg_ssd1351_set_send_buffer);
+      for(ucg_int_t y=0 ; y < 128 ; y++) {
+        unsigned char *row;
+        row = ucg->frame_buffer + (128 * y * 3);
+        ucg->arg.pixel.pos.y = y;
+        for(ucg_int_t x=0 ; x < 128 ; x++) {
+          unsigned char *pixel;
+          uint8_t c[3];
+          pixel = row + (x * 3);
+          c[0] = (*pixel) >> 2;
+          c[1] = *(pixel + 1) >> 2;
+          c[2] = *(pixel + 2) >> 2;
+          ucg_com_SendRepeat3Bytes(ucg, 1, c);
+        }
+      }
+      ucg_com_SetCSLineStatus(ucg, 1);
       return 1;
     case UCG_MSG_DRAW_L90FX:
       //ucg_handle_l90fx(ucg, ucg_dev_ic_ssd1351_18);

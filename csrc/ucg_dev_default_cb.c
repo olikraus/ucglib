@@ -43,12 +43,51 @@
 
 ucg_int_t ucg_dev_default_cb(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  ucg_wh_t *dimension;
+  uint8_t orig_color[3];
+  uint8_t orig_x;
+  uint8_t orig_y;
+
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:
       return ucg->ext_cb(ucg, msg, data);
     case UCG_MSG_SET_CLIP_BOX:
       ucg->clip_box = *(ucg_box_t *)data;
+      break;
+    case UCG_MSG_SEND_BUFFER:
+      dimension = (ucg_wh_t *)data;
+
+      orig_color[0] = ucg->arg.pixel.rgb.color[0];
+      orig_color[1] = ucg->arg.pixel.rgb.color[1];
+      orig_color[2] = ucg->arg.pixel.rgb.color[2];
+      orig_x = ucg->arg.pixel.pos.x;
+      orig_y = ucg->arg.pixel.pos.y;
+
+      for(ucg_int_t y=0 ; y < dimension->h ; y++) {
+        unsigned char *row;
+
+        row = ucg->frame_buffer + (dimension->w * y * 3);
+        ucg->arg.pixel.pos.y = y;
+        for(ucg_int_t x=0 ; x < dimension->w ; x++) {
+          unsigned char *pixel;
+
+          pixel = row + (x * 3);
+
+          ucg->arg.pixel.rgb.color[0] = *pixel;
+          ucg->arg.pixel.rgb.color[1] = *(pixel + 1);
+          ucg->arg.pixel.rgb.color[2] = *(pixel + 2);
+          ucg->arg.pixel.pos.x = x;
+          ucg->device_cb(ucg, UCG_MSG_DRAW_PIXEL, NULL);
+        }
+      }
+
+      ucg->arg.pixel.rgb.color[0] = orig_color[0];
+      ucg->arg.pixel.rgb.color[1] = orig_color[1];
+      ucg->arg.pixel.rgb.color[2] = orig_color[2];
+      ucg->arg.pixel.pos.x = orig_x;
+      ucg->arg.pixel.pos.y = orig_y;
+
       break;
   }
   return 1;	/* all ok */

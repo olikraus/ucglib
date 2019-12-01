@@ -36,6 +36,7 @@
 
 #include "ucg.h"
 #include <string.h> 	/* memset */
+#include <stdlib.h>
 
 #ifdef __AVR__
 uint8_t global_SREG_backup;		// used by the atomic macros
@@ -52,6 +53,8 @@ static void ucg_init_struct(ucg_t *ucg)
   //ucg->display_offset.x = 0;
   //ucg->display_offset.y = 0;
   ucg->font = 0;
+  ucg->frame_buffer = NULL;
+  ucg->device_cb_real = NULL;
   //ucg->font_mode = UCG_FONT_MODE_NONE;   Old font procedures
   ucg->font_decode.is_transparent = 1;  // new font procedures
   
@@ -77,3 +80,16 @@ ucg_int_t ucg_Init(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, uc
   return r;
 }
 
+ucg_int_t ucg_InitBuffer(ucg_t *ucg, ucg_dev_fnptr device_cb, ucg_dev_fnptr ext_cb, ucg_com_fnptr com_cb)
+{
+  ucg_int_t r;
+
+  r = ucg_Init(ucg, device_cb, ext_cb, com_cb);
+
+  ucg->frame_buffer = calloc(1, ucg_GetWidth(ucg) * ucg_GetHeight(ucg) * 3);
+
+  ucg->device_cb_real = ucg->device_cb;
+  ucg->device_cb = ucg_dev_buffer;
+
+  return r;
+}

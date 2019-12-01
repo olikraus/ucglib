@@ -129,3 +129,18 @@ void ucg_DrawL90RLWithArg(ucg_t *ucg)
 }
 */
 
+void ucg_SendBuffer(ucg_t *ucg)
+{
+  ucg_dev_fnptr orig_device_cb;
+  ucg_wh_t dimension;
+
+  if(ucg->device_cb_real == NULL)
+    return;
+
+  ucg->device_cb_real(ucg, UCG_MSG_GET_DIMENSION, &dimension);
+
+  orig_device_cb = ucg->device_cb;
+  ucg->device_cb = ucg->device_cb_real;
+  ucg->device_cb(ucg, UCG_MSG_SEND_BUFFER, &dimension);
+  ucg->device_cb = orig_device_cb;
+}
