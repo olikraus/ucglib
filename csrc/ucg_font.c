@@ -37,6 +37,20 @@
 
 #include "ucg.h"
 
+static void ucg_read_font_info(ucg_font_info_t *font_info, const ucg_fntpgm_uint8_t *font);
+static int8_t ucg_font_GetLowerGDescent(const void *font);
+static uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt);
+static ucg_int_t ucg_font_calc_vref_center(ucg_t *ucg);
+static ucg_int_t ucg_font_calc_vref_top(ucg_t *ucg);
+static ucg_int_t ucg_font_calc_vref_bottom(ucg_t *ucg);
+static ucg_int_t ucg_font_calc_vref_font(ucg_t *ucg);
+static ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding);
+static void ucg_UpdateRefHeight(ucg_t *ucg);
+static const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding);
+static int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data);
+static void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground);
+static int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt);
+
 /* font api */
 
 /* pointer to the start adress of the glyph, points to progmem area on avr uC */
@@ -155,7 +169,7 @@ static uint16_t ucg_font_get_word(const ucg_fntpgm_uint8_t *font, uint8_t offset
 
 /*========================================================================*/
 /* new font format */
-void ucg_read_font_info(ucg_font_info_t *font_info, const ucg_fntpgm_uint8_t *font)
+static void ucg_read_font_info(ucg_font_info_t *font_info, const ucg_fntpgm_uint8_t *font)
 {
   /* offset 0 */
   font_info->glyph_cnt = ucg_font_get_byte(font, 0);
@@ -274,7 +288,7 @@ uint8_t ucg_font_GetFontEndEncoding(const void *font_arg)
   return encoding;  
 }
 
-int8_t ucg_font_GetLowerGDescent(const void *font)
+static __attribute__((unused)) int8_t ucg_font_GetLowerGDescent(const void *font)
 {
   return ucg_font_get_byte(font, 14);
 }
@@ -353,7 +367,7 @@ int8_t ucg_GetFontBBXOffY(ucg_t *ucg)
   return ucg->font_info.y_offset;		/* new font info structure */
 }
 
-uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg) UCG_NOINLINE; 
+uint8_t __attribute__((unused)) ucg_GetFontCapitlaAHeight(ucg_t *ucg) UCG_NOINLINE; 
 uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg)
 {
   // OBSOLETE return ucg_font_GetCapitalAHeight(ucg->font);
@@ -364,7 +378,7 @@ uint8_t ucg_GetFontCapitalAHeight(ucg_t *ucg)
 /* glyph handling */
 
 /* optimized */
-uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt) 
+static uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt) 
 {
   uint8_t val;
   uint8_t bit_pos = f->decode_bit_pos;
@@ -409,7 +423,7 @@ uint8_t ucg_font_decode_get_unsigned_bits(ucg_font_decode_t *f, uint8_t cnt)
 
 */
 /* optimized */
-int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
+static int8_t ucg_font_decode_get_signed_bits(ucg_font_decode_t *f, uint8_t cnt)
 {
   int8_t v, d;
   v = (int8_t)ucg_font_decode_get_unsigned_bits(f, cnt);
@@ -559,7 +573,7 @@ void ucg_font_decode_draw_pixel(ucg_t *ucg, uint8_t lx, uint8_t ly, uint8_t cnt,
     ucg_font_decode_glyph()
 */
 /* optimized */
-void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground)
+static void ucg_font_decode_len(ucg_t *ucg, uint8_t len, uint8_t is_foreground)
 {
   uint8_t cnt;	/* total number of remaining pixels, which have to be drawn */
   uint8_t rem; 	/* remaining pixel to the right edge of the glyph */
@@ -667,7 +681,7 @@ static void ucg_font_setup_decode(ucg_t *ucg, const uint8_t *glyph_data)
     ucg_font_decode_len()
 */
 /* optimized */
-int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
+static int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
 {
   uint8_t a, b;
   int8_t x, y;
@@ -718,7 +732,7 @@ int8_t ucg_font_decode_glyph(ucg_t *ucg, const uint8_t *glyph_data)
   Return:
     Address of the glyph data or NULL, if the encoding is not avialable in the font.
 */
-const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
+static const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
 {
   const uint8_t *font = ucg->font;
   font += UCG_FONT_DATA_STRUCT_SIZE;
@@ -745,7 +759,7 @@ const uint8_t *ucg_font_get_glyph_data(ucg_t *ucg, uint8_t encoding)
   return NULL;
 }
 
-ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
+static ucg_int_t ucg_font_draw_glyph(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, uint8_t encoding)
 {
   ucg_int_t dx = 0;
   ucg->font_decode.target_x = x;
@@ -861,7 +875,7 @@ ucg_int_t ucg_DrawString(ucg_t *ucg, ucg_int_t x, ucg_int_t y, uint8_t dir, cons
 
 /* set ascent/descent for reference point calculation */
 
-void ucg_UpdateRefHeight(ucg_t *ucg)
+static void ucg_UpdateRefHeight(ucg_t *ucg)
 {
   if ( ucg->font == NULL )
     return;
@@ -907,8 +921,10 @@ void ucg_SetFontRefHeightAll(ucg_t *ucg)
 /*===============================================*/
 /* callback procedures to correct the y position */
 
-ucg_int_t ucg_font_calc_vref_font(ucg_t *ucg)
+static ucg_int_t ucg_font_calc_vref_font(ucg_t *ucg)
 {
+  (void)ucg;
+
   return 0;
 }
 
@@ -918,7 +934,7 @@ void ucg_SetFontPosBaseline(ucg_t *ucg)
 }
 
 
-ucg_int_t ucg_font_calc_vref_bottom(ucg_t *ucg)
+static ucg_int_t ucg_font_calc_vref_bottom(ucg_t *ucg)
 {
   return (ucg_int_t)(ucg->font_ref_descent);
 }
@@ -928,7 +944,7 @@ void ucg_SetFontPosBottom(ucg_t *ucg)
   ucg->font_calc_vref = ucg_font_calc_vref_bottom;
 }
 
-ucg_int_t ucg_font_calc_vref_top(ucg_t *ucg)
+static ucg_int_t ucg_font_calc_vref_top(ucg_t *ucg)
 {
   ucg_int_t tmp;
   /* reference pos is one pixel above the upper edge of the reference glyph */
@@ -942,7 +958,7 @@ void ucg_SetFontPosTop(ucg_t *ucg)
   ucg->font_calc_vref = ucg_font_calc_vref_top;
 }
 
-ucg_int_t ucg_font_calc_vref_center(ucg_t *ucg)
+static ucg_int_t ucg_font_calc_vref_center(ucg_t *ucg)
 {
   int8_t tmp;
   tmp = ucg->font_ref_ascent;

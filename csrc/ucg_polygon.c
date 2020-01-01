@@ -276,6 +276,8 @@ void pg_ClearPolygonXY(pg_struct *pg)
 
 void pg_AddPolygonXY(pg_struct *pg, ucg_t *ucg, int16_t x, int16_t y)
 {
+  (void)ucg;
+
   if ( pg->cnt < PG_MAX_POINTS )
   {
     pg->list[pg->cnt].x = x;

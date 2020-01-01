@@ -41,8 +41,9 @@
 uint8_t global_SREG_backup;		// used by the atomic macros
 #endif
 
+static void ucg_init_struct(ucg_t *ucg);
 
-void ucg_init_struct(ucg_t *ucg)
+static void ucg_init_struct(ucg_t *ucg)
 {
   //memset(ucg, 0, sizeof(ucg_t));
   ucg->is_power_up = 0;

@@ -37,6 +37,8 @@
 
 #include "ucg.h"
 
+static ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg);
+
 /*
   Graphics Memory Writing Direction: 0x05
   Bit 3: RGB/BGR
@@ -223,7 +225,7 @@ static ucg_int_t ucg_handle_ld50t6160_l90tc(ucg_t *ucg)
 }
 #endif /* UCG_MSG_DRAW_L90TC */
 
-ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg)
+static ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg)
 {
   uint8_t i;
   uint8_t c[3];
@@ -240,7 +242,7 @@ ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg)
   
   if ( ucg_clip_l90se(ucg) != 0 )
   {
-    ucg_int_t i;
+    ucg_int_t k;
     switch(ucg->arg.dir)
     {
       case 0: 
@@ -264,7 +266,7 @@ ucg_int_t ucg_handle_ld50t6160_l90se(ucg_t *ucg)
 	break;
     }
     
-    for( i = 0; i < ucg->arg.len; i++ )
+    for( k = 0; k < ucg->arg.len; k++ )
     {
       c[0] = ucg->arg.ccs_line[0].current>>2;
       c[1] = ucg->arg.ccs_line[1].current>>2; 
@@ -347,6 +349,8 @@ ucg_int_t ucg_dev_ic_ld50t6160_18(ucg_t *ucg, ucg_int_t msg, void *data)
 
 ucg_int_t ucg_ext_ld50t6160_18(ucg_t *ucg, ucg_int_t msg, void *data)
 {
+  (void)data;
+
   switch(msg)
   {
     case UCG_MSG_DRAW_L90SE:

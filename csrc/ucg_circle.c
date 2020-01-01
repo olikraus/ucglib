@@ -70,7 +70,9 @@ static void ucg_draw_circle_section(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_in
     }
 }
 
-void ucg_draw_circle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option)
+static void ucg_draw_circle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
+
+static void ucg_draw_circle(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option)
 {
     ucg_int_t f;
     ucg_int_t ddF_x;
@@ -159,7 +161,9 @@ static void ucg_draw_disc_section(ucg_t *ucg, ucg_int_t x, ucg_int_t y, ucg_int_
     }
 }
 
-void ucg_draw_disc(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option)
+static void ucg_draw_disc(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option);
+
+static void ucg_draw_disc(ucg_t *ucg, ucg_int_t x0, ucg_int_t y0, ucg_int_t rad, uint8_t option)
 {
   ucg_int_t f;
   ucg_int_t ddF_x;
