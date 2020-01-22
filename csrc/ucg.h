@@ -96,6 +96,9 @@ extern "C"
 #endif
 #endif
 
+/* Define this for an additional user pointer inside the ucg data struct */
+//#define WITH_USER_PTR
+
 #ifdef __GNUC__
 #  define UCG_NOINLINE __attribute__((noinline))
 #  define UCG_SECTION(name) __attribute__ ((section (name)))
@@ -411,6 +414,10 @@ struct _ucg_t
   int8_t font_ref_ascent;
   int8_t font_ref_descent;
 
+#ifdef WITH_USER_PTR
+  void *user_ptr;
+#endif
+
   /* only for Arduino/C++ Interface */
 #ifdef USE_PIN_LIST
   uint8_t pin_list[UCG_PIN_COUNT];
@@ -421,6 +428,8 @@ struct _ucg_t
 #endif
 
 #endif
+
+
 
   /* 
     Small amount of RAM for the com interface (com_cb).
@@ -436,6 +445,11 @@ struct _ucg_t
 
 #define ucg_GetWidth(ucg) ((ucg)->dimension.w)
 #define ucg_GetHeight(ucg) ((ucg)->dimension.h)
+
+#ifdef WITH_USER_PTR
+#define ucg_GetUserPtr(ucg) ((ucg)->user_ptr)
+#define ucg_SetUserPtr(ucg, p) ((ucg)->user_ptr = (p))
+#endif
 
 #define UCG_MSG_DEV_POWER_UP	10
 #define UCG_MSG_DEV_POWER_DOWN 11

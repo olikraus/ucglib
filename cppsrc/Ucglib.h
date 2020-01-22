@@ -89,6 +89,10 @@ class Ucglib : public Print
     ucg_int_t getWidth(void) { return ucg_GetWidth(&ucg); }
     ucg_int_t getHeight(void) { return ucg_GetHeight(&ucg); }
     
+#ifdef WITH_USER_PTR
+    void *getUserPtr() { return ucg_GetUserPtr(&ucg); }
+    void setUserPtr(void *p) { ucg_SetUserPtr(&ucg, p); }
+#endif
     
     void setFontRefHeightText(void) 	{ ucg_SetFontRefHeightText(&ucg); }
     void setFontRefHeightExtendedText(void) { ucg_SetFontRefHeightExtendedText(&ucg); }
