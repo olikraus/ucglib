@@ -6,8 +6,8 @@ Supported display controller: ST7735, ILI9341, PCF8833, SSD1351, LD50T6160, ILI9
 
 Features: Graphics primitives with 18 bit color depth, filled polygon draw, >300, landscape/portrait mode.
 
+# Arduino
 See the [github wiki](https://github.com/olikraus/ucglib/wiki) for reference manual and tutorials.
-
 
 [//]: # ([Download Ucglib Arduino Library](https://github.com/olikraus/Ucglib_Arduino/releases/latest))
 
@@ -15,4 +15,13 @@ See the [github wiki](https://github.com/olikraus/ucglib/wiki) for reference man
 
 Version v1.01 for Arduino IDE 1.0.x [![](https://api.bintray.com/packages/olikraus/Ucglib/Arduino/images/download.png)](https://bintray.com/olikraus/Ucglib/Arduino/_latestVersion)
 
+# ESP-IDF
+
+Clone in your components directory using the following command.
+
+`git submodule add https://github.com/olikraus/ucglib components/u8g2`
+
+
+# Screenshot
 <a href='http://www.youtube.com/watch?feature=player_embedded&v=GSpYY0AMtEU' target='_blank'><img src='http://img.youtube.com/vi/GSpYY0AMtEU/0.jpg' width='425' height=344 /></a>
+
