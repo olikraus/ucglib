@@ -115,33 +115,85 @@ static void ucg_com_arduino_init_shift_out(uint8_t dataPin, uint8_t clockPin)
   u8g_bitNotData ^= 0x0ff;
 }
 
+// This assembler macro takes 5 clock cycles, regardless of whether
+// "bit" in "val" is set or cleared.
+#define SPI_BIT(val, bit, dat0, dat1, outData)	      \
+  __asm__ __volatile__("mov  __tmp_reg__,%2"  "\n\t"  \
+		       "sbrc %0,%1"           "\n\t"  \
+		       "mov  __tmp_reg__,%3"  "\n\t"  \
+		       "st   %a4,__tmp_reg__" "\n\t"  \
+		       : /* No outputs */             \
+		       : "r" (val), "I" (bit),	      \
+		         "r" (dat0), "r" (dat1),      \
+		         "e" (outData)                \
+		       )
 
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t val) UCG_NOINLINE;
 static void ucg_com_arduino_send_generic_SW_SPI(ucg_t *ucg, uint8_t val)
 {
-  uint8_t cnt = 8;
-  uint8_t bitData = u8g_bitData;
-  uint8_t bitNotData = u8g_bitNotData;
-  uint8_t bitClock = u8g_bitClock;
-  uint8_t bitNotClock = u8g_bitNotClock;
-  volatile uint8_t *outData = u8g_outData;
+  volatile uint8_t *outData  = u8g_outData;
   volatile uint8_t *outClock = u8g_outClock;
   
   UCG_ATOMIC_START();
-  do
-  {
-    if ( val & 128 )
-      *outData |= bitData;
-    else
-      *outData &= bitNotData;
+
+  if (outData == outClock) {
+    // If outData and outClock are pointing to the same port,
+    // then we can set both clock and data bits with one write.
+    
+    // 10 clock cycles to set up registers
+    uint8_t dat0_clk0 = *outData & u8g_bitNotClock & u8g_bitNotData;
+    uint8_t dat0_clk1 = dat0_clk0 | u8g_bitClock;
+    uint8_t dat1_clk0 = dat0_clk0 | u8g_bitData;
+    uint8_t dat1_clk1 = dat0_clk1 | u8g_bitData;
+
+    // 10 clock cycles per bit = 1.6 MHz bit time for Arduino Uno
+    // Data changes on the falling edge of the clock for 50% setup/hold
+    SPI_BIT(val, 7, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 7, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 6, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 6, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 5, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 5, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 4, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 4, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 3, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 3, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 2, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 2, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 1, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 1, dat0_clk1, dat1_clk1, outData);
+
+    SPI_BIT(val, 0, dat0_clk0, dat1_clk0, outData);
+    SPI_BIT(val, 0, dat0_clk1, dat1_clk1, outData);
+
+    //*outClock &= u8g_bitNotClock; // Only necessary if clock needs to be low after byte transfer
+  } else {
+    uint8_t cnt = 8;
+    uint8_t bitData     = u8g_bitData;
+    uint8_t bitNotData  = u8g_bitNotData;
+    uint8_t bitClock    = u8g_bitClock;
+    uint8_t bitNotClock = u8g_bitNotClock;
+
+    do
+      {
+	if ( val & 128 )
+	  *outData |= bitData;
+	else
+	  *outData &= bitNotData;
    
-    *outClock |= bitClock;
-    val <<= 1;
-    cnt--;
-    *outClock &= bitNotClock;
-  } while( cnt != 0 );
-  UCG_ATOMIC_END();
-  
+	*outClock |= bitClock;
+	val <<= 1;
+	cnt--;
+	*outClock &= bitNotClock;
+      } while( cnt != 0 );
+  }
+  UCG_ATOMIC_END();  
 }
 
 #else
