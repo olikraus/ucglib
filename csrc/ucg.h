@@ -120,7 +120,12 @@ extern "C"
 #include <avr/pgmspace.h>
 /* UCG_PROGMEM is used by the XBM example */
 #define UCG_PROGMEM UCG_SECTION(".progmem.data")
-typedef uint8_t PROGMEM ucg_pgm_uint8_t;
+// avr-gcc 5.4 does not support PROGMEM for typedefs (https://github.com/olikraus/ucglib/issues/99)
+#if defined(__GNUC__) && __GNUC__<8
+#  define ucg_pgm_uint8_t uint8_t PROGMEM
+#else
+   typedef uint8_t PROGMEM ucg_pgm_uint8_t;
+#endif
 typedef uint8_t ucg_fntpgm_uint8_t;
 #define ucg_pgm_read(adr) pgm_read_byte_near(adr)
 #define UCG_PSTR(s) ((ucg_pgm_uint8_t *)PSTR(s))
