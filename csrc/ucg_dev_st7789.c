@@ -141,14 +141,13 @@ static void set_16bit_color(ucg_t *ucg, uint8_t buff[2]) {
   buff[1] |= b&0x1F;
 }
 
-
-static void handle_l90fx(ucg_t *ucg) {
+static ucg_int_t handle_l90fx(ucg_t *ucg) {
   ucg_int_t dx=0, dy=0;
   uint8_t madctl_data=0;
   uint8_t buff[2];
 
   if ( ucg_clip_l90fx(ucg) == 0 )
-    return;
+    return 0;
 
   switch(ucg->arg.dir) {
     case 0:
@@ -194,12 +193,94 @@ static void handle_l90fx(ucg_t *ucg) {
   set_16bit_color(ucg, buff);
 
   for(ucg_int_t i = 0; i < ucg->arg.len; i++ ) {
-    ucg_com_SendString(ucg, 2, buff);
+    ucg_com_SendByte(ucg, buff[0]);
+    ucg_com_SendByte(ucg, buff[1]);
     ucg->arg.pixel.pos.x+=dx;
     ucg->arg.pixel.pos.y+=dy;
   }
 
   ucg_com_SetCSLineStatus(ucg, 1);
+
+  return 1;
+}
+
+static ucg_int_t handle_l90se(ucg_t *ucg) {
+  ucg_int_t dx=0, dy=0;
+  ucg_int_t k, j;
+  uint8_t madctl_data=0;
+  uint8_t buff[2];
+
+  if ( ucg_clip_l90se(ucg) == 0 )
+    return 0;
+  
+  for (int i = 0; i < 3; i++ )
+    ucg_ccs_init(
+      ucg->arg.ccs_line+i,
+      ucg->arg.rgb[0].color[i],
+      ucg->arg.rgb[1].color[i],
+      ucg->arg.len
+    );
+
+  switch(ucg->arg.dir) {
+    case 0:
+      dx = 1;
+      dy = 0;
+      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_LEFT_TO_RIGHT;
+      break;
+    case 1:
+      dx = 0;
+      dy = 1;
+      madctl_data = ST7789_MADCTL_PAGE_ADDRESS_ORDER_TOP_TO_BOTTOM;
+      break;
+    case 2:
+      dx = -1;
+      dy = 0;
+      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_RIGHT_TO_LEFT;
+      break;
+    case 3:
+      dx = 0;
+      dy = -1;
+      madctl_data = ST7789_MADCTL_PAGE_ADDRESS_ORDER_BOTTOM_TO_TOP;
+      break;
+  }
+
+  ucg_com_SetCSLineStatus(ucg, 0);
+
+  send_cmd_data(ucg, ST7789_MADCTL, 1, &madctl_data);
+
+  set_column_address(
+    ucg,
+    ucg->arg.pixel.pos.x, // x_start
+    ucg->arg.pixel.pos.x + (ucg->arg.len * dx) // x_end
+  );
+  set_row_address(
+    ucg,
+    ucg->arg.pixel.pos.y, // y_start
+    ucg->arg.pixel.pos.y + (ucg->arg.len * dy) // y_end
+  );
+
+  send_cmd(ucg, ST7789_RAMWR);
+  ucg_com_SetCDLineStatus(ucg, (ucg->com_cfg_cd)&1);
+
+  for( k = 0; k < ucg->arg.len; k++ ) {
+    ucg->arg.pixel.rgb.color[0] = ucg->arg.ccs_line[0].current;
+    ucg->arg.pixel.rgb.color[1] = ucg->arg.ccs_line[1].current; 
+    ucg->arg.pixel.rgb.color[2] = ucg->arg.ccs_line[2].current;
+
+    set_16bit_color(ucg, buff);
+    ucg_com_SendByte(ucg, buff[0]);
+    ucg_com_SendByte(ucg, buff[1]);
+
+    ucg->arg.pixel.pos.x+=dx;
+    ucg->arg.pixel.pos.y+=dy;
+    for ( j = 0; j < 3; j++ ) {
+      ucg_ccs_step(ucg->arg.ccs_line+j);
+    }
+  }
+
+  ucg_com_SetCSLineStatus(ucg, 1);
+
+  return 1;
 }
 
 ucg_int_t ucg_dev_st7789_16x240x240(ucg_t *ucg, ucg_int_t msg, void *data) {
@@ -233,14 +314,10 @@ ucg_int_t ucg_dev_st7789_16x240x240(ucg_t *ucg, ucg_int_t msg, void *data) {
       }
       return 1;
     case UCG_MSG_DRAW_L90FX:
-      handle_l90fx(ucg);
-      return 1;
+      return handle_l90fx(ucg);
     case UCG_MSG_DRAW_L90SE:
-      ucg_handle_l90se(ucg, ucg_dev_st7789_16x240x240);
-      return 1;
+      return handle_l90se(ucg);
   }
 
-  // UCG_MSG_SET_CLIP_BOX
-  // UCG_MSG_SEND_BUFFER
   return ucg_dev_default_cb(ucg, msg, data);
 }
