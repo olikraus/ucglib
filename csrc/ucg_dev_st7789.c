@@ -141,7 +141,6 @@ static void set_16bit_color(ucg_t *ucg, uint8_t buff[2]) {
   buff[1] |= b&0x1F;
 }
 
-#include <libopencm3/stm32/spi.h>
 
 static void handle_l90fx(ucg_t *ucg) {
   ucg_int_t dx=0, dy=0;
