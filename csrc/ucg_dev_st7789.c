@@ -154,7 +154,7 @@ static void handle_l90fx(ucg_t *ucg) {
     case 0:
       dx = 1;
       dy = 0;
-      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_RIGHT_TO_LEFT;
+      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_LEFT_TO_RIGHT;
       break;
     case 1:
       dx = 0;
@@ -164,7 +164,7 @@ static void handle_l90fx(ucg_t *ucg) {
     case 2:
       dx = -1;
       dy = 0;
-      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_LEFT_TO_RIGHT;
+      madctl_data = ST7789_MADCTL_COLUMN_ADDRESS_ORDER_RIGHT_TO_LEFT;
       break;
     case 3:
       dx = 0;
