@@ -42,6 +42,54 @@
 uint8_t global_SREG_backup;		// used by the atomic macros
 #endif
 
+static void default_power_up(ucg_t *ucg, ucg_com_info_t *ucg_com_info) {
+  ucg->com_cb(ucg, UCG_COM_MSG_POWER_UP, 0, (uint8_t *)ucg_com_info);
+}
+
+static void default_power_down(ucg_t *ucg) {
+  ucg->com_cb(ucg, UCG_COM_MSG_POWER_DOWN, 0, NULL);
+}
+
+static void default_delay(ucg_t *ucg, uint16_t microseconds) {
+  ucg->com_cb(ucg, UCG_COM_MSG_DELAY, microseconds, NULL);
+}
+
+static void default_change_reset_line(ucg_t *ucg, uint8_t state) {
+  ucg->com_cb(ucg, UCG_COM_MSG_CHANGE_RESET_LINE, state, NULL);
+}
+
+static void default_change_cd_line(ucg_t *ucg, uint8_t state) {
+  ucg->com_cb(ucg, UCG_COM_MSG_CHANGE_CD_LINE, state, NULL);
+}
+
+static void default_change_cs_line(ucg_t *ucg, uint8_t state) {
+  ucg->com_cb(ucg, UCG_COM_MSG_CHANGE_CS_LINE, state, NULL);
+}
+
+static void default_send_byte(ucg_t *ucg, uint8_t byte) {
+  ucg->com_cb(ucg, UCG_COM_MSG_SEND_BYTE, byte, NULL);
+}
+
+static void default_repeat_1_byte(ucg_t *ucg, uint16_t repeat, uint8_t byte) {
+  ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_1_BYTE, repeat, &byte);
+}
+
+static void default_repeat_2_bytes(ucg_t *ucg, uint16_t repeat, uint8_t bytes[2]) {
+  ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_2_BYTES, repeat, bytes);
+}
+
+static void default_repeat_3_bytes(ucg_t *ucg, uint16_t repeat, uint8_t bytes[3]) {
+  ucg->com_cb(ucg, UCG_COM_MSG_REPEAT_3_BYTES, repeat, bytes);
+}
+
+static void default_send_str(ucg_t *ucg, uint16_t length, uint8_t bytes[]) {
+  ucg->com_cb(ucg, UCG_COM_MSG_SEND_STR, length, bytes);
+}
+
+static void default_send_cd_data_sequence(ucg_t *ucg, uint16_t count, uint8_t bytes[]) {
+  ucg->com_cb(ucg, UCG_COM_MSG_SEND_CD_DATA_SEQUENCE, count, bytes);
+}
+
 static void ucg_init_struct(ucg_t *ucg);
 
 static void ucg_init_struct(ucg_t *ucg)
@@ -61,6 +109,19 @@ static void ucg_init_struct(ucg_t *ucg)
   ucg->com_initial_change_sent = 0;
   ucg->com_status = 0;
   ucg->com_cfg_cd = 0;
+
+  ucg->com_cb_funcs.power_up = default_power_up;
+  ucg->com_cb_funcs.power_down = default_power_down;
+  ucg->com_cb_funcs.delay = default_delay;
+  ucg->com_cb_funcs.change_reset_line = default_change_reset_line;
+  ucg->com_cb_funcs.change_cd_line = default_change_cd_line;
+  ucg->com_cb_funcs.change_cs_line = default_change_cs_line;
+  ucg->com_cb_funcs.send_byte = default_send_byte;
+  ucg->com_cb_funcs.repeat_1_byte = default_repeat_1_byte;
+  ucg->com_cb_funcs.repeat_2_bytes = default_repeat_2_bytes;
+  ucg->com_cb_funcs.repeat_3_bytes = default_repeat_3_bytes;
+  ucg->com_cb_funcs.send_str = default_send_str;
+  ucg->com_cb_funcs.send_cd_data_sequence = default_send_cd_data_sequence;
 }
 
 
