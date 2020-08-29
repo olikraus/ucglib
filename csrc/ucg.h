@@ -362,6 +362,23 @@ typedef struct _ucg_font_decode_t ucg_font_decode_t;
 #define UCG_PIN_VAL_NONE 255
 #endif
 
+typedef void (*ucg_com_send_byte)(uint8_t data); 
+
+struct _ucg_com_cb_funcs {
+  void (*power_up)(ucg_t *, ucg_com_info_t *);
+  void (*power_down)(ucg_t *);
+  void (*delay)(ucg_t *, uint16_t);
+  void (*change_reset_line)(ucg_t *, uint8_t);
+  void (*change_cd_line)(ucg_t *, uint8_t);
+  void (*change_cs_line)(ucg_t *, uint8_t);
+  void (*send_byte)(ucg_t *, uint8_t);
+  void (*repeat_1_byte)(ucg_t *, uint16_t, uint8_t);
+  void (*repeat_2_bytes)(ucg_t *, uint16_t, uint8_t[2]);
+  void (*repeat_3_bytes)(ucg_t *, uint16_t, uint8_t[3]);
+  void (*send_str)(ucg_t *, uint16_t, uint8_t *);
+  void (*send_cd_data_sequence)(ucg_t *, uint16_t, uint8_t[]);
+};
+
 struct _ucg_t
 {
   unsigned is_power_up:1;
@@ -382,6 +399,8 @@ struct _ucg_t
   
   /* communication interface */
   ucg_com_fnptr com_cb;
+
+  struct _ucg_com_cb_funcs com_cb_funcs;
   
   /* offset, that is additionally added to UCG_VARX/UCG_VARY */
   /* seems to be required for the Nokia display */
