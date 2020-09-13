@@ -124,6 +124,13 @@ typedef uint8_t PROGMEM ucg_pgm_uint8_t;
 typedef uint8_t ucg_fntpgm_uint8_t;
 #define ucg_pgm_read(adr) pgm_read_byte_near(adr)
 #define UCG_PSTR(s) ((ucg_pgm_uint8_t *)PSTR(s))
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+/* Teensy4 */
+#undef PROGMEM
+typedef uint8_t ucg_pgm_uint8_t;
+typedef uint8_t ucg_fntpgm_uint8_t;
+#define ucg_pgm_read(adr) (*(const uint8_t *)(adr)) 
+#define UCG_PSTR(s) ((uint8_t *)(s))
 #else
 #define UCG_PROGMEM
 #define PROGMEM
