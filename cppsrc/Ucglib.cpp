@@ -779,8 +779,15 @@ void Ucglib3Wire9bitHWSPI::begin(uint8_t is_transparent)
 /*=========================================================================*/
 /* 8 Bit Parallel */
 
-
-#if defined(__PIC32MX) || defined(__arm__) || defined(ESP8266) || defined(ARDUINO_ARCH_ESP8266) || defined(ESP_PLATFORM) || defined(ARDUINO_ARCH_ESP32)
+#if defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
+/* Teensy3 */
+static volatile uint8_t *u8g_data_port[9];
+static uint8_t u8g_data_mask[9];
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+/* Teensy4 */
+static volatile uint32_t *u8g_data_port[9];
+static uint32_t u8g_data_mask[9];
+#elif (defined(__PIC32MX) || defined(__arm__) || defined(ESP8266) || defined(ARDUINO_ARCH_ESP8266) || defined(ESP_PLATFORM) || defined(ARDUINO_ARCH_ESP32))
 /* CHIPKIT PIC32 */
 static volatile uint32_t *u8g_data_port[9];
 static uint32_t u8g_data_mask[9];
@@ -830,7 +837,24 @@ static void ucg_com_arduino_init_8bit(ucg_t *ucg)
 static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
 {
   int i;
-  #if defined(__arm__)
+  #if defined(__MK20DX256__) || defined( __MK64FX512__) || defined(__MK66FX1M0__) || defined(__IMXRT1052__) || defined(__IMXRT1062__)
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+  #elif defined(__arm__)
   __NOP;
   __NOP;
   __NOP;
@@ -860,7 +884,24 @@ static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
     data >>= 1;
   }
 
-  #if defined(__arm__)
+  #if defined(__MK20DX256__) || defined( __MK64FX512__) || defined(__MK66FX1M0__) || defined(__IMXRT1052__) || defined(__IMXRT1062__)
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+  #elif defined(__arm__)
   __NOP;
   __NOP;
   __NOP;
@@ -885,7 +926,24 @@ static void ucg_com_arduino_send_8bit(ucg_t *ucg, uint8_t data)
   
   *u8g_data_port[8] &= ~u8g_data_mask[8]; 
   
-#if defined(__arm__)
+  #if defined(__MK20DX256__) || defined( __MK64FX512__) || defined(__MK66FX1M0__) || defined(__IMXRT1052__) || defined(__IMXRT1062__)
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+    __asm__ __volatile__("NOP");
+  #elif defined(__arm__)
   __NOP;
   __NOP;
   __NOP;
