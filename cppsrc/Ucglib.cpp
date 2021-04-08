@@ -40,6 +40,13 @@
 
 #include "Ucglib.h"
 
+#if defined(__arm__)
+#if defined(__NOP)
+#undef __NOP
+#endif
+#define __NOP __asm volatile ("nop")
+#endif
+
 /*=========================================================================*/
 /* 8 Bit SW SPI */
 
